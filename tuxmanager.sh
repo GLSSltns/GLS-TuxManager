@@ -20,10 +20,10 @@ showtitle()
 }
 
 showmenu(){
-	echo -e "[1] Services Install\t\t\t[5] Info"
-	echo -e "[2] Services Configuration\t\t[${RED}6${NOCOLOR}] Quit"
-	echo -e "[3] Services Management"
-	echo -e "[4] Services Status"
+	echo -e "${BLUE}[${ORANGE}1${BLUE}]${NOCOLOR} Services Install\t\t\t${BLUE}[${ORANGE}5${BLUE}]${NOCOLOR} Info"
+	echo -e "${BLUE}[${ORANGE}2${BLUE}]${NOCOLOR} Services Configuration\t\t${BLUE}[${RED}6${NOCOLOR}${BLUE}]${NOCOLOR} Quit"
+	echo -e "${BLUE}[${ORANGE}3${BLUE}]${NOCOLOR} Services Management"
+	echo -e "${BLUE}[${ORANGE}4${BLUE}]${NOCOLOR} Services Status"
 	echo ""
 }
 
