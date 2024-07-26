@@ -50,7 +50,7 @@ showinfo()
 	clear
 }
 
-menuinstall()
+showmenuinstall()
 {
 	clear
 	showtitle
@@ -59,6 +59,11 @@ menuinstall()
 	echo -e " ${BLUE}[${ORANGE}2${BLUE}]${NOCOLOR} Install WEB Service"
 	echo -e " ${BLUE}[${ORANGE}3${BLUE}]${NOCOLOR} Go Back"
 	echo ""
+}
+
+menuinstall()
+{
+	showmenuinstall
 	for ((;;))
 	do
 		echo -e -n " ${BLUE}Enter An Option ${ORANGE}\$${BLUE}>:${NOCOLOR} "
@@ -66,15 +71,14 @@ menuinstall()
 		case $op in
 			1)
 				bash Scripts/install_dhcp.sh
-				menuinstall
+				showmenuinstall
 			;;
 			2)
 				bash Scripts/install_web.sh
-				menuinstall
+				showmenuinstall
 			;;
 			3)
 				clear
-				showmenu
 				break
 			;;
 			*) 
@@ -96,6 +100,7 @@ mainf()
 			1)
 				clear
 				menuinstall
+				showmenu
 			;;
 			2)echo "Configuration";;
 			3)echo "Management";;
