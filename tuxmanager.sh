@@ -12,8 +12,34 @@ PINK='\033[1;36;40m'
 YELLOW='\033[0;33;40m'
 WHITE='\033[1;37;40m'
 
-
 NOCOLOR='\033[0m'
+
+#FLASG 
+
+ISDHCP=0 # Check DHCP install
+ISHTTP=0 # Check HTTP install
+
+checkservicesinstall()
+{
+	checkinstall="$(yum list installed | grep dhcp-server)"
+	if [ ${#checkinstall} -eq 0 ]
+	then
+		ISDHCP=0
+	else
+		ISDHCP=1
+	fi
+
+	checkinstall="$(yum list installed | grep httpd)"
+	if [ ${#checkinstall} -eq 0 ]
+	then
+		ISHTTP=0
+	else
+		ISHTTP=1
+	fi
+}
+
+
+
 
 showtitle()
 {
@@ -50,6 +76,7 @@ showinfo()
 	clear
 }
 
+
 showmenuinstall()
 {
 	clear
@@ -70,16 +97,57 @@ menuinstall()
 		read -r op
 		case $op in
 			1)
-				bash Scripts/install_dhcp.sh
-				showmenuinstall
+				bash Scripts/install_dhcp.sh ; showmenuinstall
+
 			;;
 			2)
-				bash Scripts/install_web.sh
-				showmenuinstall
+				bash Scripts/install_web.sh ; showmenuinstall
 			;;
 			3)
-				clear
-				break
+				clear ; break
+			;;
+			*) 
+				echo -e " ${BLUE}[${RED}X${BLUE}]${RED} Invalid Option\n"
+			;;
+		esac
+	done
+}
+
+showmenuconfig()
+{
+	clear
+	showtitle
+
+	echo -e -n "\n ${BLUE}[${ORANGE}1${BLUE}]${NOCOLOR} Configure DHCP Service"
+	if [ $ISDHCP -eq 0 ]
+	then
+		echo -n -e "\t\t${NOCOLOR}[${RED}DHCP is not installed${NOCOLOR}]"
+	fi
+	echo -e -n "\n ${BLUE}[${ORANGE}2${BLUE}]${NOCOLOR} Configure WEB Service"
+	if [ $ISHTTP -eq 0 ]
+	then
+		echo -n -e "\t\t${NOCOLOR}[${RED}WEB (HTTP) is not installed${NOCOLOR}]"
+	fi
+	echo -e "\n ${BLUE}[${ORANGE}3${BLUE}]${NOCOLOR} Go Back"
+	echo ""
+}
+
+menuconfig()
+{
+	showmenuconfig
+	for ((;;))
+	do
+		echo -e -n " ${BLUE}Enter An Option ${ORANGE}\$${BLUE}>:${NOCOLOR} "
+		read -r op
+		case $op in
+			1)
+				bash Scripts/configure_dhcp.sh ; showmenuconfig
+			;;
+			2)
+				bash Scripts/configure_web.sh ; showmenuconfig
+			;;
+			3)
+				clear ; break
 			;;
 			*) 
 				echo -e " ${BLUE}[${RED}X${BLUE}]${RED} Invalid Option\n"
@@ -91,6 +159,8 @@ menuinstall()
 
 mainf()
 {
+	checkservicesinstall
+
 	showmenu
 	for ((;;))
 	do
@@ -99,16 +169,16 @@ mainf()
 		case $op in 
 			1)
 				clear
-				menuinstall
-				showmenu
+				menuinstall ; showmenu
+				checkservicesinstall			
 			;;
-			2)echo "Configuration";;
+			2)
+				clear ; menuconfig ; showmenu
+			;;
 			3)echo "Management";;
 			4)echo "Status";;
 			5)
-				clear
-				showinfo
-				showmenu
+				clear ; showinfo ; showmenu
 			;;
 			6)
 				break
