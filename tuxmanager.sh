@@ -25,6 +25,15 @@ show_title() {
     bash Utils/show_title.sh $ORANGE
 }
 
+show_message()
+{
+    local c=$1
+    local message=$2
+    local color=$3
+
+    echo -e " ${BLUE}[${color}${c}${BLUE}]${color} ${message}${NOCOLOR}"
+}
+
 display_not_installed_message() {
     local service=$1
     local flag=$2
@@ -91,7 +100,7 @@ menu_install() {
                 break
                 ;;
             *)
-                echo -e " ${BLUE}[${RED}X${BLUE}]${RED} Invalid Option\n"
+                show_message "X" "Invalid Option" $RED
                 ;;
         esac
     done
@@ -129,7 +138,7 @@ menu_config() {
                 break
                 ;;
             *)
-                echo -e " ${BLUE}[${RED}X${BLUE}]${RED} Invalid Option\n"
+                show_message "X" "Invalid Option" $RED
                 ;;
         esac
     done
@@ -167,7 +176,7 @@ menu_manage() {
                 break
                 ;;
             *)
-                echo -e " ${BLUE}[${RED}X${BLUE}]${RED} Invalid Option\n"
+                show_message "X" "Invalid Option" $RED
                 ;;
         esac
     done
@@ -205,14 +214,14 @@ menu_status() {
                 break
                 ;;
             *)
-                echo -e " ${BLUE}[${RED}X${BLUE}]${RED} Invalid Option\n"
+                show_message "X" "Invalid Option" $RED
                 ;;
         esac
     done
 }
 
-# MAIN FUNCTION
-main() {
+# MENU: MAIN
+main_menu() {
 	clear
     check_services_install
     show_menu
@@ -250,10 +259,20 @@ main() {
                 break
                 ;;
             *)
-                echo -e " ${BLUE}[${RED}X${BLUE}]${RED} Invalid Option\n"
+                show_message "X" "Invalid Option" $RED
                 ;;
         esac
     done
+}
+
+main() 
+{
+    if [ $UID != 0 ]; then
+        show_message "X" "TuxManager must be run as ROOT.\n" $RED
+        exit 1
+    fi
+
+    main_menu
 }
 
 main
