@@ -2,16 +2,23 @@
 
 # COLORS
 BLUE='\033[0;1;34;94m'
-YELLOW='\033[0;1;33;93m'
-RED='\033[1;31m'
-GREEN='\033[0;1;32;92m'
+PURPLE='\033[0;1;35;95m'
+ORANGE='\033[0;1;33;93m'
+RED='\033[0;31m'
+GREEN='\033[0;0;32;92m'
+GREEN2='\033[0;32m'
+PINK='\033[1;36m'
+YELLOW='\033[0;33m'
+WHITE='\033[1;37m'
 NOCOLOR='\033[0m'
+
+HTTPCOLOR='\033[1;35m'
 
 ISINSTALLED=0
 
 show_title() {
     clear
-    bash Utils/show_title.sh $YELLOW
+    bash Utils/show_title.sh $HTTPCOLOR
 }
 
 display_not_installed_message() {
@@ -101,7 +108,7 @@ remove_pkg() {
 
 update_pkg() {
     if [ $ISINSTALLED -eq 1 ]; then
-        local is_update_needed=$(yum check-update WEB (HTTP)-server | grep -q 'WEB (HTTP)-server' && echo 1 || echo 0)
+        local is_update_needed=$(yum check-update httpd | grep -q 'httpd' && echo 1 || echo 0)
         if [ $is_update_needed -eq 1 ]; then
             show_title
             show_message "!" "Updating WEB (HTTP) Service..." $YELLOW
@@ -123,10 +130,10 @@ update_pkg() {
 
 show_menu() {
     echo ""
-    echo -e " ${BLUE}[${YELLOW}1${BLUE}]${NOCOLOR} Install WEB"
-    echo -e " ${BLUE}[${YELLOW}2${BLUE}]${NOCOLOR} Remove WEB"
-    echo -e " ${BLUE}[${YELLOW}3${BLUE}]${NOCOLOR} Update WEB"
-    echo -e " ${BLUE}[${YELLOW}4${BLUE}]${NOCOLOR} Go Back"
+    echo -e " ${BLUE}[${HTTPCOLOR}1${BLUE}]${NOCOLOR} Install WEB"
+    echo -e " ${BLUE}[${HTTPCOLOR}2${BLUE}]${NOCOLOR} Remove WEB"
+    echo -e " ${BLUE}[${HTTPCOLOR}3${BLUE}]${NOCOLOR} Update WEB"
+    echo -e " ${BLUE}[${HTTPCOLOR}4${BLUE}]${NOCOLOR} Go Back"
     echo ""
 }
 
@@ -135,7 +142,7 @@ menu()
     show_title
     show_menu
     while true; do
-        echo -ne " ${BLUE}Enter An Option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
+        echo -ne " ${BLUE}Enter An Option ${HTTPCOLOR}\$${BLUE}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
