@@ -2,14 +2,15 @@
 
 # COLORS
 BLUE='\033[0;1;34;94m'
+LIGHTBLUE='\033[36;40m'
 PURPLE='\033[0;1;35;95m'
 ORANGE='\033[0;1;33;93m'
-RED='\033[1;31m'
-GREEN='\033[0;1;32;92m'
-GREEN2='\033[0;32;40m'
-PINK='\033[1;36;40m'
-YELLOW='\033[0;33;40m'
-WHITE='\033[1;37;40m'
+RED='\033[0;31m'
+GREEN='\033[0;0;32;92m'
+GREEN2='\033[0;32m'
+PINK='\033[1;36m'
+YELLOW='\033[0;33m'
+WHITE='\033[1;37m'
 NOCOLOR='\033[0m'
 
 # FLAGS
@@ -22,7 +23,7 @@ check_services_install() {
 }
 
 show_title() {
-    bash Utils/show_title.sh $ORANGE
+    bash Utils/show_title.sh $LIGHTBLUE 
 }
 
 show_message()
@@ -44,27 +45,27 @@ display_not_installed_message() {
 
 show_menu() {
     show_title
-    echo -e " \n ${BLUE}[${ORANGE}1${BLUE}]${NOCOLOR} Service Installation\t\t${BLUE}[${ORANGE}5${BLUE}]${NOCOLOR} Info"
-    echo -e " ${BLUE}[${ORANGE}2${BLUE}]${NOCOLOR} Service Configuration\t\t${BLUE}[${ORANGE}6${BLUE}]${NOCOLOR} Quit"
-    echo -e " ${BLUE}[${ORANGE}3${BLUE}]${NOCOLOR} Service Management"
-    echo -e " ${BLUE}[${ORANGE}4${BLUE}]${NOCOLOR} Service Monitoring"
+    echo -e " \n ${BLUE}[${LIGHTBLUE}1${BLUE}]${NOCOLOR} Service Installation\t\t${BLUE}[${LIGHTBLUE}5${BLUE}]${NOCOLOR} Info"
+    echo -e " ${BLUE}[${LIGHTBLUE}2${BLUE}]${NOCOLOR} Service Configuration\t\t${BLUE}[${LIGHTBLUE}6${BLUE}]${NOCOLOR} Quit"
+    echo -e " ${BLUE}[${LIGHTBLUE}3${BLUE}]${NOCOLOR} Service Management"
+    echo -e " ${BLUE}[${LIGHTBLUE}4${BLUE}]${NOCOLOR} Service Monitoring"
     echo ""
 }
 
 show_info() {
     show_title
-    echo -e "${ORANGE}"
+    echo -e "${YELLOW}"
     echo -e '  / ` /  /_`__ /_` _  /   _/_ . _  _   _'
     echo -ne ' /_; /_,._/   ._/ /_// /_//  / /_// /_\ ' 
     echo -e "${BLUE} <\\"
-    echo -e "${BLUE} <_______________________________________[]${ORANGE}#######${BLUE}]"
+    echo -e "${BLUE} <_______________________________________[]${YELLOW}#######${BLUE}]"
     echo -e '                                         </'
     echo -e " ${BLUE}AUTHORS:"	
     echo -e " ${BLUE}@ Gael Landa ${NOCOLOR}\t\thttps://github.com/GsusLnd"
     echo -e " ${BLUE}@ Leonardo Aceves ${NOCOLOR}\thttps://github.com/L30AM"
     echo -e " ${BLUE}@ Sergio Méndez ${NOCOLOR}\thttps://github.com/sergiomndz15"
     echo -e " ${BLUE}@ Alexandra Gonzáles ${NOCOLOR}\thttps://github.com/AlexMangle"
-    echo -ne " \n ${BLUE}[${ORANGE}ENTER${BLUE}]${NOCOLOR} Go Back"
+    echo -ne " \n ${BLUE}[${LIGHTBLUE}ENTER${BLUE}]${NOCOLOR} Go Back"
     read -s
     echo ""
     clear
@@ -75,16 +76,16 @@ show_menu_install() {
     clear
     show_title
     echo ""
-    echo -e " ${BLUE}[${ORANGE}1${BLUE}]${NOCOLOR} Install DHCP Service"
-    echo -e " ${BLUE}[${ORANGE}2${BLUE}]${NOCOLOR} Install WEB Service"
-    echo -e " ${BLUE}[${ORANGE}3${BLUE}]${NOCOLOR} Go Back"
+    echo -e " ${BLUE}[${LIGHTBLUE}1${BLUE}]${NOCOLOR} Install DHCP Service"
+    echo -e " ${BLUE}[${LIGHTBLUE}2${BLUE}]${NOCOLOR} Install WEB Service"
+    echo -e " ${BLUE}[${LIGHTBLUE}3${BLUE}]${NOCOLOR} Go Back"
     echo ""
 }
 
 menu_install() {
     show_menu_install
     while true; do
-        echo -ne " ${BLUE}Enter An Option ${ORANGE}\$${BLUE}>:${NOCOLOR} "
+        echo -ne " ${BLUE}Enter An Option ${LIGHTBLUE}\$${BLUE}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
@@ -111,18 +112,18 @@ show_menu_config() {
     clear
     show_title
 
-    echo -ne "\n ${BLUE}[${ORANGE}1${BLUE}]${NOCOLOR} Configure DHCP Service"
+    echo -ne "\n ${BLUE}[${LIGHTBLUE}1${BLUE}]${NOCOLOR} Configure DHCP Service"
     display_not_installed_message "DHCP" $ISDHCP
-    echo -ne "\n ${BLUE}[${ORANGE}2${BLUE}]${NOCOLOR} Configure WEB Service"
+    echo -ne "\n ${BLUE}[${LIGHTBLUE}2${BLUE}]${NOCOLOR} Configure WEB Service"
     display_not_installed_message "WEB (HTTP)" $ISHTTP
-    echo -e "\n ${BLUE}[${ORANGE}3${BLUE}]${NOCOLOR} Go Back"
+    echo -e "\n ${BLUE}[${LIGHTBLUE}3${BLUE}]${NOCOLOR} Go Back"
     echo ""
 }
 
 menu_config() {
     show_menu_config
     while true; do
-        echo -ne " ${BLUE}Enter An Option ${ORANGE}\$${BLUE}>:${NOCOLOR} "
+        echo -ne " ${BLUE}Enter An Option ${LIGHTBLUE}\$${BLUE}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
@@ -149,18 +150,18 @@ show_menu_manage() {
     clear
     show_title
 
-    echo -ne "\n ${BLUE}[${ORANGE}1${BLUE}]${NOCOLOR} Manage DHCP Service"
+    echo -ne "\n ${BLUE}[${LIGHTBLUE}1${BLUE}]${NOCOLOR} Manage DHCP Service"
     display_not_installed_message "DHCP" $ISDHCP
-    echo -ne "\n ${BLUE}[${ORANGE}2${BLUE}]${NOCOLOR} Manage WEB Service"
+    echo -ne "\n ${BLUE}[${LIGHTBLUE}2${BLUE}]${NOCOLOR} Manage WEB Service"
     display_not_installed_message "WEB (HTTP)" $ISHTTP
-    echo -e "\n ${BLUE}[${ORANGE}3${BLUE}]${NOCOLOR} Go Back"
+    echo -e "\n ${BLUE}[${LIGHTBLUE}3${BLUE}]${NOCOLOR} Go Back"
     echo ""
 }
 
 menu_manage() {
     show_menu_manage
     while true; do
-        echo -ne " ${BLUE}Enter An Option ${ORANGE}\$${BLUE}>:${NOCOLOR} "
+        echo -ne " ${BLUE}Enter An Option ${LIGHTBLUE}\$${BLUE}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
@@ -187,18 +188,18 @@ show_menu_status() {
     clear
     show_title
 
-    echo -ne "\n ${BLUE}[${ORANGE}1${BLUE}]${NOCOLOR} DHCP Service Status"
+    echo -ne "\n ${BLUE}[${LIGHTBLUE}1${BLUE}]${NOCOLOR} DHCP Service Status"
     display_not_installed_message "DHCP" $ISDHCP
-    echo -ne "\n ${BLUE}[${ORANGE}2${BLUE}]${NOCOLOR} WEB Service Status"
+    echo -ne "\n ${BLUE}[${LIGHTBLUE}2${BLUE}]${NOCOLOR} WEB Service Status"
     display_not_installed_message "WEB (HTTP)" $ISHTTP
-    echo -e "\n ${BLUE}[${ORANGE}3${BLUE}]${NOCOLOR} Go Back"
+    echo -e "\n ${BLUE}[${LIGHTBLUE}3${BLUE}]${NOCOLOR} Go Back"
     echo ""
 }
 
 menu_status() {
     show_menu_status
     while true; do
-        echo -ne " ${BLUE}Enter An Option ${ORANGE}\$${BLUE}>:${NOCOLOR} "
+        echo -ne " ${BLUE}Enter An Option ${LIGHTBLUE}\$${BLUE}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
@@ -223,10 +224,10 @@ menu_status() {
 # MENU: MAIN
 main_menu() {
 	clear
-    check_services_install
+    check_services_install &
     show_menu
     while true; do
-        echo -ne " ${BLUE}Enter An Option ${ORANGE}\$${BLUE}>: ${NOCOLOR}"
+        echo -ne " ${BLUE}Enter An Option ${LIGHTBLUE}\$${BLUE}>: ${NOCOLOR}"
         read -r op
         case $op in 
             1)
