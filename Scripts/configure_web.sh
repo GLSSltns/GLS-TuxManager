@@ -111,6 +111,52 @@ view_file_content() {
     done
 }
 
+remove_file() {
+    while true; do
+        echo -ne "Enter the name of the file to remove (relative to $HTTPD_ROOT): "
+        read -r file_name
+        local target_file="$HTTPD_ROOT/$file_name"
+        if [[ -f "$target_file" ]]; then
+            echo -ne "Are you sure you want to delete '$file_name'? (y/n): "
+            read -r confirmation
+            if [[ "$confirmation" =~ ^[Yy]$ ]]; then
+                rm "$target_file"
+                show_message "-" "File '$file_name' deleted successfully." $GREEN
+                config_changed=1
+                break
+            else
+                show_message "X" "File deletion cancelled." $RED
+                break
+            fi
+        else
+            show_message "X" "File '$file_name' does not exist." $RED
+        fi
+    done
+}
+
+remove_directory() {
+    while true; do
+        echo -ne "Enter the name of the directory to remove (relative to $HTTPD_ROOT): "
+        read -r dir_name
+        local target_dir="$HTTPD_ROOT/$dir_name"
+        if [[ -d "$target_dir" ]]; then
+            echo -ne "Are you sure you want to delete directory '$dir_name' and all its contents? (y/n): "
+            read -r confirmation
+            if [[ "$confirmation" =~ ^[Yy]$ ]]; then
+                rm -r "$target_dir"
+                show_message "-" "Directory '$dir_name' deleted successfully." $GREEN
+                config_changed=1
+                break
+            else
+                show_message "X" "Directory deletion cancelled." $RED
+                break
+            fi
+        else
+            show_message "X" "Directory '$dir_name' does not exist." $RED
+        fi
+    done
+}
+
 list_files() {
     echo -e "\n${YELLOW}Listing files in $HTTPD_ROOT:${NOCOLOR}"
     display_tree_structure "$HTTPD_ROOT" ""
@@ -139,8 +185,10 @@ show_httpd_menu() {
     echo -e " ${BLUE}[${HTTPCOLOR}2${BLUE}]${NOCOLOR} Add File"
     echo -e " ${BLUE}[${HTTPCOLOR}3${BLUE}]${NOCOLOR} Edit File"
     echo -e " ${BLUE}[${HTTPCOLOR}4${BLUE}]${NOCOLOR} View File Content"
-    echo -e " ${BLUE}[${HTTPCOLOR}5${BLUE}]${NOCOLOR} List Files"
-    echo -e " ${BLUE}[${HTTPCOLOR}6${BLUE}]${NOCOLOR} Exit"
+    echo -e " ${BLUE}[${HTTPCOLOR}5${BLUE}]${NOCOLOR} Remove File"
+    echo -e " ${BLUE}[${HTTPCOLOR}6${BLUE}]${NOCOLOR} Remove Directory"
+    echo -e " ${BLUE}[${HTTPCOLOR}7${BLUE}]${NOCOLOR} List Files"
+    echo -e " ${BLUE}[${HTTPCOLOR}8${BLUE}]${NOCOLOR} Exit"
     echo ""
 }
 
@@ -154,8 +202,10 @@ httpd_menu() {
             2) add_file ;;
             3) edit_file ;;
             4) view_file_content ;;
-            5) list_files ;;
-            6) break ;;
+            5) remove_file ;;
+            6) remove_directory ;;
+            7) list_files ;;
+            8) break ;;
             *) show_message "X" "Invalid option." $RED ;;
         esac
     done
