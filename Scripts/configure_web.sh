@@ -157,6 +157,28 @@ remove_directory() {
     done
 }
 
+upload_file() {
+    while true; do
+        echo -ne "Enter the path of the file to upload (e.g., /path/to/local/file.html): "
+        read -r local_file_path
+        if [[ -f "$local_file_path" ]]; then
+            echo -ne "Enter the target directory in HTTPD root (relative to $HTTPD_ROOT, or leave empty for root): "
+            read -r dir_name
+            local target_dir="$HTTPD_ROOT/$dir_name"
+            if [[ -z "$dir_name" || -d "$target_dir" ]]; then
+                cp "$local_file_path" "$target_dir/"
+                show_message "+" "File '$(basename "$local_file_path")' uploaded successfully to '$target_dir'." $GREEN
+                config_changed=1
+                break
+            else
+                show_message "X" "Directory '$dir_name' does not exist." $RED
+            fi
+        else
+            show_message "X" "Local file '$local_file_path' does not exist." $RED
+        fi
+    done
+}
+
 list_files() {
     echo -e "\n${YELLOW}Listing files in $HTTPD_ROOT:${NOCOLOR}"
     display_tree_structure "$HTTPD_ROOT" ""
@@ -187,11 +209,11 @@ show_httpd_menu() {
     echo -e " ${BLUE}[${HTTPCOLOR}4${BLUE}]${NOCOLOR} View File Content"
     echo -e " ${BLUE}[${HTTPCOLOR}5${BLUE}]${NOCOLOR} Remove File"
     echo -e " ${BLUE}[${HTTPCOLOR}6${BLUE}]${NOCOLOR} Remove Directory"
-    echo -e " ${BLUE}[${HTTPCOLOR}7${BLUE}]${NOCOLOR} List Files"
-    echo -e " ${BLUE}[${HTTPCOLOR}8${BLUE}]${NOCOLOR} Exit"
+    echo -e " ${BLUE}[${HTTPCOLOR}7${BLUE}]${NOCOLOR} Upload File"
+    echo -e " ${BLUE}[${HTTPCOLOR}8${BLUE}]${NOCOLOR} List Files"
+    echo -e " ${BLUE}[${HTTPCOLOR}9${BLUE}]${NOCOLOR} Exit"
     echo ""
 }
-
 httpd_menu() {
     while true; do
         show_httpd_menu
@@ -204,8 +226,9 @@ httpd_menu() {
             4) view_file_content ;;
             5) remove_file ;;
             6) remove_directory ;;
-            7) list_files ;;
-            8) break ;;
+            7) upload_file ;;
+            8) list_files ;;
+            9) break ;;
             *) show_message "X" "Invalid option." $RED ;;
         esac
     done
