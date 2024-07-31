@@ -298,7 +298,6 @@ show_dhcp_menu() {
 
 dhcp_menu() {
     while [[ true ]]; do
-        read_dhcp_config $DEFAULT_DHCP_CONF
         show_dhcp_menu
         echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
         read -r op
@@ -374,10 +373,13 @@ main_menu() {
         case $option in
             1) dhcp_menu ;;
             2) interface_menu ;;
-            3) exit ;;
+            3) break ;;
             *) show_message "X" "Invalid option." $RED ;;
         esac
     done
 }
 
+read_config "$DEFAULT_DHCP_CONF"
+read_interface_config "$DEFAULT_INTERFACE_CONF"
 main_menu
+
