@@ -312,9 +312,10 @@ show_interface_menu() {
     echo ""
     echo -e " ${BLUE}[${DHCPCOLOR}1${BLUE}]${NOCOLOR} Interface: $interface"
     echo -e " ${BLUE}[${DHCPCOLOR}2${BLUE}]${NOCOLOR} IP and Prefix: $ip_prefix"
-    echo -e " ${BLUE}[${DHCPCOLOR}3${BLUE}]${NOCOLOR} DNS: $dns"
-    echo -e " ${BLUE}[${DHCPCOLOR}4${BLUE}]${NOCOLOR} Save Configuration"
-    echo -e " ${BLUE}[${DHCPCOLOR}5${BLUE}]${NOCOLOR} Back to Main Menu"
+    echo -e " ${BLUE}[${DHCPCOLOR}3${BLUE}]${NOCOLOR} Gateway: $gateway"
+    echo -e " ${BLUE}[${DHCPCOLOR}4${BLUE}]${NOCOLOR} DNS: $dns"
+    echo -e " ${BLUE}[${DHCPCOLOR}5${BLUE}]${NOCOLOR} Save Configuration"
+    echo -e " ${BLUE}[${DHCPCOLOR}6${BLUE}]${NOCOLOR} Back to Main Menu"
     echo ""
 }
 
@@ -326,9 +327,10 @@ interface_menu() {
         case $op in
             1) configure_interface ;;
             2) configure_ip_prefix ;;
-            3) configure_dns ;;
-            4) save_interface_configuration ;;
-            5) break ;;
+            3) configure_gateway ;;
+            4) configure_dns ;;
+            5) save_interface_configuration ;;
+            6) break ;;
             *) show_message "X" "Invalid option." $RED ;;
         esac
     done
