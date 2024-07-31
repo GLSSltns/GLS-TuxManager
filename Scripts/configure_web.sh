@@ -11,13 +11,10 @@ PINK='\033[1;36m'
 YELLOW='\033[0;33m'
 WHITE='\033[1;37m'
 NOCOLOR='\033[0m'
-HTTPCOLOR='\033[1;32m'
+HTTPCOLOR='\033[1;33m'
 
-DEFAULT_HTTPD_DIR="/var/www/html"
-TEMPLATES_DIR="templates"
-HTML_EXT=".html"
-
-httpd_conf_changed=0
+HTTPD_ROOT="/var/www/html"
+config_changed=0
 
 # Utils
 source Utils/progress_bar.sh
@@ -45,112 +42,124 @@ validate_input() {
 }
 
 create_directory() {
-    echo -ne "Enter the directory name to create: "
-    read -r dir_name
-    mkdir -p "$DEFAULT_HTTPD_DIR/$dir_name"
-    show_message "!" "Directory '$dir_name' created successfully." $GREEN
-    sleep 2
+    while true; do
+        echo -ne "Enter the name of the directory to create: "
+        read -r dir_name
+        if validate_input "$dir_name" '^[a-zA-Z0-9_-]+$'; then
+            mkdir -p "$HTTPD_ROOT/$dir_name"
+            show_message "+" "Directory '$dir_name' created successfully." $GREEN
+            config_changed=1
+            break
+        else
+            show_message "X" "Invalid directory name." $RED
+        fi
+    done
 }
 
-add_html_template() {
-    echo -ne "Enter the name of the HTML template to add: "
-    read -r template_name
-    touch "$DEFAULT_HTTPD_DIR/$TEMPLATES_DIR/$template_name$HTML_EXT"
-    echo "<html><head><title>$template_name</title></head><body><h1>$template_name</h1></body></html>" > "$DEFAULT_HTTPD_DIR/$TEMPLATES_DIR/$template_name$HTML_EXT"
-    show_message "!" "Template '$template_name$HTML_EXT' added successfully." $GREEN
-    sleep 2
+add_file() {
+    while true; do
+        echo -ne "Enter the directory to add the file in (relative to $HTTPD_ROOT, or leave empty for root): "
+        read -r dir_name
+        local target_dir="$HTTPD_ROOT/$dir_name"
+        if [[ -z "$dir_name" || -d "$target_dir" ]]; then
+            echo -ne "Enter the name of the file to create (e.g., index.html): "
+            read -r file_name
+            if validate_input "$file_name" '^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$'; then
+                touch "$target_dir/$file_name"
+                show_message "+" "File '$file_name' created successfully in '$target_dir'." $GREEN
+                config_changed=1
+                break
+            else
+                show_message "X" "Invalid file name." $RED
+            fi
+        else
+            show_message "X" "Directory '$dir_name' does not exist." $RED
+        fi
+    done
 }
 
-edit_html_template() {
-    echo -ne "Enter the name of the HTML template to edit: "
-    read -r template_name
-    nano "$DEFAULT_HTTPD_DIR/$TEMPLATES_DIR/$template_name$HTML_EXT"
+edit_file() {
+    while true; do
+        echo -ne "Enter the name of the file to edit (relative to $HTTPD_ROOT): "
+        read -r file_name
+        local target_file="$HTTPD_ROOT/$file_name"
+        if [[ -f "$target_file" ]]; then
+            nano "$target_file"
+            show_message "+" "File '$file_name' edited successfully." $GREEN
+            config_changed=1
+            break
+        else
+            show_message "X" "File '$file_name' does not exist." $RED
+        fi
+    done
 }
 
-list_html_templates() {
-    echo -e "\n${GREEN}Available HTML Templates:${NOCOLOR}"
-    ls -1 "$DEFAULT_HTTPD_DIR/$TEMPLATES_DIR"/*.html
-    echo ""
-    echo -ne "Press enter to continue..."
+view_file_content() {
+    while true; do
+        echo -ne "Enter the name of the file to view (relative to $HTTPD_ROOT): "
+        read -r file_name
+        local target_file="$HTTPD_ROOT/$file_name"
+        if [[ -f "$target_file" ]]; then
+            echo -e "\n${YELLOW}Content of '$file_name':${NOCOLOR}"
+            cat "$target_file"
+            echo -e "\n${BLUE}Press ENTER to continue...${NOCOLOR}"
+            read -r
+            break
+        else
+            show_message "X" "File '$file_name' does not exist." $RED
+        fi
+    done
+}
+
+list_files() {
+    echo -e "\n${YELLOW}Listing files in $HTTPD_ROOT:${NOCOLOR}"
+    display_tree_structure "$HTTPD_ROOT" ""
+    echo -e "\n${BLUE}Press ENTER to continue...${NOCOLOR}"
     read -r
 }
 
-save_configuration() {
-    show_title
-    show_message "!" "Saving HTTPD configuration..." $YELLOW
-    progress_bar 5 $YELLOW &
-    wait
-    show_message "-" "HTTPD configuration saved successfully." $GREEN
-    httpd_conf_changed=0
-    echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
-    sleep 4.5
+display_tree_structure() {
+    local dir_path=$1
+    local indent=$2
+
+    for file in "$dir_path"/*; do
+        if [[ -d "$file" ]]; then
+            echo -e "${indent}${BLUE}+--${NOCOLOR}$(basename "$file")/"
+            display_tree_structure "$file" "$indent    "
+        elif [[ -f "$file" ]]; then
+            echo -e "\t${GREEN}+--${NOCOLOR}$(basename "$file")"
+        fi
+    done
 }
 
 show_httpd_menu() {
     show_title
+    echo -e "\t\t\t\t\t ${HTTPCOLOR}HTTPD CONFIGURATION:${NOCOLOR}"
     echo -e " ${BLUE}[${HTTPCOLOR}1${BLUE}]${NOCOLOR} Create Directory"
-    echo -e " ${BLUE}[${HTTPCOLOR}2${BLUE}]${NOCOLOR} Add HTML Template"
-    echo -e " ${BLUE}[${HTTPCOLOR}3${BLUE}]${NOCOLOR} Edit HTML Template"
-    echo -e " ${BLUE}[${HTTPCOLOR}4${BLUE}]${NOCOLOR} List HTML Templates"
-    echo -e " ${BLUE}[${HTTPCOLOR}5${BLUE}]${NOCOLOR} Save Configuration"
-    echo -e " ${BLUE}[${HTTPCOLOR}6${BLUE}]${NOCOLOR} Back to Main Menu"
+    echo -e " ${BLUE}[${HTTPCOLOR}2${BLUE}]${NOCOLOR} Add File"
+    echo -e " ${BLUE}[${HTTPCOLOR}3${BLUE}]${NOCOLOR} Edit File"
+    echo -e " ${BLUE}[${HTTPCOLOR}4${BLUE}]${NOCOLOR} View File Content"
+    echo -e " ${BLUE}[${HTTPCOLOR}5${BLUE}]${NOCOLOR} List Files"
+    echo -e " ${BLUE}[${HTTPCOLOR}6${BLUE}]${NOCOLOR} Exit"
     echo ""
 }
 
 httpd_menu() {
-    while [ true ]; do
+    while true; do
         show_httpd_menu
         echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
         read -r op
         case $op in
             1) create_directory ;;
-            2) add_html_template ;;
-            3) edit_html_template ;;
-            4) list_html_templates ;;
-            5) 
-                clear
-                save_configuration ;;
-            6) 
-                if [ $httpd_conf_changed -eq 1 ]; then
-                    show_message "!!" "You have unsaved changes." $YELLOW
-                    echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
-                    read -r confirm
-                    if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
-                        echo ""
-                        sleep 1
-                    else
-                        echo ""
-                        show_message "!" "Quitting without saving." $YELLOW
-                        httpd_conf_changed=0
-                        echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
-                        sleep 2
-                        break
-                    fi
-                else
-                    break
-                fi
-                ;;
+            2) add_file ;;
+            3) edit_file ;;
+            4) view_file_content ;;
+            5) list_files ;;
+            6) break ;;
             *) show_message "X" "Invalid option." $RED ;;
         esac
     done
     clear
 }
 
-main_menu() {
-    while [ true ]; do
-        show_title
-        echo ""
-        echo -e " ${BLUE}[${HTTPCOLOR}1${BLUE}]${NOCOLOR} Configure HTTPD"
-        echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
-        read -r op
-        case $op in
-            1) httpd_menu ;;
-            2) break ;;
-            *) show_message "X" "Invalid option." $RED ;;
-        esac
-    done
-}
-
-# Create templates directory if it doesn't exist
-mkdir -p "$DEFAULT_HTTPD_DIR/$TEMPLATES_DIR"
-main_menu
+httpd_menu
