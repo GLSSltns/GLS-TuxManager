@@ -298,6 +298,7 @@ show_dhcp_menu() {
 
 dhcp_menu() {
     while [[ true ]]; do
+        read_dhcp_config $DEFAULT_DHCP_CONF
         show_dhcp_menu
         echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
         read -r op
