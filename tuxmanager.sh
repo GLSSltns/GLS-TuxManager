@@ -224,7 +224,7 @@ menu_status() {
 # MENU: MAIN
 main_menu() {
 	clear
-    check_services_install &
+    check_services_install 
     show_menu
     while true; do
         echo -ne " ${BLUE}Enter An Option ${LIGHTBLUE}\$${BLUE}>: ${NOCOLOR}"
