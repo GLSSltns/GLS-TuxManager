@@ -271,7 +271,7 @@ save_interface_configuration() {
 
 show_dhcp_menu() {
     show_title
-    echo -e "\t\t\t\t ${DHCPCOLOR}CURRENT CONFIG:${NOCOLOR}"
+    echo -e "\t\t\t\t\t ${DHCPCOLOR}CURRENT CONFIG:${NOCOLOR}"
     echo -e " ${BLUE}[${DHCPCOLOR}1${BLUE}]${NOCOLOR} Subnet: \t\t\t\t [${DHCPCOLOR}$subnet${NOCOLOR}]"
     echo -e " ${BLUE}[${DHCPCOLOR}2${BLUE}]${NOCOLOR} Netmask: \t\t\t\t [${DHCPCOLOR}$netmask${NOCOLOR}]"
     echo -e " ${BLUE}[${DHCPCOLOR}3${BLUE}]${NOCOLOR} Range: \t\t\t\t [${DHCPCOLOR}$range${NOCOLOR}]"
@@ -309,11 +309,11 @@ dhcp_menu() {
 
 show_interface_menu() {
     show_title
-    echo -e "\t\t\t\t ${DHCPCOLOR}CURRENT CONFIG:${NOCOLOR}"
+    echo -e "\t\t\t\t\t ${DHCPCOLOR}CURRENT CONFIG:${NOCOLOR}"
     echo -e " ${BLUE}[${DHCPCOLOR}1${BLUE}]${NOCOLOR} Interface: \t\t\t [${DHCPCOLOR}$interface${NOCOLOR}]"
     echo -e " ${BLUE}[${DHCPCOLOR}2${BLUE}]${NOCOLOR} IP and Prefix: \t\t\t [${DHCPCOLOR}$ip_prefix${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}3${BLUE}]${NOCOLOR} Gateway: \t\t\t [${DHCPCOLOR}$gateway${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}4${BLUE}]${NOCOLOR} DNS: \t\t\t [${DHCPCOLOR}$dns${NOCOLOR}]"
+    echo -e " ${BLUE}[${DHCPCOLOR}3${BLUE}]${NOCOLOR} Gateway: \t\t\t\t [${DHCPCOLOR}$gateway${NOCOLOR}]"
+    echo -e " ${BLUE}[${DHCPCOLOR}4${BLUE}]${NOCOLOR} DNS: \t\t\t\t [${DHCPCOLOR}$dns${NOCOLOR}]"
     echo -e " ${BLUE}[${DHCPCOLOR}5${BLUE}]${NOCOLOR} Save Configuration"
     echo -e " ${BLUE}[${DHCPCOLOR}6${BLUE}]${NOCOLOR} Back to Main Menu"
     echo ""
