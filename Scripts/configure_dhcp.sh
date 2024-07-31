@@ -18,6 +18,7 @@ DEFAULT_INTERFACE_CONF="/etc/sysconfig/dhcpd"
 
 dhcp_changed=0
 interface_changed=0
+INTACTIVE=0
 
 # Utils
 source Utils/progress_bar.sh
@@ -32,6 +33,20 @@ show_message() {
     local message=$2
     local color=$3
     echo -e " ${BLUE}[${color}${c}${BLUE}]${color} ${message}${NOCOLOR}"
+}
+
+validate_input() {
+    local input=$1
+    local regex=$2
+    if [[ $input =~ $regex ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+interface_state(){
+    INTACTIVE=$(nmcli con show "$interface" | grep -q GENERAL.STATE && echo 1 || echo 0)
 }
 
 read_config() {
@@ -61,33 +76,6 @@ subnet $subnet netmask $netmask {
 EOL
 }
 
-read_interface_config() {
-    interface_config_file=$1
-    interface=$(grep -Po 'DHCPDARGS=\K[^;]*' "$interface_config_file")
-    ip_prefix=$(nmcli con show "$interface" | grep ipv4.addresses | awk '{print $2}')
-    gateway=$(nmcli con show "$interface" | grep ipv4.gateway | awk '{print $2}')  
-    dns=$(nmcli con show "$interface" | grep ipv4.dns: | awk '{print $2}')
-}
-
-write_interface_config() {
-    interface_config_file=$1
-    cat <<EOL | tee "$interface_config_file" > /dev/null
-# DHCPDARGS is defined by the dhcpd startup script
-DHCPDARGS=$interface
-EOL
-
-    nmcli con mod "$interface" ipv4.addresses "$ip_prefix" ipv4.dns "$dns" ipv4.gateway "$gateway" ipv4.method manual
-}
-
-validate_input() {
-    local input=$1
-    local regex=$2
-    if [[ $input =~ $regex ]]; then
-        return 0
-    else
-        return 1
-    fi
-}
 
 configure_subnet() {
     while [ true ]; do
@@ -198,10 +186,73 @@ save_configuration() {
     show_message "!" "Saving DHCP configuration..." $YELLOW
     progress_bar 5 $YELLOW &
     write_config "$DEFAULT_DHCP_CONF"
+    read_config "$DEFAULT_DHCP_CONF"
     wait
     show_message "-" "DHCP configuration saved successfully." $GREEN
+    dhcp_changed=0
     echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
     sleep 4.5
+}
+
+show_dhcp_menu() {
+    show_title
+    echo -e "\t\t\t\t\t ${DHCPCOLOR}CURRENT CONFIG:${NOCOLOR}"
+    echo -e " ${BLUE}[${DHCPCOLOR}1${BLUE}]${NOCOLOR} Subnet: \t\t\t\t [${DHCPCOLOR}$subnet${NOCOLOR}]"
+    echo -e " ${BLUE}[${DHCPCOLOR}2${BLUE}]${NOCOLOR} Netmask: \t\t\t\t [${DHCPCOLOR}$netmask${NOCOLOR}]"
+    echo -e " ${BLUE}[${DHCPCOLOR}3${BLUE}]${NOCOLOR} Range: \t\t\t\t [${DHCPCOLOR}$range${NOCOLOR}]"
+    echo -e " ${BLUE}[${DHCPCOLOR}4${BLUE}]${NOCOLOR} Routers: \t\t\t\t [${DHCPCOLOR}$routers${NOCOLOR}]"
+    echo -e " ${BLUE}[${DHCPCOLOR}5${BLUE}]${NOCOLOR} Domain Name: \t\t\t [${DHCPCOLOR}$domain_name${NOCOLOR}]"
+    echo -e " ${BLUE}[${DHCPCOLOR}6${BLUE}]${NOCOLOR} Domain Name Servers: \t\t [${DHCPCOLOR}$domain_name_servers${NOCOLOR}]"
+    echo -e " ${BLUE}[${DHCPCOLOR}7${BLUE}]${NOCOLOR} Default Lease Time: \t\t [${DHCPCOLOR}$default_lease_time${NOCOLOR}]"
+    echo -e " ${BLUE}[${DHCPCOLOR}8${BLUE}]${NOCOLOR} Max Lease Time: \t\t\t [${DHCPCOLOR}$max_lease_time${NOCOLOR}]"
+    echo ""
+    echo -e " ${BLUE}[${DHCPCOLOR}9${BLUE}]${NOCOLOR} Save Configuration"
+    echo -e " ${BLUE}[${DHCPCOLOR}10${BLUE}]${NOCOLOR} Back to Main Menu"
+    echo ""
+}
+
+dhcp_menu() {
+    while [ true ]; do
+        show_dhcp_menu
+        echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
+        read -r op
+        case $op in
+            1) configure_subnet ;;
+            2) configure_netmask ;;
+            3) configure_range ;;
+            4) configure_routers ;;
+            5) configure_domain_name ;;
+            6) configure_domain_name_servers ;;
+            7) configure_default_lease_time ;;
+            8) configure_max_lease_time ;;
+            9) 
+                clear
+                save_configuration ;;
+            10) 
+                if [ $dhcp_changed -eq 1 ]; then
+                    show_message "!!" "You have unsaved changes." $YELLOW
+                    echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
+                    read -r confirm
+                    if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+                        echo ""
+                        sleep 1
+                    else
+                        echo ""
+                        show_message "!" "Quitting without saving." $YELLOW
+                        dhcp_changed=0
+                        read_config "$DEFAULT_DHCP_CONF"
+                        echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+                        sleep 2
+                        break
+                    fi
+                else
+                    break
+                fi
+                ;;
+            *) show_message "X" "Invalid option." $RED ;;
+        esac
+    done
+    clear
 }
 
 configure_interface() {
@@ -256,76 +307,90 @@ configure_dns() {
     done
 }
 
+toggle_interface() {
+    interface_state 
 
+    if [ $INTACTIVE -eq 1 ]; then
+        show_message "!" "Shutting down interface $interface..." $YELLOW
+        progress_bar 7 $YELLOW &
+        nmcli con down "$interface" > /dev/null 2>&1
+        wait
+        show_message "!" "Interface $interface is now down." $GREEN
+        # INTACTIVE=0
+        sleep 3
+    elif [ $INTACTIVE -eq 0 ]; then
+        show_message "!" "Starting up interface $interface..." $YELLOW
+        progress_bar 7 $YELLOW &
+        nmcli con up "$interface" > /dev/null 2>&1
+        wait
+        show_message "!" "Interface $interface is now up." $GREEN
+        # INTACTIVE=1
+        sleep 3
+    else
+        show_message "X" "Could not determine the state of $interface." $RED
+        sleep 2
+    fi
+}
 
+restart_interface() {
+    interface_state
+
+    if [ $INTACTIVE -eq 1 ]; then
+        show_message "!" "Restarting interface $interface..." $YELLOW
+        progress_bar 10 $YELLOW &
+        nmcli con down "$interface" > /dev/null 2>&1
+        sleep 2
+        nmcli con up "$interface" > /dev/null 2>&1
+        wait
+        show_message "!" "Interface $interface has been restarted." $GREEN
+        # INTACTIVE=1
+        sleep 3
+    elif [ $INTACTIVE -eq 0 ]; then
+        show_message "!" "The Interface is currently down." $YELLOW
+        sleep 2
+        show_message "!" "Starting up interface $interface..." $YELLOW
+        progress_bar 7 $YELLOW &
+        nmcli con up "$interface" > /dev/null 2>&1
+        wait
+        show_message "!" "Interface $interface is now up." $GREEN
+        # INTACTIVE=1
+        sleep 3
+    else
+        show_message "X" "Could not determine the state of $interface." $RED
+        sleep 2
+    fi
+}
+
+read_interface_config() {
+    interface_config_file=$1
+    interface=$(grep -Po 'DHCPDARGS=\K[^;]*' "$interface_config_file")
+    ip_prefix=$(nmcli con show "$interface" | grep ipv4.addresses | awk '{print $2}')
+    gateway=$(nmcli con show "$interface" | grep ipv4.gateway | awk '{print $2}')  
+    dns=$(nmcli con show "$interface" | grep ipv4.dns: | awk '{print $2}')
+}
+
+write_interface_config() {
+    interface_config_file=$1
+    cat <<EOL | tee "$interface_config_file" > /dev/null
+# DHCPDARGS is defined by the dhcpd startup script
+DHCPDARGS=$interface
+EOL
+
+    nmcli con mod "$interface" ipv4.addresses "$ip_prefix" ipv4.dns "$dns" ipv4.gateway "$gateway" ipv4.method manual
+}
+    
 save_interface_configuration() {
     clear
     show_title
     show_message "!" "Saving interface configuration..." $YELLOW
     progress_bar 5 $YELLOW &
     write_interface_config "$DEFAULT_INTERFACE_CONF"
+    read_interface_config "$DEFAULT_INTERFACE_CONF"
     wait
     show_message "-" "Interface configuration saved successfully." $GREEN
+    interface_changed=0
     echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
     sleep 4.5
-}
-
-show_dhcp_menu() {
-    show_title
-    echo -e "\t\t\t\t\t ${DHCPCOLOR}CURRENT CONFIG:${NOCOLOR}"
-    echo -e " ${BLUE}[${DHCPCOLOR}1${BLUE}]${NOCOLOR} Subnet: \t\t\t\t [${DHCPCOLOR}$subnet${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}2${BLUE}]${NOCOLOR} Netmask: \t\t\t\t [${DHCPCOLOR}$netmask${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}3${BLUE}]${NOCOLOR} Range: \t\t\t\t [${DHCPCOLOR}$range${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}4${BLUE}]${NOCOLOR} Routers: \t\t\t\t [${DHCPCOLOR}$routers${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}5${BLUE}]${NOCOLOR} Domain Name: \t\t\t [${DHCPCOLOR}$domain_name${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}6${BLUE}]${NOCOLOR} Domain Name Servers: \t\t [${DHCPCOLOR}$domain_name_servers${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}7${BLUE}]${NOCOLOR} Default Lease Time: \t\t [${DHCPCOLOR}$default_lease_time${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}8${BLUE}]${NOCOLOR} Max Lease Time: \t\t\t [${DHCPCOLOR}$max_lease_time${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}9${BLUE}]${NOCOLOR} Save Configuration"
-    echo -e " ${BLUE}[${DHCPCOLOR}10${BLUE}]${NOCOLOR} Back to Main Menu"
-    echo ""
-}
-
-dhcp_menu() {
-    while [ true ]; do
-        show_dhcp_menu
-        echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
-        read -r op
-        case $op in
-            1) configure_subnet ;;
-            2) configure_netmask ;;
-            3) configure_range ;;
-            4) configure_routers ;;
-            5) configure_domain_name ;;
-            6) configure_domain_name_servers ;;
-            7) configure_default_lease_time ;;
-            8) configure_max_lease_time ;;
-            9) 
-                clear
-                save_configuration ;;
-            10) 
-                if [ $dhcp_changed ]; then
-                    show_message "!!" "You have unsaved changes." $YELLOW
-                    echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
-                    read -r confirm
-                    if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
-                        show_message "!" "Quitting without saving." $YELLOW
-                        echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
-                        sleep 2
-                        break
-                    else
-                        echo ""
-                        save_configuration
-                        sleep 2  
-                    fi
-                else
-                    break
-                fi
-                ;;
-            *) show_message "X" "Invalid option." $RED ;;
-        esac
-    done
-    clear
 }
 
 show_interface_menu() {
@@ -336,12 +401,20 @@ show_interface_menu() {
     echo -e " ${BLUE}[${DHCPCOLOR}3${BLUE}]${NOCOLOR} Gateway: \t\t\t\t [${DHCPCOLOR}$gateway${NOCOLOR}]"
     echo -e " ${BLUE}[${DHCPCOLOR}4${BLUE}]${NOCOLOR} DNS: \t\t\t\t [${DHCPCOLOR}$dns${NOCOLOR}]"
     echo -e " ${BLUE}[${DHCPCOLOR}5${BLUE}]${NOCOLOR} Save Configuration"
-    echo -e " ${BLUE}[${DHCPCOLOR}6${BLUE}]${NOCOLOR} Back to Main Menu"
+    echo ""
+    if [ $INTACTIVE -eq 1 ]; then
+        echo -e " ${BLUE}[${DHCPCOLOR}6${BLUE}]${NOCOLOR} Shut Down Interface"
+    else
+        echo -e " ${BLUE}[${DHCPCOLOR}6${BLUE}]${NOCOLOR} Start Up Interface"
+    fi
+    echo -e " ${BLUE}[${DHCPCOLOR}7${BLUE}]${NOCOLOR} Restart Interface"
+    echo -e " ${BLUE}[${DHCPCOLOR}8${BLUE}]${NOCOLOR} Back to Main Menu"
     echo ""
 }
 
 interface_menu() {
     while [ true ]; do
+        interface_state
         show_interface_menu
         echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
         read -r op
@@ -350,8 +423,37 @@ interface_menu() {
             2) configure_ip_prefix ;;
             3) configure_gateway ;;
             4) configure_dns ;;
-            5) save_interface_configuration ;;
-            6) break ;;
+            5) 
+                clear
+                save_interface_configuration 
+                ;;
+            6) 
+                toggle_interface 
+                ;;
+            7) 
+                restart_interface 
+                ;;
+            8)
+                if [ $interface_changed -eq 1 ]; then
+                    show_message "!!" "You have unsaved changes." $YELLOW
+                    echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
+                    read -r confirm
+                    if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+                        echo ""
+                        sleep 1
+                    else
+                        echo ""
+                        show_message "!" "Quitting without saving." $YELLOW
+                        interface_changed=0
+                        read_config "$DEFAULT_INTERFACE_CONF"
+                        echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+                        sleep 2
+                        break
+                    fi
+                else
+                    break
+                fi
+                ;;
             *) show_message "X" "Invalid option." $RED ;;
         esac
     done
