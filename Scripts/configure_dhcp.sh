@@ -306,8 +306,8 @@ dhcp_menu() {
             10) 
                 if [ $dhcp_changed ]; then
                     show_message "!!" "You have unsaved changes." $YELLOW
-                    read -r confirm
                     echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
+                    read -r confirm
                     if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
                         show_message "!" "Quitting without saving." $YELLOW
                         echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
