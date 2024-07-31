@@ -145,7 +145,7 @@ configure_domain_name() {
     while [ true ]; do
         echo -ne "Enter the domain name (e.g., example.com): "
         read -r domain_name
-        if [ validate_input "$domain_name" '^[a-zA-Z0-9.-]+$' ]; then
+        if validate_input "$domain_name" '^[a-zA-Z0-9.-]+$'; then
             dhcp_changed=1
             break
         else
