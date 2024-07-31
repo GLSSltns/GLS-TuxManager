@@ -73,8 +73,9 @@ EOL
 
 read_interface_config() {
     interface_config_file=$1
-    interface=$(grep -Po 'DHCPDARGS="\K[^"]+' "$interface_config_file")
+    interface=$(grep -Po 'DHCPDARGS=\K[^;]*' "$interface_config_file")
     ip_prefix=$(nmcli con show "$interface" | grep ipv4.addresses | awk '{print $2}')
+    gateway=$(nmcli con show "$interface" | grep ipv4.gateway | awk '{print $2}')  
     dns=$(nmcli con show "$interface" | grep ipv4.dns | awk '{print $2}')
 }
 
@@ -85,9 +86,7 @@ write_interface_config() {
 DHCPDARGS=$interface;
 EOL
 
-    nmcli con mod "$interface" ipv4.addresses "$ip_prefix" ipv4.dns "$dns" ipv4.method manual
-    nmcli con up "$interface"
-    # systemctl restart dhcpd
+    nmcli con mod "$interface" ipv4.addresses "$ip_prefix" ipv4.dns "$dns" ipv4.gateway "$gateway" ipv4.method manual
 }
 
 validate_input() {
@@ -210,7 +209,7 @@ save_configuration() {
 
 configure_interface() {
     while true; do
-        echo -ne "Enter the interface to listen on (e.g., eth0): "
+        echo -ne "Enter the interface to listen on (e.g., enp0s9): "
         read -r interface
         if validate_input "$interface" '^[a-zA-Z0-9]+$'; then
             break
@@ -232,6 +231,18 @@ configure_ip_prefix() {
     done
 }
 
+configure_gateway() {
+    while [[ true ]]; do
+        echo -ne "Enter the gateway (e.g., 192.168.1.1): "
+        read -r gateway
+        if [ validate_input "$gateway" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$' ]; then
+            break
+        else
+            show_message "X" "Invalid gateway format." $RED
+        fi
+    done
+}
+
 configure_dns() {
     while true; do
         echo -ne "Enter the DNS server (e.g., 8.8.8.8): "
@@ -243,6 +254,8 @@ configure_dns() {
         fi
     done
 }
+
+
 
 save_interface_configuration() {
     clear
