@@ -76,7 +76,7 @@ read_interface_config() {
     interface=$(grep -Po 'DHCPDARGS=\K[^;]*' "$interface_config_file")
     ip_prefix=$(nmcli con show "$interface" | grep ipv4.addresses | awk '{print $2}')
     gateway=$(nmcli con show "$interface" | grep ipv4.gateway | awk '{print $2}')  
-    dns=$(nmcli con show "$interface" | grep ipv4.dns | awk '{print $2}')
+    dns=$(nmcli con show "$interface" | grep ipv4.dns: | awk '{print $2}')
     echo $dns
 }
 
