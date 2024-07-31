@@ -93,7 +93,7 @@ configure_subnet() {
     while [ true ]; do
         echo -ne "Enter the subnet (e.g., 192.168.1.0): "
         read -r subnet
-        if [ validate_input "$subnet" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$' ]; then
+        if validate_input "$subnet" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_changed=1
             break
         else
@@ -106,7 +106,7 @@ configure_netmask() {
     while [ true ]; do
         echo -ne "Enter the netmask (e.g., 255.255.255.0): "
         read -r netmask
-        if [ validate_input "$netmask" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$' ]; then
+        if validate_input "$netmask" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_changed=1
             break
         else
@@ -119,7 +119,7 @@ configure_range() {
     while [ true ]; do
         echo -ne "Enter the range (e.g., 192.168.1.100 192.168.1.200): "
         read -r range
-        if [ validate_input "$range" '^[0-9]{1,3}(\.[0-9]{1,3}){3} [0-9]{1,3}(\.[0-9]{1,3}){3}$' ]; then
+        if validate_input "$range" '^[0-9]{1,3}(\.[0-9]{1,3}){3} [0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_changed=1
             break
         else
@@ -132,7 +132,7 @@ configure_routers() {
     while [ true ]; do
         echo -ne "Enter the routers (e.g., 192.168.1.1): "
         read -r routers
-        if [ validate_input "$routers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$' ]; then
+        if validate_input "$routers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_changed=1
             break
         else
@@ -158,7 +158,7 @@ configure_domain_name_servers() {
     while [ true ]; do
         echo -ne "Enter the domain name servers (e.g., 8.8.8.8, 8.8.4.4): "
         read -r domain_name_servers
-        if [ validate_input "$domain_name_servers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}(, [0-9]{1,3}(\.[0-9]{1,3}){3})*$' ]; then
+        if validate_input "$domain_name_servers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}(, [0-9]{1,3}(\.[0-9]{1,3}){3})*$'; then
             dhcp_changed=1
             break
         else
@@ -171,7 +171,7 @@ configure_default_lease_time() {
     while [ true ]; do
         echo -ne "Enter the default lease time (in seconds): "
         read -r default_lease_time
-        if [ validate_input "$default_lease_time" '^[0-9]+$' ]; then
+        if validate_input "$default_lease_time" '^[0-9]+$'; then
             dhcp_changed=1
             break
         else
@@ -184,7 +184,7 @@ configure_max_lease_time() {
     while [ true ]; do
         echo -ne "Enter the max lease time (in seconds): "
         read -r max_lease_time
-        if [ validate_input "$max_lease_time" '^[0-9]+$' ]; then
+        if validate_input "$max_lease_time" '^[0-9]+$'; then
             dhcp_changed=1
             break
         else
@@ -208,7 +208,7 @@ configure_interface() {
     while [ true ]; do
         echo -ne "Enter the interface to listen on (e.g., enp0s9): "
         read -r interface
-        if [ validate_input "$interface" '^[a-zA-Z0-9]+$' ]; then
+        if validate_input "$interface" '^[a-zA-Z0-9]+$'; then
             interface_changed=1
             break
         else
@@ -221,7 +221,7 @@ configure_ip_prefix() {
     while [ true ]; do
         echo -ne "Enter the IP address and prefix (e.g., 192.168.1.1/24): "
         read -r ip_prefix
-        if [ validate_input "$ip_prefix" '^[0-9]{1,3}(\.[0-9]{1,3}){3}/[0-9]+$' ]; then
+        if validate_input "$ip_prefix" '^[0-9]{1,3}(\.[0-9]{1,3}){3}/[0-9]+$'; then
             interface_changed=1
             break
         else
@@ -234,7 +234,7 @@ configure_gateway() {
     while [ true ]; do
         echo -ne "Enter the gateway (e.g., 192.168.1.1): "
         read -r gateway
-        if [ validate_input "$gateway" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$' ]; then
+        if validate_input "$gateway" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             interface_changed=1
             break
         else
@@ -247,7 +247,7 @@ configure_dns() {
     while [ true ]; do
         echo -ne "Enter the DNS server (e.g., 8.8.8.8): "
         read -r dns
-        if [ validate_input "$dns" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$' ]; then
+        if validate_input "$dns" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             interface_changed=1
             break
         else
@@ -306,6 +306,7 @@ dhcp_menu() {
             10) 
                 if [ $dhcp_changed ]; then
                     show_message "!!" "You have unsaved changes." $YELLOW
+                    read -r confirm
                     echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
                     if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
                         show_message "!" "Quitting without saving." $YELLOW
