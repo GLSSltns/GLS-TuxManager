@@ -16,6 +16,10 @@ DHCPCOLOR='\033[1;33m'
 DEFAULT_DHCP_CONF="/etc/dhcp/dhcpd.conf"
 DEFAULT_INTERFACE_CONF="/etc/sysconfig/dhcpd"
 
+dhcp_changed=0
+interface_changed=0
+
+
 show_title() {
     clear
     bash Utils/show_title.sh $DHCPCOLOR
@@ -83,7 +87,7 @@ write_interface_config() {
     interface_config_file=$1
     cat <<EOL | tee "$interface_config_file" > /dev/null
 # DHCPDARGS is defined by the dhcpd startup script
-DHCPDARGS=$interface;
+DHCPDARGS=$interface
 EOL
 
     nmcli con mod "$interface" ipv4.addresses "$ip_prefix" ipv4.dns "$dns" ipv4.gateway "$gateway" ipv4.method manual
@@ -100,10 +104,11 @@ validate_input() {
 }
 
 configure_subnet() {
-    while true; do
+    while [ true ]; do
         echo -ne "Enter the subnet (e.g., 192.168.1.0): "
         read -r subnet
-        if validate_input "$subnet" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        if [ validate_input "$subnet" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$' ]; then
+            dhcp_changed=1
             break
         else
             show_message "X" "Invalid subnet format." $RED
@@ -112,10 +117,11 @@ configure_subnet() {
 }
 
 configure_netmask() {
-    while true; do
+    while [ true ]; do
         echo -ne "Enter the netmask (e.g., 255.255.255.0): "
         read -r netmask
-        if validate_input "$netmask" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        if [ validate_input "$netmask" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$' ]; then
+            dhcp_changed=1
             break
         else
             show_message "X" "Invalid netmask format." $RED
@@ -124,10 +130,11 @@ configure_netmask() {
 }
 
 configure_range() {
-    while true; do
+    while [ true ]; do
         echo -ne "Enter the range (e.g., 192.168.1.100 192.168.1.200): "
         read -r range
-        if validate_input "$range" '^[0-9]{1,3}(\.[0-9]{1,3}){3} [0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        if [ validate_input "$range" '^[0-9]{1,3}(\.[0-9]{1,3}){3} [0-9]{1,3}(\.[0-9]{1,3}){3}$' ]; then
+            dhcp_changed=1
             break
         else
             show_message "X" "Invalid range format." $RED
@@ -136,10 +143,11 @@ configure_range() {
 }
 
 configure_routers() {
-    while true; do
+    while [ true ]; do
         echo -ne "Enter the routers (e.g., 192.168.1.1): "
         read -r routers
-        if validate_input "$routers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        if [ validate_input "$routers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$' ]; then
+            dhcp_changed=1
             break
         else
             show_message "X" "Invalid routers format." $RED
@@ -148,10 +156,11 @@ configure_routers() {
 }
 
 configure_domain_name() {
-    while true; do
+    while [ true ]; do
         echo -ne "Enter the domain name (e.g., example.com): "
         read -r domain_name
-        if validate_input "$domain_name" '^[a-zA-Z0-9.-]+$'; then
+        if [ validate_input "$domain_name" '^[a-zA-Z0-9.-]+$' ]; then
+            dhcp_changed=1
             break
         else
             show_message "X" "Invalid domain name format." $RED
@@ -160,10 +169,11 @@ configure_domain_name() {
 }
 
 configure_domain_name_servers() {
-    while true; do
+    while [ true ]; do
         echo -ne "Enter the domain name servers (e.g., 8.8.8.8, 8.8.4.4): "
         read -r domain_name_servers
-        if validate_input "$domain_name_servers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}(, [0-9]{1,3}(\.[0-9]{1,3}){3})*$'; then
+        if [ validate_input "$domain_name_servers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}(, [0-9]{1,3}(\.[0-9]{1,3}){3})*$' ]; then
+            dhcp_changed=1
             break
         else
             show_message "X" "Invalid domain name servers format." $RED
@@ -172,10 +182,11 @@ configure_domain_name_servers() {
 }
 
 configure_default_lease_time() {
-    while true; do
+    while [ true ]; do
         echo -ne "Enter the default lease time (in seconds): "
         read -r default_lease_time
-        if validate_input "$default_lease_time" '^[0-9]+$'; then
+        if [ validate_input "$default_lease_time" '^[0-9]+$' ]; then
+            dhcp_changed=1
             break
         else
             show_message "X" "Invalid default lease time format." $RED
@@ -184,10 +195,11 @@ configure_default_lease_time() {
 }
 
 configure_max_lease_time() {
-    while true; do
+    while [ true ]; do
         echo -ne "Enter the max lease time (in seconds): "
         read -r max_lease_time
-        if validate_input "$max_lease_time" '^[0-9]+$'; then
+        if [ validate_input "$max_lease_time" '^[0-9]+$' ]; then
+            dhcp_changed=1
             break
         else
             show_message "X" "Invalid max lease time format." $RED
@@ -196,7 +208,6 @@ configure_max_lease_time() {
 }
 
 save_configuration() {
-    clear
     show_title
     show_message "!" "Saving DHCP configuration..." $YELLOW
     progress_bar 5 $YELLOW &
@@ -208,10 +219,11 @@ save_configuration() {
 }
 
 configure_interface() {
-    while true; do
+    while [ true ]; do
         echo -ne "Enter the interface to listen on (e.g., enp0s9): "
         read -r interface
-        if validate_input "$interface" '^[a-zA-Z0-9]+$'; then
+        if [ validate_input "$interface" '^[a-zA-Z0-9]+$' ]; then
+            interface_changed=1
             break
         else
             show_message "X" "Invalid interface format." $RED
@@ -220,10 +232,11 @@ configure_interface() {
 }
 
 configure_ip_prefix() {
-    while true; do
+    while [ true ]; do
         echo -ne "Enter the IP address and prefix (e.g., 192.168.1.1/24): "
         read -r ip_prefix
-        if validate_input "$ip_prefix" '^[0-9]{1,3}(\.[0-9]{1,3}){3}/[0-9]+$'; then
+        if [ validate_input "$ip_prefix" '^[0-9]{1,3}(\.[0-9]{1,3}){3}/[0-9]+$' ]; then
+            interface_changed=1
             break
         else
             show_message "X" "Invalid IP address and prefix format." $RED
@@ -232,10 +245,11 @@ configure_ip_prefix() {
 }
 
 configure_gateway() {
-    while [[ true ]]; do
+    while [ true ]; do
         echo -ne "Enter the gateway (e.g., 192.168.1.1): "
         read -r gateway
         if [ validate_input "$gateway" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$' ]; then
+            interface_changed=1
             break
         else
             show_message "X" "Invalid gateway format." $RED
@@ -244,10 +258,11 @@ configure_gateway() {
 }
 
 configure_dns() {
-    while true; do
+    while [ true ]; do
         echo -ne "Enter the DNS server (e.g., 8.8.8.8): "
         read -r dns
-        if validate_input "$dns" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        if [ validate_input "$dns" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$' ]; then
+            interface_changed=1
             break
         else
             show_message "X" "Invalid DNS server format." $RED
@@ -286,7 +301,7 @@ show_dhcp_menu() {
 }
 
 dhcp_menu() {
-    while true; do
+    while [ true ]; do
         show_dhcp_menu
         echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
         read -r op
@@ -299,8 +314,27 @@ dhcp_menu() {
             6) configure_domain_name_servers ;;
             7) configure_default_lease_time ;;
             8) configure_max_lease_time ;;
-            9) save_configuration ;;
-            10) break ;;
+            9) 
+                clear
+                save_configuration ;;
+            10) 
+                if [ $dhcp_changed ]; then
+                    show_message "!!" "You have unsaved changes." $YELLOW
+                    echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
+                    if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+                        show_message "!" "Quitting without saving." $YELLOW
+                        echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+                        sleep 2
+                        break
+                    else
+                        echo ""
+                        save_configuration
+                        sleep 2  
+                    fi
+                else
+                    break
+                fi
+                ;;
             *) show_message "X" "Invalid option." $RED ;;
         esac
     done
@@ -320,7 +354,7 @@ show_interface_menu() {
 }
 
 interface_menu() {
-    while true; do
+    while [ true ]; do
         show_interface_menu
         echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
         read -r op
@@ -338,7 +372,7 @@ interface_menu() {
 }
 
 main_menu() {
-    while true; do
+    while [ true ]; do
         show_title
         echo ""
         echo -e " ${BLUE}[${DHCPCOLOR}1${BLUE}]${NOCOLOR} Configure DHCP"
