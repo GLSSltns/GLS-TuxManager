@@ -216,6 +216,7 @@ configure_max_lease_time() {
 
 save_configuration() {
     show_title
+    echo ""
     show_message "!" "Saving DHCP configuration..." $YELLOW
     progress_bar 5 $YELLOW &
     write_config "$DEFAULT_DHCP_CONF"
@@ -223,8 +224,8 @@ save_configuration() {
     wait
     show_message "-" "DHCP configuration saved successfully." $GREEN
     dhcp_conf_changed=0
-    echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
-    sleep 4.5
+    echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+    sleep 3
 }
 
 show_dhcp_menu() {
@@ -304,7 +305,7 @@ dhcp_menu() {
                             show_message "!" "Quitting without saving." $YELLOW
                             dhcp_conf_changed=0
                             read_config "$DEFAULT_DHCP_CONF"
-                            echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+                            echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
                             sleep 2
                             break
                         fi
@@ -392,20 +393,24 @@ toggle_interface() {
 
     if [ $INTACTIVE -eq 1 ]; then
         show_title
+        echo ""
         show_message "!" "Shutting down interface $interface..." $YELLOW
         progress_bar 7 $YELLOW &
         nmcli con down "$interface" > /dev/null 2>&1
         wait
         show_message "!" "Interface $interface is now down." $GREEN
+        echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
         # INTACTIVE=0
         sleep 3
     elif [ $INTACTIVE -eq 0 ]; then
         show_title
+        echo ""
         show_message "!" "Starting up interface $interface..." $YELLOW
         progress_bar 7 $YELLOW &
         nmcli con up "$interface" > /dev/null 2>&1
         wait
         show_message "!" "Interface $interface is now up." $GREEN
+        echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
         # INTACTIVE=1
         sleep 3
     else
@@ -419,6 +424,7 @@ restart_interface() {
 
     if [ $INTACTIVE -eq 1 ]; then
         show_title
+        echo ""
         show_message "!" "Restarting interface $interface..." $YELLOW
         progress_bar 10 $YELLOW &
         nmcli con down "$interface" > /dev/null 2>&1
@@ -426,17 +432,21 @@ restart_interface() {
         nmcli con up "$interface" > /dev/null 2>&1
         wait
         show_message "!" "Interface $interface has been restarted." $GREEN
+        echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
         # INTACTIVE=1
         sleep 3
     elif [ $INTACTIVE -eq 0 ]; then
         show_title
+        echo ""
         show_message "!" "The Interface is currently down." $YELLOW
         sleep 2
+        echo ""
         show_message "!" "Starting up interface $interface..." $YELLOW
         progress_bar 7 $YELLOW &
         nmcli con up "$interface" > /dev/null 2>&1
         wait
         show_message "!" "Interface $interface is now up." $GREEN
+        echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
         # INTACTIVE=1
         sleep 3
     else
@@ -466,6 +476,7 @@ EOL
 save_interface_configuration() {
     clear
     show_title
+    echo ""
     show_message "!" "Saving interface configuration..." $YELLOW
     progress_bar 5 $YELLOW &
     write_interface_config "$DEFAULT_INTERFACE_CONF"
@@ -473,8 +484,8 @@ save_interface_configuration() {
     wait
     show_message "-" "Interface configuration saved successfully." $GREEN
     interface_conf_changed=0
-    echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
-    sleep 4.5
+    echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+    sleep 3
 }
 
 show_interface_menu() {
