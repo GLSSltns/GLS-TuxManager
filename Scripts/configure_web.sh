@@ -43,7 +43,7 @@ validate_input() {
 }
 
 create_directory() {
-    while true; do
+    while [ true ]; do
         echo -ne "\n Enter the name of the directory to create: "
         read -r dir_name
         if [ -z "$dir_name" ]; then
@@ -67,7 +67,7 @@ create_directory() {
 }
 
 add_file() {
-    while true; do
+    while [ true ]; do
         echo -ne "\n Enter the directory to add the file in (${HTTPCOLOR}relative to $HTTPD_ROOT, or leave empty for root${NOCOLOR}): "
         read -r dir_name
         local target_dir="$HTTPD_ROOT/$dir_name"
@@ -97,7 +97,7 @@ add_file() {
 }
 
 edit_file() {
-    while true; do
+    while [ true ]; do
         echo -ne "\n Enter the name of the file to edit (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r file_name
         if [ -z "$file_name" ]; then
@@ -121,7 +121,7 @@ edit_file() {
 }
 
 view_file_content() {
-    while true; do
+    while [ true ]; do
         echo -ne "\n Enter the name of the file to view (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r file_name
         if [ -z "$file_name" ]; then
@@ -144,7 +144,7 @@ view_file_content() {
 }
 
 remove_file() {
-    while true; do
+    while [ true ]; do
         echo -ne "\n Enter the name of the file to remove (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r file_name
         if [ -z "$file_name" ]; then
@@ -177,7 +177,7 @@ remove_file() {
 }
 
 remove_directory() {
-    while true; do
+    while [ true ]; do
         echo -ne "\n Enter the name of the directory to remove (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r dir_name
         if [ -z "$dir_name" ]; then
@@ -209,7 +209,7 @@ remove_directory() {
 }
 
 upload_file() {
-    while true; do
+    while [ true ]; do
         echo -ne "\n Enter the path of the file to upload (${HTTPCOLOR}e.g., /path/to/local/file.html${NOCOLOR}): "
         read -r local_file_path
         if [ -z "$local_file_path" ]; then
@@ -276,7 +276,7 @@ show_httpd_menu() {
 httpd_menu() {
     clear
     show_httpd_menu
-    while true; do
+    while [ true ]; do
         echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
         read -r op
         if [ -z "$op" ]; then
