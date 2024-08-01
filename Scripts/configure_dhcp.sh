@@ -11,7 +11,8 @@ PINK='\033[1;36m'
 YELLOW='\033[0;33m'
 WHITE='\033[1;37m'
 NOCOLOR='\033[0m'
-DHCPCOLOR='\033[1;33m'
+
+DHCPCOLOR='\033[0;33m'
 
 DEFAULT_DHCP_CONF="/etc/dhcp/dhcpd.conf"
 DEFAULT_INTERFACE_CONF="/etc/sysconfig/dhcpd"

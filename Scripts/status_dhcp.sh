@@ -11,7 +11,8 @@ PINK='\033[1;36m'
 YELLOW='\033[0;33m'
 WHITE='\033[1;37m'
 NOCOLOR='\033[0m'
-DHCPCOLOR='\033[1;33m'
+
+DHCPCOLOR='\033[0;33m'
 
 #Utils
 source Utils/progress_bar.sh
