@@ -30,13 +30,15 @@ check_and_continue() {
     local script_path=$3
 
     if [ $is_installed -eq 0 ]; then
+        echo ""
         show_message "X" "The $service_name Service Package Is Not Installed" $RED 
-        show_message "!" "Install The Package Before Continue" $RED
+        show_message "!" "Install The Package Before Continuing" $RED
+        echo ""
     else
         bash $script_path
         clear
+        show_menu_config
     fi
-    show_menu_config
 }
 
 show_title() {
