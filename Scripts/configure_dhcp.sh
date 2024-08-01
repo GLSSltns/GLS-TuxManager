@@ -391,6 +391,7 @@ toggle_interface() {
     interface_state 
 
     if [ $INTACTIVE -eq 1 ]; then
+        show_title
         show_message "!" "Shutting down interface $interface..." $YELLOW
         progress_bar 7 $YELLOW &
         nmcli con down "$interface" > /dev/null 2>&1
@@ -399,6 +400,7 @@ toggle_interface() {
         # INTACTIVE=0
         sleep 3
     elif [ $INTACTIVE -eq 0 ]; then
+        show_title
         show_message "!" "Starting up interface $interface..." $YELLOW
         progress_bar 7 $YELLOW &
         nmcli con up "$interface" > /dev/null 2>&1
@@ -416,6 +418,7 @@ restart_interface() {
     interface_state
 
     if [ $INTACTIVE -eq 1 ]; then
+        show_title
         show_message "!" "Restarting interface $interface..." $YELLOW
         progress_bar 10 $YELLOW &
         nmcli con down "$interface" > /dev/null 2>&1
@@ -426,6 +429,7 @@ restart_interface() {
         # INTACTIVE=1
         sleep 3
     elif [ $INTACTIVE -eq 0 ]; then
+        show_title
         show_message "!" "The Interface is currently down." $YELLOW
         sleep 2
         show_message "!" "Starting up interface $interface..." $YELLOW
@@ -475,6 +479,7 @@ save_interface_configuration() {
 
 show_interface_menu() {
     show_title
+    interface_state
     echo -e "\t\t\t\t\t ${DHCPCOLOR}CURRENT CONFIG:${NOCOLOR}"
     echo -e " ${BLUE}[${DHCPCOLOR}1${BLUE}]${NOCOLOR} Interface: \t\t\t [${DHCPCOLOR}$interface${NOCOLOR}]"
     echo -e " ${BLUE}[${DHCPCOLOR}2${BLUE}]${NOCOLOR} IP and Prefix: \t\t\t [${DHCPCOLOR}$ip_prefix${NOCOLOR}]"
@@ -493,7 +498,6 @@ show_interface_menu() {
 }
 
 interface_menu() {
-    interface_state
     show_interface_menu
     while [ true ]; do
         interface_state
@@ -538,7 +542,7 @@ interface_menu() {
                         echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
                         read -r confirm
                         if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
-                            echo ""
+                            show_interface_menu
                             sleep 1
                         else
                             echo ""
