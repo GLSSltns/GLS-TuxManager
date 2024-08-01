@@ -47,6 +47,7 @@ create_directory() {
         read -r dir_name
         if [ -z "$dir_name" ]; then
         	show_message "!" "Cancelled." $YELLOW
+        	sleep 3
             break
         else
             if validate_input "$dir_name" '^[a-zA-Z0-9_-]+$'; then
@@ -91,6 +92,7 @@ edit_file() {
         read -r file_name
         if [ -z "$file_name" ]; then
         	show_message "!" "Cancelled." $YELLOW
+        	sleep 3
             break
         fi
         local target_file="$HTTPD_ROOT/$file_name"
@@ -112,6 +114,7 @@ view_file_content() {
         read -r file_name
         if [ -z "$file_name" ]; then
         	show_message "!" "Cancelled." $YELLOW
+        	sleep 3
             break
         fi
         local target_file="$HTTPD_ROOT/$file_name"
@@ -133,6 +136,7 @@ remove_file() {
         read -r file_name
         if [ -z "$file_name" ]; then
         	show_message "!" "Cancelled." $YELLOW
+        	sleep 3
             break
         fi
         local target_file="$HTTPD_ROOT/$file_name"
@@ -161,6 +165,7 @@ remove_directory() {
         read -r dir_name
         if [ -z "$dir_name" ]; then
         	show_message "!" "Cancelled." $YELLOW
+        	sleep 3
             break
         fi
         local target_dir="$HTTPD_ROOT/$dir_name"
