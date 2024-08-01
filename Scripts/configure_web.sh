@@ -47,7 +47,7 @@ create_directory() {
         read -r dir_name
         if [ -z "$dir_name" ]; then
         	show_message "!" "Cancelled." $YELLOW
-        	sleep 3
+        	sleep 2
             break
         else
             if validate_input "$dir_name" '^[a-zA-Z0-9_-]+$'; then
@@ -73,6 +73,7 @@ add_file() {
             read -r file_name
             if [ -z "$file_name" ]; then
             	show_message "!" "Cancelled." $YELLOW
+            	sleep 3
             	break
             elif validate_input "$file_name" '^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$'; then
                 touch "$target_dir/$file_name"
@@ -95,7 +96,7 @@ edit_file() {
         read -r file_name
         if [ -z "$file_name" ]; then
         	show_message "!" "Cancelled." $YELLOW
-        	sleep 3
+        	sleep 2
             break
         fi
         local target_file="$HTTPD_ROOT/$file_name"
@@ -117,7 +118,7 @@ view_file_content() {
         read -r file_name
         if [ -z "$file_name" ]; then
         	show_message "!" "Cancelled." $YELLOW
-        	sleep 3
+        	sleep 2
             break
         fi
         local target_file="$HTTPD_ROOT/$file_name"
@@ -139,7 +140,7 @@ remove_file() {
         read -r file_name
         if [ -z "$file_name" ]; then
         	show_message "!" "Cancelled." $YELLOW
-        	sleep 3
+        	sleep 2
             break
         fi
         local target_file="$HTTPD_ROOT/$file_name"
@@ -168,7 +169,7 @@ remove_directory() {
         read -r dir_name
         if [ -z "$dir_name" ]; then
         	show_message "!" "Cancelled." $YELLOW
-        	sleep 3
+        	sleep 2
             break
         fi
         local target_dir="$HTTPD_ROOT/$dir_name"
@@ -195,7 +196,11 @@ upload_file() {
     while true; do
         echo -ne "Enter the path of the file to upload (e.g., /path/to/local/file.html): "
         read -r local_file_path
-        if [[ -f "$local_file_path" ]]; then
+        if [-z "$local_file_path" ]; then
+        	show_message "!" "Cancelled." $YELLOW
+        	sleep 2
+        	break
+        elif [[ -f "$local_file_path" ]]; then
             echo -ne "Enter the target directory in HTTPD root (relative to $HTTPD_ROOT, or leave empty for root): "
             read -r dir_name
             local target_dir="$HTTPD_ROOT/$dir_name"
