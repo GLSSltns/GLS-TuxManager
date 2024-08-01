@@ -48,7 +48,7 @@ create_directory() {
         if [ -z "$dir_name" ]; then
         	show_message "!" "Cancelled..." $YELLOW
         	sleep 2.5
- .5           break
+            break
         else
             if validate_input "$dir_name" '^[a-zA-Z0-9_-]+$'; then
                 mkdir -p "$HTTPD_ROOT/$dir_name"
@@ -149,7 +149,7 @@ remove_file() {
         if [ -z "$file_name" ]; then
         	show_message "!" "Cancelled..." $YELLOW
         	sleep 2
- .5           break
+            break
         fi
         local target_file="$HTTPD_ROOT/$file_name"
         if [[ -f "$target_file" ]]; then
@@ -182,7 +182,7 @@ remove_directory() {
         if [ -z "$dir_name" ]; then
         	show_message "!" "Cancelled..." $YELLOW
         	sleep 2
- .5           break
+            break
         fi
         local target_dir="$HTTPD_ROOT/$dir_name"
         if [[ -d "$target_dir" ]]; then
@@ -214,7 +214,7 @@ upload_file() {
         if [ -z "$local_file_path" ]; then
         	show_message "!" "Cancelled..." $YELLOW
         	sleep 2
- .5       	break
+        	break
         elif [[ -f "$local_file_path" ]]; then
             echo -ne "\n Enter the target directory in HTTPD root (${HTTPCOLOR}relative to $HTTPD_ROOT, or leave empty for root${NOCOLOR}): "
             read -r dir_name
