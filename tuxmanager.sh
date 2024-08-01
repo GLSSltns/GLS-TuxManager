@@ -134,10 +134,10 @@ menu_config() {
         read -r op
         case $op in
             1)
-                check_and_configure "DHCP" $ISDHCP "Scripts/configure_dhcp.sh"
+                check_and_continue "DHCP" $ISDHCP "Scripts/configure_dhcp.sh"
                 ;;
             2)
-                check_and_configure "WEB" $ISHTTP "Scripts/configure_web.sh"
+                check_and_continue "WEB" $ISHTTP "Scripts/configure_web.sh"
                 ;;
             3)
                 clear
