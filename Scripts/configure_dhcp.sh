@@ -12,7 +12,7 @@ YELLOW='\033[0;33m'
 WHITE='\033[1;37m'
 NOCOLOR='\033[0m'
 
-DHCPCOLOR='\033[0;33m'
+DHCPCOLOR='\033[1;33m'
 
 DEFAULT_DHCP_CONF="/etc/dhcp/dhcpd.conf"
 DEFAULT_INTERFACE_CONF="/etc/sysconfig/dhcpd"
@@ -82,7 +82,9 @@ configure_subnet() {
     while [ true ]; do
         echo -ne "Enter the subnet (e.g., 192.168.1.0): "
         read -r subnet
-        if validate_input "$subnet" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        if [ -z "$subnet" ]; then
+            show_message "!" "Cancelled..." $YELLOW
+        elif validate_input "$subnet" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_conf_changed=1
             break
         else
@@ -95,7 +97,9 @@ configure_netmask() {
     while [ true ]; do
         echo -ne "Enter the netmask (e.g., 255.255.255.0): "
         read -r netmask
-        if validate_input "$netmask" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        if [ -z "$netmask" ]; then
+            show_message "!" "Cancelled..." $YELLOW
+        elif validate_input "$netmask" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_conf_changed=1
             break
         else
@@ -108,7 +112,9 @@ configure_range() {
     while [ true ]; do
         echo -ne "Enter the range (e.g., 192.168.1.100 192.168.1.200): "
         read -r range
-        if validate_input "$range" '^[0-9]{1,3}(\.[0-9]{1,3}){3} [0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        if [ -z "$range" ]; then
+            show_message "!" "Cancelled..." $YELLOW
+        elif validate_input "$range" '^[0-9]{1,3}(\.[0-9]{1,3}){3} [0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_conf_changed=1
             break
         else
@@ -121,7 +127,9 @@ configure_routers() {
     while [ true ]; do
         echo -ne "Enter the routers (e.g., 192.168.1.1): "
         read -r routers
-        if validate_input "$routers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        if [ -z "$routers" ]; then
+            show_message "!" "Cancelled..." $YELLOW
+        elif validate_input "$routers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_conf_changed=1
             break
         else
@@ -134,7 +142,9 @@ configure_domain_name() {
     while [ true ]; do
         echo -ne "Enter the domain name (e.g., example.com): "
         read -r domain_name
-        if validate_input "$domain_name" '^[a-zA-Z0-9.-]+$'; then
+        if [ -z "$domain_name" ]; then
+            show_message "!" "Cancelled..." $YELLOW
+        elif validate_input "$domain_name" '^[a-zA-Z0-9.-]+$'; then
             dhcp_conf_changed=1
             break
         else
@@ -147,7 +157,9 @@ configure_domain_name_servers() {
     while [ true ]; do
         echo -ne "Enter the domain name servers (e.g., 8.8.8.8, 8.8.4.4): "
         read -r domain_name_servers
-        if validate_input "$domain_name_servers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}(, [0-9]{1,3}(\.[0-9]{1,3}){3})*$'; then
+        if [ -z "$domain_name_servers" ]; then
+            show_message "!" "Cancelled..." $YELLOW
+        elif validate_input "$domain_name_servers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}(, [0-9]{1,3}(\.[0-9]{1,3}){3})*$'; then
             dhcp_conf_changed=1
             break
         else
@@ -160,7 +172,9 @@ configure_default_lease_time() {
     while [ true ]; do
         echo -ne "Enter the default lease time (in seconds): "
         read -r default_lease_time
-        if validate_input "$default_lease_time" '^[0-9]+$'; then
+        if [ -z "$default_lease_time" ]; then
+            show_message "!" "Cancelled..." $YELLOW
+        elif validate_input "$default_lease_time" '^[0-9]+$'; then
             dhcp_conf_changed=1
             break
         else
@@ -173,7 +187,9 @@ configure_max_lease_time() {
     while [ true ]; do
         echo -ne "Enter the max lease time (in seconds): "
         read -r max_lease_time
-        if validate_input "$max_lease_time" '^[0-9]+$'; then
+        if [ -z "$max_lease_time" ]; then
+            show_message "!" "Cancelled..." $YELLOW
+        elif validate_input "$max_lease_time" '^[0-9]+$'; then
             dhcp_conf_changed=1
             break
         else
@@ -217,41 +233,45 @@ dhcp_menu() {
         show_dhcp_menu
         echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
         read -r op
-        case $op in
-            1) configure_subnet ;;
-            2) configure_netmask ;;
-            3) configure_range ;;
-            4) configure_routers ;;
-            5) configure_domain_name ;;
-            6) configure_domain_name_servers ;;
-            7) configure_default_lease_time ;;
-            8) configure_max_lease_time ;;
-            9) 
-                clear
-                save_configuration ;;
-            10) 
-                if [ $dhcp_conf_changed -eq 1 ]; then
-                    show_message "!!" "You have unsaved changes." $YELLOW
-                    echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
-                    read -r confirm
-                    if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
-                        echo ""
-                        sleep 1
+        if [ -z "$op" ]; then
+            echo "" > /dev/null
+        else
+            case $op in
+                1) configure_subnet ;;
+                2) configure_netmask ;;
+                3) configure_range ;;
+                4) configure_routers ;;
+                5) configure_domain_name ;;
+                6) configure_domain_name_servers ;;
+                7) configure_default_lease_time ;;
+                8) configure_max_lease_time ;;
+                9) 
+                    clear
+                    save_configuration ;;
+                10) 
+                    if [ $dhcp_conf_changed -eq 1 ]; then
+                        show_message "!!" "You have unsaved changes." $YELLOW
+                        echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
+                        read -r confirm
+                        if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+                            echo ""
+                            sleep 1
+                        else
+                            echo ""
+                            show_message "!" "Quitting without saving." $YELLOW
+                            dhcp_conf_changed=0
+                            read_config "$DEFAULT_DHCP_CONF"
+                            echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+                            sleep 2
+                            break
+                        fi
                     else
-                        echo ""
-                        show_message "!" "Quitting without saving." $YELLOW
-                        dhcp_conf_changed=0
-                        read_config "$DEFAULT_DHCP_CONF"
-                        echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
-                        sleep 2
                         break
                     fi
-                else
-                    break
-                fi
-                ;;
-            *) show_message "X" "Invalid option." $RED ;;
-        esac
+                    ;;
+                *) show_message "X" "Invalid option." $RED ;;
+            esac
+        fi
     done
     clear
 }
@@ -260,7 +280,9 @@ configure_interface() {
     while [ true ]; do
         echo -ne "Enter the interface to listen on (e.g., enp0s9): "
         read -r interface
-        if validate_input "$interface" '^[a-zA-Z0-9]+$'; then
+        if [ -z "$interface" ]; then
+            show_message "!" "Cancelled..." $YELLOW
+        elif validate_input "$interface" '^[a-zA-Z0-9]+$'; then
             interface_conf_changed=1
             break
         else
@@ -273,7 +295,9 @@ configure_ip_prefix() {
     while [ true ]; do
         echo -ne "Enter the IP address and prefix (e.g., 192.168.1.1/24): "
         read -r ip_prefix
-        if validate_input "$ip_prefix" '^[0-9]{1,3}(\.[0-9]{1,3}){3}/[0-9]+$'; then
+        if [ -z "$ip_prefix" ]; then
+            show_message "!" "Cancelled..." $YELLOW
+        elif validate_input "$ip_prefix" '^[0-9]{1,3}(\.[0-9]{1,3}){3}/[0-9]+$'; then
             interface_conf_changed=1
             break
         else
@@ -286,7 +310,9 @@ configure_gateway() {
     while [ true ]; do
         echo -ne "Enter the gateway (e.g., 192.168.1.1): "
         read -r gateway
-        if validate_input "$gateway" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        if [ -z "$gateway" ]; then
+            show_message "!" "Cancelled..." $YELLOW
+        elif validate_input "$gateway" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             interface_conf_changed=1
             break
         else
@@ -299,7 +325,9 @@ configure_dns() {
     while [ true ]; do
         echo -ne "Enter the DNS server (e.g., 8.8.8.8): "
         read -r dns
-        if validate_input "$dns" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        if [ -z "$dns" ]; then
+            show_message "!" "Cancelled..." $YELLOW
+        elif validate_input "$dns" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             interface_conf_changed=1
             break
         else
@@ -419,44 +447,48 @@ interface_menu() {
         show_interface_menu
         echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
         read -r op
-        case $op in
-            1) configure_interface ;;
-            2) configure_ip_prefix ;;
-            3) configure_gateway ;;
-            4) configure_dns ;;
-            5) 
-                clear
-                save_interface_configuration 
-                ;;
-            6) 
-                toggle_interface 
-                ;;
-            7) 
-                restart_interface 
-                ;;
-            8)
-                if [ $interface_conf_changed -eq 1 ]; then
-                    show_message "!!" "You have unsaved changes." $YELLOW
-                    echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
-                    read -r confirm
-                    if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
-                        echo ""
-                        sleep 1
+        if [ -z "$op" ]; then
+            echo "" > /dev/null
+        else
+            case $op in
+                1) configure_interface ;;
+                2) configure_ip_prefix ;;
+                3) configure_gateway ;;
+                4) configure_dns ;;
+                5) 
+                    clear
+                    save_interface_configuration 
+                    ;;
+                6) 
+                    toggle_interface 
+                    ;;
+                7) 
+                    restart_interface 
+                    ;;
+                8)
+                    if [ $interface_conf_changed -eq 1 ]; then
+                        show_message "!!" "You have unsaved changes." $YELLOW
+                        echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
+                        read -r confirm
+                        if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+                            echo ""
+                            sleep 1
+                        else
+                            echo ""
+                            show_message "!" "Quitting without saving." $YELLOW
+                            interface_conf_changed=0
+                            read_config "$DEFAULT_INTERFACE_CONF"
+                            echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+                            sleep 2
+                            break
+                        fi
                     else
-                        echo ""
-                        show_message "!" "Quitting without saving." $YELLOW
-                        interface_conf_changed=0
-                        read_config "$DEFAULT_INTERFACE_CONF"
-                        echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
-                        sleep 2
                         break
                     fi
-                else
-                    break
-                fi
-                ;;
-            *) show_message "X" "Invalid option." $RED ;;
-        esac
+                    ;;
+                *) show_message "X" "Invalid option." $RED ;;
+            esac
+        fi 
     done
     clear
 }
@@ -471,12 +503,16 @@ main_menu() {
         echo ""
         echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
         read -r op
-        case $op in
-            1) dhcp_menu ;;
-            2) interface_menu ;;
-            3) break ;;
-            *) show_message "X" "Invalid option." $RED ;;
-        esac
+        if [ -z "$op" ]; then
+            echo "" > /dev/null
+        else
+            case $op in
+                1) dhcp_menu ;;
+                2) interface_menu ;;
+                3) break ;;
+                *) show_message "X" "Invalid option." $RED ;;
+            esac
+        fi    
     done
 }
 
