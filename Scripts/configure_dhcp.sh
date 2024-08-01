@@ -221,6 +221,7 @@ save_configuration() {
     progress_bar 5 $YELLOW &
     write_config "$DEFAULT_DHCP_CONF"
     read_config "$DEFAULT_DHCP_CONF"
+    sleep 1
     wait
     show_message "-" "DHCP configuration saved successfully." $GREEN
     dhcp_conf_changed=0
@@ -481,6 +482,7 @@ save_interface_configuration() {
     progress_bar 5 $YELLOW &
     write_interface_config "$DEFAULT_INTERFACE_CONF"
     read_interface_config "$DEFAULT_INTERFACE_CONF"
+    sleep 1
     wait
     show_message "-" "Interface configuration saved successfully." $GREEN
     interface_conf_changed=0

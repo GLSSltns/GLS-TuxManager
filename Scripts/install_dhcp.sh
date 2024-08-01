@@ -21,14 +21,6 @@ show_title() {
     bash Utils/show_title.sh $DHCPCOLOR
 }
 
-display_not_installed_message() {
-    local service=$1
-    local flag=$2
-    if [ $flag -eq 0 ]; then
-        echo -ne "\t\t${NOCOLOR}[${RED}${service} is not installed${NOCOLOR}]"
-    fi
-}
-
 show_message()
 {
     local c=$1
@@ -64,13 +56,16 @@ install_pkg() {
         show_message "!" "DHCP Service Is Already Installed.\n" $YELLOW
     else
         show_title
-        show_message "!" 'Installing DHCP...' $YELLOW
+        echo ""
+        show_message "!" 'Downloanding DHCP Package (dhcp-server)...' $YELLOW
+        sleep 1
         progress_bar 10 $YELLOW &
         yum install -y dhcp-server > /dev/null 2>&1
         wait
+        sleep 1
         show_message "-" "DHCP Service Installed Successfully." $GREEN
-        echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
-        sleep 4.5
+        echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+        sleep 3.5
         show_title
         show_menu
     fi
@@ -79,24 +74,25 @@ install_pkg() {
 remove_pkg() {
     if [ $ISINSTALLED -eq 1 ]; then
         show_title
-
+        echo ""
         show_message "!?" "The DHCP Service Package (dhcp-server) Will Be REMOVED!!" $RED
         echo -ne " Is It Okay? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
         read -r confirm
         if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+            sleep 1
             show_message "!" "Removal canceled." $YELLOW
-            echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+            echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
             sleep 2
         else
             echo ""
             sleep 2
-            show_message "!" "Removing DHCP Service..." $YELLOW
+            show_message "!" "Removing DHCP Service Package..." $YELLOW
             progress_bar 10 $YELLOW &
             yum remove -y dhcp-server > /dev/null 2>&1
             wait
-            show_message "-" "DHCP Service Removed Successfully." $GREEN
-            echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
-            sleep 4.5
+            show_message "-" "DHCP Service Package Removed Successfully." $GREEN
+            echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+            sle3p 4.5
         fi
         
         show_title
@@ -111,13 +107,14 @@ update_pkg() {
         local is_update_needed=$(yum check-update dhcp-server | grep -q 'dhcp-server' && echo 1 || echo 0)
         if [ $is_update_needed -eq 1 ]; then
             show_title
-            show_message "!" "Updating DHCP Service..." $YELLOW
+            echo ""
+            show_message "!" "Updating DHCP Service Package (dhcp-server)..." $YELLOW
             progress_bar 10 $YELLOW &
             yum update -y dhcp-server > /dev/null 2>&1
             wait
-            show_message "-" "DHCP Service Updated Successfully." $GREEN
-            echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
-            sleep 4.5
+            show_message "-" "DHCP Service Package Updated Successfully." $GREEN
+            echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+            sleep 3.5
             show_title
             show_menu
         else
