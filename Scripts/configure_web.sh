@@ -20,7 +20,7 @@ config_changed=0
 source Utils/progress_bar.sh
 
 show_title() {
-	clear
+    clear
     bash Utils/show_title.sh $HTTPCOLOR
 }
 
@@ -43,21 +43,22 @@ validate_input() {
 
 create_directory() {
     while true; do
-        echo -ne "Enter the name of the directory to create (leave empty for cancel): "
+        echo -ne "Enter the name of the directory to create: "
         read -r dir_name
         if [ -z "$dir_name" ]; then
-        	break
+        	show_message "!" "Cancelled." $YELLOW
+            break
         else
-	        if validate_input "$dir_name" '^[a-zA-Z0-9_-]+$'; then
-	            mkdir -p "$HTTPD_ROOT/$dir_name"
-	            show_message "+" "Directory '$dir_name' created successfully." $GREEN
-	            config_changed=1
-	            clear
-	            break
-	        else
-	            show_message "X" "Invalid directory name." $RED
-	        fi
-	     fi
+            if validate_input "$dir_name" '^[a-zA-Z0-9_-]+$'; then
+                mkdir -p "$HTTPD_ROOT/$dir_name"
+                show_message "+" "Directory '$dir_name' created successfully." $GREEN
+                config_changed=1
+                clear
+                break
+            else
+                show_message "X" "Invalid directory name." $RED
+            fi
+        fi
     done
 }
 
@@ -88,6 +89,10 @@ edit_file() {
     while true; do
         echo -ne "Enter the name of the file to edit (relative to $HTTPD_ROOT): "
         read -r file_name
+        if [ -z "$file_name" ]; then
+        	show_message "!" "Cancelled." $YELLOW
+            break
+        fi
         local target_file="$HTTPD_ROOT/$file_name"
         if [[ -f "$target_file" ]]; then
             nano "$target_file"
@@ -105,6 +110,10 @@ view_file_content() {
     while true; do
         echo -ne "Enter the name of the file to view (relative to $HTTPD_ROOT): "
         read -r file_name
+        if [ -z "$file_name" ]; then
+        	show_message "!" "Cancelled." $YELLOW
+            break
+        fi
         local target_file="$HTTPD_ROOT/$file_name"
         if [[ -f "$target_file" ]]; then
             echo -e "\n${YELLOW}Content of '$file_name':${NOCOLOR}"
@@ -122,6 +131,10 @@ remove_file() {
     while true; do
         echo -ne "Enter the name of the file to remove (relative to $HTTPD_ROOT): "
         read -r file_name
+        if [ -z "$file_name" ]; then
+        	show_message "!" "Cancelled." $YELLOW
+            break
+        fi
         local target_file="$HTTPD_ROOT/$file_name"
         if [[ -f "$target_file" ]]; then
             echo -ne "Are you sure you want to delete '$file_name'? (y/n): "
@@ -146,6 +159,10 @@ remove_directory() {
     while true; do
         echo -ne "Enter the name of the directory to remove (relative to $HTTPD_ROOT): "
         read -r dir_name
+        if [ -z "$dir_name" ]; then
+        	show_message "!" "Cancelled." $YELLOW
+            break
+        fi
         local target_dir="$HTTPD_ROOT/$dir_name"
         if [[ -d "$target_dir" ]]; then
             echo -ne "Are you sure you want to delete directory '$dir_name' and all its contents? (y/n): "
@@ -225,60 +242,51 @@ show_httpd_menu() {
     echo ""
 }
 httpd_menu() {
-	clear
+    clear
     show_httpd_menu
     while true; do
         echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
         read -r op
         if [ -z "$op" ]; then
-        	clear
-        	show_httpd_menu
+            echo "" > /dev/null
         else
-	        case $op in
-	            1) 
-					# clear
-					list_files 
-					show_httpd_menu
-					;;
-	            2) 
-					# clear
-					create_directory 
-					show_httpd_menu
-					;;
-	            3) 
-					# clear
-					remove_directory 
-					show_httpd_menu
-					;;
-	            4) 
-					# clear
-					add_file 
-					show_httpd_menu
-					;;
-	            5) 
-					# clear
-					upload_file 
-					show_httpd_menu
-					;;
-	            6) 
-					# clear
-					edit_file 
-					show_httpd_menu
-					;;
-	            7) 
-					# clear
-					remove_file 
-					show_httpd_menu
-					;;
-	            8) 
-					# clear
-					view_file_content 
-					show_httpd_menu
-					;;
-	            9) break ;;
-	            *) show_message "X" "Invalid option." $RED ; echo "" ;;
-	        esac
-	    fi
+            case $op in
+                1) 
+                    list_files 
+                    show_httpd_menu
+                    ;;
+                2) 
+                    create_directory 
+                    show_httpd_menu
+                    ;;
+                3) 
+                    remove_directory 
+                    show_httpd_menu
+                    ;;
+                4) 
+                    add_file 
+                    show_httpd_menu
+                    ;;
+                5) 
+                    upload_file 
+                    show_httpd_menu
+                    ;;
+                6) 
+                    edit_file 
+                    show_httpd_menu
+                    ;;
+                7) 
+                    remove_file 
+                    show_httpd_menu
+                    ;;
+                8) 
+                    view_file_content 
+                    show_httpd_menu
+                    ;;
+                9) break ;;
+                *) show_message "X" "Invalid option." $RED ; echo "" ;;
+            esac
+        fi
     done
     clear
 }
