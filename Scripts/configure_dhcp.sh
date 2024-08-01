@@ -84,6 +84,8 @@ configure_subnet() {
         read -r subnet
         if [ -z "$subnet" ]; then
             show_message "!" "Cancelled..." $YELLOW
+            sleep 2.5
+            break
         elif validate_input "$subnet" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_conf_changed=1
             break
@@ -99,6 +101,8 @@ configure_netmask() {
         read -r netmask
         if [ -z "$netmask" ]; then
             show_message "!" "Cancelled..." $YELLOW
+            sleep 2.5
+            break
         elif validate_input "$netmask" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_conf_changed=1
             break
@@ -114,6 +118,8 @@ configure_range() {
         read -r range
         if [ -z "$range" ]; then
             show_message "!" "Cancelled..." $YELLOW
+            sleep 2.5
+            break
         elif validate_input "$range" '^[0-9]{1,3}(\.[0-9]{1,3}){3} [0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_conf_changed=1
             break
@@ -129,6 +135,8 @@ configure_routers() {
         read -r routers
         if [ -z "$routers" ]; then
             show_message "!" "Cancelled..." $YELLOW
+            sleep 2.5
+            break
         elif validate_input "$routers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_conf_changed=1
             break
@@ -144,6 +152,8 @@ configure_domain_name() {
         read -r domain_name
         if [ -z "$domain_name" ]; then
             show_message "!" "Cancelled..." $YELLOW
+            sleep 2.5
+            break
         elif validate_input "$domain_name" '^[a-zA-Z0-9.-]+$'; then
             dhcp_conf_changed=1
             break
@@ -159,6 +169,8 @@ configure_domain_name_servers() {
         read -r domain_name_servers
         if [ -z "$domain_name_servers" ]; then
             show_message "!" "Cancelled..." $YELLOW
+            sleep 2.5
+            break
         elif validate_input "$domain_name_servers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}(, [0-9]{1,3}(\.[0-9]{1,3}){3})*$'; then
             dhcp_conf_changed=1
             break
@@ -174,6 +186,8 @@ configure_default_lease_time() {
         read -r default_lease_time
         if [ -z "$default_lease_time" ]; then
             show_message "!" "Cancelled..." $YELLOW
+            sleep 2.5
+            break
         elif validate_input "$default_lease_time" '^[0-9]+$'; then
             dhcp_conf_changed=1
             break
@@ -189,6 +203,8 @@ configure_max_lease_time() {
         read -r max_lease_time
         if [ -z "$max_lease_time" ]; then
             show_message "!" "Cancelled..." $YELLOW
+            sleep 2.5
+            break
         elif validate_input "$max_lease_time" '^[0-9]+$'; then
             dhcp_conf_changed=1
             break
@@ -282,6 +298,8 @@ configure_interface() {
         read -r interface
         if [ -z "$interface" ]; then
             show_message "!" "Cancelled..." $YELLOW
+            sleep 2.5
+            break
         elif validate_input "$interface" '^[a-zA-Z0-9]+$'; then
             interface_conf_changed=1
             break
@@ -297,6 +315,8 @@ configure_ip_prefix() {
         read -r ip_prefix
         if [ -z "$ip_prefix" ]; then
             show_message "!" "Cancelled..." $YELLOW
+            sleep 2.5
+            break
         elif validate_input "$ip_prefix" '^[0-9]{1,3}(\.[0-9]{1,3}){3}/[0-9]+$'; then
             interface_conf_changed=1
             break
@@ -312,6 +332,8 @@ configure_gateway() {
         read -r gateway
         if [ -z "$gateway" ]; then
             show_message "!" "Cancelled..." $YELLOW
+            sleep 2.5
+            break
         elif validate_input "$gateway" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             interface_conf_changed=1
             break
@@ -327,6 +349,8 @@ configure_dns() {
         read -r dns
         if [ -z "$dns" ]; then
             show_message "!" "Cancelled..." $YELLOW
+            sleep 2.5
+            break
         elif validate_input "$dns" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             interface_conf_changed=1
             break
