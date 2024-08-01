@@ -71,7 +71,10 @@ add_file() {
         if [[ -z "$dir_name" || -d "$target_dir" ]]; then
             echo -ne "Enter the name of the file to create (e.g., index.html, style.css): "
             read -r file_name
-            if validate_input "$file_name" '^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$'; then
+            if [ -z "$file_name" ]; then
+            	show_message "!" "Cancelled." $YELLOW
+            	break
+            elif validate_input "$file_name" '^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$'; then
                 touch "$target_dir/$file_name"
                 show_message "+" "File '$file_name' created successfully in '$target_dir'." $GREEN
                 config_changed=1
