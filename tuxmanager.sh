@@ -34,6 +34,7 @@ check_and_continue() {
         show_message "!" "Install The Package Before Continue" $RED
     else
         bash $script_path
+        clear
     fi
     show_menu_config
 }
@@ -116,7 +117,6 @@ menu_install() {
 
 # MENU: CONFIGURE
 show_menu_config() {
-    clear
     show_title
 
     echo -ne "\n ${BLUE}[${LIGHTBLUE}1${BLUE}]${NOCOLOR} Configure DHCP Service"
