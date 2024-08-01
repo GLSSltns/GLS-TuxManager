@@ -20,7 +20,6 @@ config_changed=0
 source Utils/progress_bar.sh
 
 show_title() {
-    clear
     bash Utils/show_title.sh $HTTPCOLOR
 }
 
@@ -49,6 +48,7 @@ create_directory() {
             mkdir -p "$HTTPD_ROOT/$dir_name"
             show_message "+" "Directory '$dir_name' created successfully." $GREEN
             config_changed=1
+            clear
             break
         else
             show_message "X" "Invalid directory name." $RED
@@ -62,12 +62,13 @@ add_file() {
         read -r dir_name
         local target_dir="$HTTPD_ROOT/$dir_name"
         if [[ -z "$dir_name" || -d "$target_dir" ]]; then
-            echo -ne "Enter the name of the file to create (e.g., index.html): "
+            echo -ne "Enter the name of the file to create (e.g., index.html, style.css): "
             read -r file_name
             if validate_input "$file_name" '^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$'; then
                 touch "$target_dir/$file_name"
                 show_message "+" "File '$file_name' created successfully in '$target_dir'." $GREEN
                 config_changed=1
+                clear
                 break
             else
                 show_message "X" "Invalid file name." $RED
@@ -87,6 +88,7 @@ edit_file() {
             nano "$target_file"
             show_message "+" "File '$file_name' edited successfully." $GREEN
             config_changed=1
+            clear
             break
         else
             show_message "X" "File '$file_name' does not exist." $RED
@@ -123,6 +125,7 @@ remove_file() {
                 rm "$target_file"
                 show_message "-" "File '$file_name' deleted successfully." $GREEN
                 config_changed=1
+                clear
                 break
             else
                 show_message "X" "File deletion cancelled." $RED
@@ -146,6 +149,7 @@ remove_directory() {
                 rm -r "$target_dir"
                 show_message "-" "Directory '$dir_name' deleted successfully." $GREEN
                 config_changed=1
+                clear
                 break
             else
                 show_message "X" "Directory deletion cancelled." $RED
@@ -169,6 +173,7 @@ upload_file() {
                 cp "$local_file_path" "$target_dir/"
                 show_message "+" "File '$(basename "$local_file_path")' uploaded successfully to '$target_dir'." $GREEN
                 config_changed=1
+                clear
                 break
             else
                 show_message "X" "Directory '$dir_name' does not exist." $RED
@@ -188,14 +193,14 @@ list_files() {
 
 display_tree_structure() {
     local dir_path=$1
-    local indent=$2
+    local indent="$2"
 
     for file in "$dir_path"/*; do
         if [[ -d "$file" ]]; then
-            echo -e "${indent}${BLUE}+--${NOCOLOR}$(basename "$file")/"
-            display_tree_structure "$file" "$indent    "
+            echo -e "${indent}${BLUE}+-- ${NOCOLOR}$(basename "$file")/"
+            display_tree_structure "$file" "$indent    |"
         elif [[ -f "$file" ]]; then
-            echo -e "\t${GREEN}+--${NOCOLOR}$(basename "$file")"
+            echo -e "${indent}${GREEN}+-- ${NOCOLOR}$(basename "$file")"
         fi
     done
 }
@@ -203,14 +208,14 @@ display_tree_structure() {
 show_httpd_menu() {
     show_title
     echo -e "\t\t\t\t\t ${HTTPCOLOR}HTTPD CONFIGURATION:${NOCOLOR}"
-    echo -e " ${BLUE}[${HTTPCOLOR}1${BLUE}]${NOCOLOR} Create Directory"
-    echo -e " ${BLUE}[${HTTPCOLOR}2${BLUE}]${NOCOLOR} Add File"
-    echo -e " ${BLUE}[${HTTPCOLOR}3${BLUE}]${NOCOLOR} Edit File"
-    echo -e " ${BLUE}[${HTTPCOLOR}4${BLUE}]${NOCOLOR} View File Content"
-    echo -e " ${BLUE}[${HTTPCOLOR}5${BLUE}]${NOCOLOR} Remove File"
-    echo -e " ${BLUE}[${HTTPCOLOR}6${BLUE}]${NOCOLOR} Remove Directory"
-    echo -e " ${BLUE}[${HTTPCOLOR}7${BLUE}]${NOCOLOR} Upload File"
-    echo -e " ${BLUE}[${HTTPCOLOR}8${BLUE}]${NOCOLOR} List Files"
+    echo -e " ${BLUE}[${HTTPCOLOR}1${BLUE}]${NOCOLOR} List Files"
+    echo -e " ${BLUE}[${HTTPCOLOR}2${BLUE}]${NOCOLOR} Create Directory"
+    echo -e " ${BLUE}[${HTTPCOLOR}3${BLUE}]${NOCOLOR} Remove Directory"
+    echo -e " ${BLUE}[${HTTPCOLOR}4${BLUE}]${NOCOLOR} Add File"
+    echo -e " ${BLUE}[${HTTPCOLOR}5${BLUE}]${NOCOLOR} Upload File"
+    echo -e " ${BLUE}[${HTTPCOLOR}6${BLUE}]${NOCOLOR} Edit File"
+    echo -e " ${BLUE}[${HTTPCOLOR}7${BLUE}]${NOCOLOR} Remove File"
+    echo -e " ${BLUE}[${HTTPCOLOR}8${BLUE}]${NOCOLOR} View File Content"
     echo -e " ${BLUE}[${HTTPCOLOR}9${BLUE}]${NOCOLOR} Exit"
     echo ""
 }
@@ -220,14 +225,14 @@ httpd_menu() {
         echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
         read -r op
         case $op in
-            1) create_directory ;;
-            2) add_file ;;
-            3) edit_file ;;
-            4) view_file_content ;;
-            5) remove_file ;;
-            6) remove_directory ;;
-            7) upload_file ;;
-            8) list_files ;;
+            1) list_files ;;
+            2) create_directory ;;
+            3) remove_directory ;;
+            4) add_file ;;
+            5) upload_file ;;
+            6) edit_file ;;
+            7) remove_file ;;
+            8) view_file_content ;;
             9) break ;;
             *) show_message "X" "Invalid option." $RED ;;
         esac
