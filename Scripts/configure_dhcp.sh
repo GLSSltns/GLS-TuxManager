@@ -245,25 +245,52 @@ show_dhcp_menu() {
 }
 
 dhcp_menu() {
+    clear    
+    show_dhcp_menu
     while [ true ]; do
-        show_dhcp_menu
         echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
         read -r op
         if [ -z "$op" ]; then
             echo "" > /dev/null
         else
             case $op in
-                1) configure_subnet ;;
-                2) configure_netmask ;;
-                3) configure_range ;;
-                4) configure_routers ;;
-                5) configure_domain_name ;;
-                6) configure_domain_name_servers ;;
-                7) configure_default_lease_time ;;
-                8) configure_max_lease_time ;;
+                1) 
+                    configure_subnet
+                    show_dhcp_menu
+                    ;;
+                2) 
+                    configure_netmask
+                    show_dhcp_menu
+                    ;;
+                3) 
+                    configure_range
+                    show_dhcp_menu
+                    ;;
+                4) 
+                    configure_routers
+                    show_dhcp_menu
+                    ;;
+                5) 
+                    configure_domain_name
+                    show_dhcp_menu
+                    ;;
+                6) 
+                    configure_domain_name_servers
+                    show_dhcp_menu
+                    ;;
+                7) 
+                    configure_default_lease_time
+                    show_dhcp_menu
+                    ;;
+                8) 
+                    configure_max_lease_time
+                    show_dhcp_menu
+                    ;;
                 9) 
                     clear
-                    save_configuration ;;
+                    save_configuration 
+                    show_dhcp_menu
+                    ;;
                 10) 
                     if [ $dhcp_conf_changed -eq 1 ]; then
                         show_message "!!" "You have unsaved changes." $YELLOW
@@ -466,28 +493,44 @@ show_interface_menu() {
 }
 
 interface_menu() {
+    interface_state
+    show_interface_menu
     while [ true ]; do
         interface_state
-        show_interface_menu
         echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
         read -r op
         if [ -z "$op" ]; then
             echo "" > /dev/null
         else
             case $op in
-                1) configure_interface ;;
-                2) configure_ip_prefix ;;
-                3) configure_gateway ;;
-                4) configure_dns ;;
+                1) 
+                    configure_interface
+                    show_interface_menu
+                    ;;
+                2) 
+                    configure_ip_prefix
+                    show_interface_menu
+                    ;;
+                3) 
+                    configure_gateway
+                    show_interface_menu
+                    ;;
+                4) 
+                    configure_dns
+                    show_interface_menu
+                    ;;
                 5) 
                     clear
-                    save_interface_configuration 
+                    save_interface_configuration
+                    show_interface_menu
                     ;;
                 6) 
-                    toggle_interface 
+                    toggle_interface
+                    show_interface_menu 
                     ;;
                 7) 
-                    restart_interface 
+                    restart_interface
+                    show_interface_menu
                     ;;
                 8)
                     if [ $interface_conf_changed -eq 1 ]; then
