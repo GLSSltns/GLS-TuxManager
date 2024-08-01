@@ -42,17 +42,21 @@ validate_input() {
 
 create_directory() {
     while true; do
-        echo -ne "Enter the name of the directory to create: "
+        echo -ne "Enter the name of the directory to create (leave empty for cancel): "
         read -r dir_name
-        if validate_input "$dir_name" '^[a-zA-Z0-9_-]+$'; then
-            mkdir -p "$HTTPD_ROOT/$dir_name"
-            show_message "+" "Directory '$dir_name' created successfully." $GREEN
-            config_changed=1
-            clear
-            break
+        if [ -z "$dir_name" ]; then
+        	break
         else
-            show_message "X" "Invalid directory name." $RED
-        fi
+	        if validate_input "$dir_name" '^[a-zA-Z0-9_-]+$'; then
+	            mkdir -p "$HTTPD_ROOT/$dir_name"
+	            show_message "+" "Directory '$dir_name' created successfully." $GREEN
+	            config_changed=1
+	            clear
+	            break
+	        else
+	            show_message "X" "Invalid directory name." $RED
+	        fi
+	     fi
     done
 }
 
