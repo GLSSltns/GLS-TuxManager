@@ -20,6 +20,7 @@ config_changed=0
 source Utils/progress_bar.sh
 
 show_title() {
+	clear
     bash Utils/show_title.sh $HTTPCOLOR
 }
 
