@@ -16,6 +16,8 @@ DHCPCOLOR='\033[1;33m'
 
 ISINSTALLED=0
 
+source Utils/progress_bar.sh
+
 show_title() {
     clear
     bash Utils/show_title.sh $DHCPCOLOR
@@ -30,23 +32,6 @@ show_message()
     echo -e " ${BLUE}[${color}${c}${BLUE}]${color} ${message}${NOCOLOR}"
 }
 
-progress_bar() {
-    local duration=$1
-    local steps=10
-    local interval=$((duration / steps))
-
-    local color=$2
-    # echo ""   
-    for ((i = 0; i <= steps; i++)); do
-        echo -ne "${BLUE} ["
-        for ((j = 0; j < i; j++)); do echo -ne "${color}###"; done
-        for ((j = i; j < steps; j++)); do echo -ne "${NOCOLOR}..."; done
-        echo -ne "${BLUE}] ${color}$((i * 10))${BLUE}%\r"
-
-        sleep $interval
-    done
-    echo -e "${NOCOLOR}"
-}
 is_installed() {
     ISINSTALLED=$(yum list installed | grep -q dhcp-server && echo 1 || echo 0)
 }

@@ -17,22 +17,29 @@ NOCOLOR='\033[0m'
 ISDHCP=0 # Check DHCP install
 ISHTTP=0 # Check HTTP install
 
+source Utils/show_message.sh
+
 check_services_install() {
     ISDHCP=$(yum list installed | grep -q dhcp-server && echo 1 || echo 0)
     ISHTTP=$(yum list installed | grep -q httpd && echo 1 || echo 0)
 }
 
-show_title() {
-    bash Utils/show_title.sh $LIGHTBLUE 
+check_and_continue() {
+    local service_name=$1
+    local is_installed=$2
+    local script_path=$3
+
+    if [ $is_installed -eq 0 ]; then
+        show_message "X" "The $service_name Service Package Is Not Installed" $RED 
+        show_message "!" "Install The Package Before Continue" $RED
+    else
+        bash $script_path
+    fi
+    show_menu_config
 }
 
-show_message()
-{
-    local c=$1
-    local message=$2
-    local color=$3
-
-    echo -e " ${BLUE}[${color}${c}${BLUE}]${color} ${message}${NOCOLOR}"
+show_title() {
+    bash Utils/show_title.sh $LIGHTBLUE 
 }
 
 display_not_installed_message() {
@@ -127,12 +134,10 @@ menu_config() {
         read -r op
         case $op in
             1)
-                bash Scripts/configure_dhcp.sh
-                show_menu_config
+                check_and_configure "DHCP" $ISDHCP "Scripts/configure_dhcp.sh"
                 ;;
             2)
-                bash Scripts/configure_web.sh
-                show_menu_config
+                check_and_configure "WEB" $ISHTTP "Scripts/configure_web.sh"
                 ;;
             3)
                 clear
