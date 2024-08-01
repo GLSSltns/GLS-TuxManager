@@ -28,6 +28,7 @@ check_and_continue() {
     local service_name=$1
     local is_installed=$2
     local script_path=$3
+    local menu_function=$4
 
     if [ $is_installed -eq 0 ]; then
         echo ""
@@ -37,9 +38,10 @@ check_and_continue() {
     else
         bash $script_path
         clear
-        show_menu_config
+        $menu_function  
     fi
 }
+
 
 show_title() {
     bash Utils/show_title.sh $LIGHTBLUE 
@@ -136,10 +138,10 @@ menu_config() {
         read -r op
         case $op in
             1)
-                check_and_continue "DHCP" $ISDHCP "Scripts/configure_dhcp.sh"
+                check_and_continue "DHCP" $ISDHCP "Scripts/configure_dhcp.sh" "show_menu_config"
                 ;;
             2)
-                check_and_continue "WEB" $ISHTTP "Scripts/configure_web.sh"
+                check_and_continue "WEB" $ISHTTP "Scripts/configure_web.sh" "show_menu_config"
                 ;;
             3)
                 clear
