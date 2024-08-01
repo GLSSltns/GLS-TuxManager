@@ -231,7 +231,8 @@ httpd_menu() {
         echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
         read -r op
         if [ -z "$op" ]; then
-        	echo "" > /dev/null
+        	clear
+        	show_httpd_menu
         else
 	        case $op in
 	            1) 
