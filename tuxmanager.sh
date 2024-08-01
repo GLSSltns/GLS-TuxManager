@@ -65,7 +65,7 @@ show_info() {
     echo -e " ${BLUE}@ Leonardo Aceves ${NOCOLOR}\thttps://github.com/L30AM"
     echo -e " ${BLUE}@ Sergio Méndez ${NOCOLOR}\thttps://github.com/sergiomndz15"
     echo -e " ${BLUE}@ Alexandra Gonzáles ${NOCOLOR}\thttps://github.com/AlexMangle"
-    echo -ne " \n ${BLUE}[${LIGHTBLUE}ENTER${BLUE}]${NOCOLOR} Go Back"
+    echo -ne " \n Press ${BLUE}[${LIGHTBLUE}ENTER${BLUE}]${NOCOLOR} To Continue..."
     read -s
     echo ""
     clear

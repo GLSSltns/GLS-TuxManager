@@ -2,16 +2,23 @@
 
 # COLORS
 BLUE='\033[0;1;34;94m'
-YELLOW='\033[0;1;33;93m'
-RED='\033[1;31m'
-GREEN='\033[0;1;32;92m'
+PURPLE='\033[0;1;35;95m'
+ORANGE='\033[0;1;33;93m'
+RED='\033[0;31m'
+GREEN='\033[0;0;32;92m'
+GREEN2='\033[0;32m'
+PINK='\033[1;36m'
+YELLOW='\033[0;33m'
+WHITE='\033[1;37m'
 NOCOLOR='\033[0m'
+
+DHCPCOLOR='\033[1;33m'
 
 ISINSTALLED=0
 
 show_title() {
     clear
-    bash Utils/show_title.sh $YELLOW
+    bash Utils/show_title.sh $DHCPCOLOR
 }
 
 display_not_installed_message() {
@@ -123,10 +130,10 @@ update_pkg() {
 
 show_menu() {
     echo ""
-    echo -e " ${BLUE}[${YELLOW}1${BLUE}]${NOCOLOR} Install DHCP"
-    echo -e " ${BLUE}[${YELLOW}2${BLUE}]${NOCOLOR} Remove DHCP"
-    echo -e " ${BLUE}[${YELLOW}3${BLUE}]${NOCOLOR} Update DHCP"
-    echo -e " ${BLUE}[${YELLOW}4${BLUE}]${NOCOLOR} Go Back"
+    echo -e " ${BLUE}[${DHCPCOLOR}1${BLUE}]${NOCOLOR} Install DHCP"
+    echo -e " ${BLUE}[${DHCPCOLOR}2${BLUE}]${NOCOLOR} Remove DHCP"
+    echo -e " ${BLUE}[${DHCPCOLOR}3${BLUE}]${NOCOLOR} Update DHCP"
+    echo -e " ${BLUE}[${DHCPCOLOR}4${BLUE}]${NOCOLOR} Go Back"
     echo ""
 }
 
