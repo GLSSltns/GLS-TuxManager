@@ -132,7 +132,7 @@ view_file_content() {
         if [[ -f "$target_file" ]]; then
             echo -e "\n${YELLOW}Content of '$file_name':${NOCOLOR}"
             cat "$target_file"
-            echo -ne "\n Press ${BLUE}[${DHCPCOLOR}ENTER${BLUE}]${NOCOLOR} To Continue..."
+            echo -ne "\n Press ${BLUE}[${HTTPCOLOR}ENTER${BLUE}]${NOCOLOR} To Continue..."
             read -r 
             break
         else
@@ -240,7 +240,7 @@ upload_file() {
 list_files() {
     echo -e "\n${YELLOW}Listing files in $HTTPD_ROOT:${NOCOLOR}"
     display_tree_structure "$HTTPD_ROOT" ""
-    echo -e "\n${BLUE}Press ENTER to continue...${NOCOLOR}"
+    echo -ne "\n Press ${BLUE}[${HTTPCOLOR}ENTER${BLUE}]${NOCOLOR} To Continue..."
     read -r
 }
 
