@@ -196,7 +196,7 @@ upload_file() {
     while true; do
         echo -ne "Enter the path of the file to upload (e.g., /path/to/local/file.html): "
         read -r local_file_path
-        if [-z "$local_file_path" ]; then
+        if [ -z "$local_file_path" ]; then
         	show_message "!" "Cancelled." $YELLOW
         	sleep 2
         	break
