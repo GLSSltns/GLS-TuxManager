@@ -43,10 +43,10 @@ validate_input() {
 
 create_directory() {
     while true; do
-        echo -ne "Enter the name of the directory to create: "
+        echo -ne "\n Enter the name of the directory to create: "
         read -r dir_name
         if [ -z "$dir_name" ]; then
-        	show_message "!" "Cancelled." $YELLOW
+        	show_message "!" "Cancelled..." $YELLOW
         	sleep 2
             break
         else
@@ -65,14 +65,14 @@ create_directory() {
 
 add_file() {
     while true; do
-        echo -ne "Enter the directory to add the file in (relative to $HTTPD_ROOT, or leave empty for root): "
+        echo -ne "\n Enter the directory to add the file in (${HTTPCOLOR}relative to $HTTPD_ROOT, or leave empty for root${NOCOLOR}): "
         read -r dir_name
         local target_dir="$HTTPD_ROOT/$dir_name"
         if [[ -z "$dir_name" || -d "$target_dir" ]]; then
-            echo -ne "Enter the name of the file to create (e.g., index.html, style.css): "
+            echo -ne "\n Enter the name of the file to create (${HTTPCOLOR}e.g., index.html, style.css${NOCOLOR}): "
             read -r file_name
             if [ -z "$file_name" ]; then
-            	show_message "!" "Cancelled." $YELLOW
+            	show_message "!" "Cancelled..." $YELLOW
             	sleep 3
             	break
             elif validate_input "$file_name" '^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$'; then
@@ -92,10 +92,10 @@ add_file() {
 
 edit_file() {
     while true; do
-        echo -ne "Enter the name of the file to edit (relative to $HTTPD_ROOT): "
+        echo -ne "\n Enter the name of the file to edit (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r file_name
         if [ -z "$file_name" ]; then
-        	show_message "!" "Cancelled." $YELLOW
+        	show_message "!" "Cancelled..." $YELLOW
         	sleep 2
             break
         fi
@@ -114,10 +114,10 @@ edit_file() {
 
 view_file_content() {
     while true; do
-        echo -ne "Enter the name of the file to view (relative to $HTTPD_ROOT): "
+        echo -ne "\n Enter the name of the file to view (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r file_name
         if [ -z "$file_name" ]; then
-        	show_message "!" "Cancelled." $YELLOW
+        	show_message "!" "Cancelled..." $YELLOW
         	sleep 2
             break
         fi
@@ -136,16 +136,16 @@ view_file_content() {
 
 remove_file() {
     while true; do
-        echo -ne "Enter the name of the file to remove (relative to $HTTPD_ROOT): "
+        echo -ne "\n Enter the name of the file to remove (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r file_name
         if [ -z "$file_name" ]; then
-        	show_message "!" "Cancelled." $YELLOW
+        	show_message "!" "Cancelled..." $YELLOW
         	sleep 2
             break
         fi
         local target_file="$HTTPD_ROOT/$file_name"
         if [[ -f "$target_file" ]]; then
-            echo -ne "Are you sure you want to delete '$file_name'? (y/n): "
+            echo -ne "Are you sure you want to delete '$file_name'? (y/n${NOCOLOR}): "
             read -r confirmation
             if [[ "$confirmation" =~ ^[Yy]$ ]]; then
                 rm "$target_file"
@@ -165,16 +165,16 @@ remove_file() {
 
 remove_directory() {
     while true; do
-        echo -ne "Enter the name of the directory to remove (relative to $HTTPD_ROOT): "
+        echo -ne "\n Enter the name of the directory to remove (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r dir_name
         if [ -z "$dir_name" ]; then
-        	show_message "!" "Cancelled." $YELLOW
+        	show_message "!" "Cancelled..." $YELLOW
         	sleep 2
             break
         fi
         local target_dir="$HTTPD_ROOT/$dir_name"
         if [[ -d "$target_dir" ]]; then
-            echo -ne "Are you sure you want to delete directory '$dir_name' and all its contents? (y/n): "
+            echo -ne "Are you sure you want to delete directory '$dir_name' and all its contents? (y/n${NOCOLOR}): "
             read -r confirmation
             if [[ "$confirmation" =~ ^[Yy]$ ]]; then
                 rm -r "$target_dir"
@@ -194,14 +194,14 @@ remove_directory() {
 
 upload_file() {
     while true; do
-        echo -ne "Enter the path of the file to upload (e.g., /path/to/local/file.html): "
+        echo -ne "\n Enter the path of the file to upload (${HTTPCOLOR}e.g., /path/to/local/file.html${NOCOLOR}): "
         read -r local_file_path
         if [ -z "$local_file_path" ]; then
-        	show_message "!" "Cancelled." $YELLOW
+        	show_message "!" "Cancelled..." $YELLOW
         	sleep 2
         	break
         elif [[ -f "$local_file_path" ]]; then
-            echo -ne "Enter the target directory in HTTPD root (relative to $HTTPD_ROOT, or leave empty for root): "
+            echo -ne "\n Enter the target directory in HTTPD root (${HTTPCOLOR}relative to $HTTPD_ROOT, or leave empty for root${NOCOLOR}): "
             read -r dir_name
             local target_dir="$HTTPD_ROOT/$dir_name"
             if [[ -z "$dir_name" || -d "$target_dir" ]]; then
