@@ -224,19 +224,52 @@ show_httpd_menu() {
     echo ""
 }
 httpd_menu() {
+	clear
+    show_httpd_menu
     while true; do
-        show_httpd_menu
         echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
         read -r op
         case $op in
-            1) list_files ;;
-            2) create_directory ;;
-            3) remove_directory ;;
-            4) add_file ;;
-            5) upload_file ;;
-            6) edit_file ;;
-            7) remove_file ;;
-            8) view_file_content ;;
+            1) 
+				clear
+				list_files 
+				show_httpd_menu
+				;;
+            2) 
+				clear
+				create_directory 
+				show_httpd_menu
+				;;
+            3) 
+				clear
+				remove_directory 
+				show_httpd_menu
+				;;
+            4) 
+				clear
+				add_file 
+				show_httpd_menu
+				;;
+            5) 
+				clear
+				upload_file 
+				show_httpd_menu
+				;;
+            6) 
+				clear
+				edit_file 
+				show_httpd_menu
+				;;
+            7) 
+				clear
+				remove_file 
+				show_httpd_menu
+				;;
+            8) 
+				clear
+				view_file_content 
+				show_httpd_menu
+				;;
             9) break ;;
             *) show_message "X" "Invalid option." $RED ;;
         esac
