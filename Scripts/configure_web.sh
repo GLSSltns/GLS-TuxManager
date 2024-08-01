@@ -231,42 +231,42 @@ httpd_menu() {
         read -r op
         case $op in
             1) 
-				clear
+				# clear
 				list_files 
 				show_httpd_menu
 				;;
             2) 
-				clear
+				# clear
 				create_directory 
 				show_httpd_menu
 				;;
             3) 
-				clear
+				# clear
 				remove_directory 
 				show_httpd_menu
 				;;
             4) 
-				clear
+				# clear
 				add_file 
 				show_httpd_menu
 				;;
             5) 
-				clear
+				# clear
 				upload_file 
 				show_httpd_menu
 				;;
             6) 
-				clear
+				# clear
 				edit_file 
 				show_httpd_menu
 				;;
             7) 
-				clear
+				# clear
 				remove_file 
 				show_httpd_menu
 				;;
             8) 
-				clear
+				# clear
 				view_file_content 
 				show_httpd_menu
 				;;
