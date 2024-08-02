@@ -32,19 +32,24 @@ create_directory() {
         echo -ne "\n Enter the name of the directory to create: "
         read -r dir_name
         if [ -z "$dir_name" ]; then
-        	show_message "!" "Cancelled..." $YELLOW
-        	sleep 3
+            show_message "!" "Cancelled..." $YELLOW
+            sleep 3
             break
         else
             if validate_input_regex "$dir_name" '^[a-zA-Z0-9_-]+$'; then
-                mkdir -p "$HTTPD_ROOT/$dir_name"
-                show_message "+" "Directory '$dir_name' created successfully." $GREEN
-                echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-                echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-                read -r -n 1 -s
-                config_changed=1
-                clear
-                break
+                if [ -d "$HTTPD_ROOT/$dir_name" ]; then
+                    show_message "X" "Directory '$dir_name' already exists." $RED
+                    sleep 3
+                else
+                    mkdir -p "$HTTPD_ROOT/$dir_name"
+                    show_message "+" "Directory '$dir_name' created successfully." $GREEN
+                    echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+                    echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+                    read -r -n 1 -s
+                    config_changed=1
+                    clear
+                    break
+                fi
             else
                 show_message "X" "Invalid directory name." $RED
                 sleep 3
@@ -64,18 +69,23 @@ add_file() {
             echo -ne "\n Enter the name of the file to create (${HTTPCOLOR}e.g., index.html, style.css${NOCOLOR}): "
             read -r file_name
             if [ -z "$file_name" ]; then
-            	show_message "!" "Cancelled..." $YELLOW
-            	sleep 3
-            	break
-            elif validate_input_regex "$file_name" '^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$'; then
-                touch "$target_dir/$file_name"
-                show_message "+" "File '$file_name' created successfully in '$target_dir'." $GREEN
-                echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-                echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-                read -r -n 1 -s
-                config_changed=1
-                clear
+                show_message "!" "Cancelled..." $YELLOW
+                sleep 3
                 break
+            elif validate_input_regex "$file_name" '^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$'; then
+                if [ -f "$target_dir/$file_name" ]; then
+                    show_message "X" "File '$file_name' already exists in '$target_dir'." $RED
+                    sleep 3
+                else
+                    touch "$target_dir/$file_name"
+                    show_message "+" "File '$file_name' created successfully in '$target_dir'." $GREEN
+                    echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+                    echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+                    read -r -n 1 -s
+                    config_changed=1
+                    clear
+                    break
+                fi
             else
                 show_message "X" "Invalid file name." $RED
                 sleep 3
@@ -94,8 +104,8 @@ edit_file() {
         echo -ne "\n Enter the name of the file to edit (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r file_name
         if [ -z "$file_name" ]; then
-        	show_message "!" "Cancelled..." $YELLOW
-        	sleep 3
+            show_message "!" "Cancelled..." $YELLOW
+            sleep 3
             break
         fi
         local target_file="$HTTPD_ROOT/$file_name"
@@ -122,8 +132,8 @@ view_file_content() {
         echo -ne "\n Enter the name of the file to view (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r file_name
         if [ -z "$file_name" ]; then
-        	show_message "!" "Cancelled..." $YELLOW
-        	sleep 3
+            show_message "!" "Cancelled..." $YELLOW
+            sleep 3
             break
         fi
         local target_file="$HTTPD_ROOT/$file_name"
@@ -148,8 +158,8 @@ remove_file() {
         echo -ne "\n Enter the name of the file to remove (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r file_name
         if [ -z "$file_name" ]; then
-        	show_message "!" "Cancelled..." $YELLOW
-        	sleep 2
+            show_message "!" "Cancelled..." $YELLOW
+            sleep 2
             break
         fi
         local target_file="$HTTPD_ROOT/$file_name"
@@ -184,8 +194,8 @@ remove_directory() {
         echo -ne "\n Enter the name of the directory to remove (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r dir_name
         if [ -z "$dir_name" ]; then
-        	show_message "!" "Cancelled..." $YELLOW
-        	sleep 2
+            show_message "!" "Cancelled..." $YELLOW
+            sleep 2
             break
         fi
         local target_dir="$HTTPD_ROOT/$dir_name"
@@ -220,28 +230,34 @@ upload_file() {
         echo -ne "\n Enter the path of the file to upload (${HTTPCOLOR}e.g., /path/to/local/file.html${NOCOLOR}): "
         read -r local_file_path
         if [ -z "$local_file_path" ]; then
-        	show_message "!" "Cancelled..." $YELLOW
-        	sleep 2
-        	break
+            show_message "!" "Cancelled..." $YELLOW
+            sleep 3
+            break
         elif [[ -f "$local_file_path" ]]; then
-            echo -ne "\n Enter the target directory in HTTPD root (${HTTPCOLOR}relative to $HTTPD_ROOT, or leave empty for root${NOCOLOR}): "
+            echo -ne "\n Enter the target directory (${HTTPCOLOR}relative to $HTTPD_ROOT, or leave empty for root${NOCOLOR}): "
             read -r dir_name
             local target_dir="$HTTPD_ROOT/$dir_name"
             if [[ -z "$dir_name" || -d "$target_dir" ]]; then
-                cp "$local_file_path" "$target_dir/"
-                show_message "+" "File '$(basename "$local_file_path")' uploaded successfully to '$target_dir'." $GREEN
-                echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-                echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-                read -r -n 1 -s
-                config_changed=1
-                clear
-                break
+                local target_file_path="$target_dir/$(basename "$local_file_path")"
+                if [[ -f "$target_file_path" ]]; then
+                    show_message "X" "File '$(basename "$local_file_path")' already exists in '$target_dir'." $RED
+                    sleep 3
+                else
+                    cp "$local_file_path" "$target_dir"
+                    show_message "+" "File '$(basename "$local_file_path")' uploaded successfully to '$target_dir'." $GREEN
+                    echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+                    echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+                    read -r -n 1 -s
+                    config_changed=1
+                    clear
+                    break
+                fi
             else
                 show_message "X" "Directory '$dir_name' does not exist." $RED
                 sleep 3
             fi
         else
-            show_message "X" "Local file '$local_file_path' does not exist." $RED
+            show_message "X" "File '$local_file_path' does not exist." $RED
             sleep 3
         fi
     done
@@ -286,6 +302,7 @@ show_httpd_menu() {
     echo -e " ${MAIN_COLOR}[${HTTPCOLOR}9${MAIN_COLOR}]${NOCOLOR} Exit WEB Configuration"
     echo ""
 }
+
 httpd_menu() {
     clear
     show_httpd_menu
