@@ -16,6 +16,7 @@ source Utils/show_title.sh
 
 
 validate_start(){
+    clear
     progress_bar "5" "${YELLOW}"
     if systemctl is-active --quiet dhcpd; then
         echo "${YELLOW}Service is now started"
@@ -25,12 +26,13 @@ validate_start(){
             echo "${GREEN}Service started succesfully"
         else
             echo -e "${RED}Error while starting service"
-            journalctl -xeu dhcpd.service | grep dhcpd /dev/null 2>&1
+            journalctl -xeu dhcpd.service | grep dhcpd > /dev/null 2>&1
         fi
     fi
 }
 
 validate_stop(){
+    clear
     progress_bar "5" "${YELLOW}"
     if systemctl is-active --quiet dhcpd; then
         systemctl stop dhcpd
@@ -46,6 +48,7 @@ validate_stop(){
 }
 
 validate_restart(){
+    clear
     progress_bar "5" "${YELLOW}"
     if systemctl is-active --quiet dhcpd; then
         systemctl restart dhcpd
