@@ -24,7 +24,7 @@ validate_start(){
         if [ $? -eq 0]; then
             echo "${GREEN}Service started succesfully"
         else
-            echo -ne "${RED}Error while starting service"
+            echo -e "${RED}Error while starting service"
             journalctl -xeu dhcpd.service | grep dhcpd /dev/null 2>&1
         fi
     fi
@@ -35,13 +35,13 @@ validate_stop(){
     if systemctl is-active --quiet dhcpd; then
         systemctl stop dhcpd
         if [ $? -eq 0 ]; then
-            echo "${GREEN}Service stopped succesfully"
+            echo -e "${GREEN}Service stopped succesfully"
         else
-            echo "${RED}Error while stopping service"
+            echo -e "${RED}Error while stopping service"
             journalctl -xeu dhcpd.service | grep dhcpd
         fi
     else
-        echo -ne "${YELLOW}Service is not running"
+        echo -e "${YELLOW}Service is not running"
     fi
 }
 
@@ -50,13 +50,13 @@ validate_restart(){
     if systemctl is-active --quiet dhcpd; then
         systemctl restart dhcpd
         if [ $? -eq 0 ]; then
-            echo "${GREEN}Service restarted succesfully"
+            echo -e "${GREEN}Service restarted succesfully"
         else
-            echo -ne "${RED}Error while restarting service"
+            echo -e "${RED}Error while restarting service"
             journalctl -xeu dhcpd.service | grep dhcpd
         fi
     else
-        echo -ne "${YELLOW}Service is not running"
+        echo -e "${YELLOW}Service is not running"
     fi
 }
 
