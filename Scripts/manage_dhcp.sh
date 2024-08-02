@@ -29,7 +29,7 @@ validate_start(){
         echo -e "${YELLOW}Service is already started${NOCOLOR}"
     else
         systemctl start dhcpd > /dev/null 2>&1
-        if [ echo $? -eq 0 ]; then
+        if [ $? -eq 0 ]; then
             echo -e "${GREEN}Service started successfully${NOCOLOR}"
         else
             error=$(journalctl -xeu dhcpd.service | grep -q "/etc/dhcp/dhcpd.conf" > /dev/null 2>&1)
