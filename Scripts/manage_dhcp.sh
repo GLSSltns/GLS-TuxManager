@@ -78,11 +78,13 @@ show_dhcp_config() {
 prompt_confirmation() {
     prompt_message=$1
     while true; do
-        read -rp "$prompt_message [y/n]: " yn
+        echo ""
+        echo -ne "${WHITE} $prompt_message [${GREEN}y${WHITE}/${RED}n${NOCOLOR}]: " yn
+        read -r 
         case $yn in
             [Yy]*) return 0 ;;
             [Nn]*) return 1 ;;
-            *) echo "Please answer yes or no." ;;
+            *) show_message "X" "Prease answer yes (Y) or no (n)." $RED ;;
         esac
     done
 }
@@ -95,8 +97,8 @@ validate_start(){
         show_message "!" "DHCP is already running." $YELLOW
     else
         show_dhcp_config
-        if prompt_confirmation "\n Are you sure you want to start the DHCP service with this configuration?"; then
-            show_message "!" "Starting DHCP service..." $GREEN
+        if prompt_confirmation "Are you sure you want to start the DHCP service with this configuration?"; then
+            show_message "!" "Starting DHCP service..." $YELLOW
             systemctl start dhcpd > /dev/null 2>&1
             is_dhcp_started
             sleep 2
@@ -175,21 +177,24 @@ menu_dhcp() {
         case $op in
             1)
                 # DHCP start
-                echo -e "${YELLOW}Checking for DHCP status"
+                show_message "!" "Checking for DHCP status...\n" $YELLOW
                 sleep 2
                 validate_start
+                menu_dhcp_man
                 ;;
             2)
                 # DHCP restart
-                echo -e "${YELLOW}Checking for DHCP status"
+                show_message "!" "Checking for DHCP status...\n" $YELLOW
                 sleep 2
                 validate_restart
+                menu_dhcp_man
                 ;;
             3)
                 # DHCP stop
-                echo -e "${YELLOW}Checking for DHCP status"
+                show_message "!" "Checking for DHCP status...\n" $YELLOW
                 sleep 2
                 validate_stop
+                menu_dhcp_man
                 ;;
             4)
                 # Go back to main menu
