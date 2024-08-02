@@ -27,23 +27,10 @@ is_dhcp_started(){
 }
 
 show_error_details() {
-    error_type=$1
-    error_details=$2
-
-    echo -e "${RED}Error: $error_type"
-    echo -e "${YELLOW}Details:"
+    error_details=$1
+    echo -e "${RED}Error:${NOCOLOR}"
+    echo -e "${YELLOW}Details:${NOCOLOR}"
     echo -e "${WHITE}$error_details${NOCOLOR}"
-}
-
-categorize_error() {
-    error_log=$1
-    if echo "$error_log" | grep -q "subnet"; then
-        show_error_details "Subnet Configuration Error" "$error_log"
-    elif echo "$error_log" | grep -q "interface"; then
-        show_error_details "Interface Configuration Error" "$error_log"
-    else
-        show_error_details "Unknown Error" "$error_log"
-    fi
 }
 
 read_config() {
@@ -62,7 +49,7 @@ read_interface_config() {
     interface_config_file=$1
     interface=$(grep -Po 'DHCPDARGS=\K[^;]*' "$interface_config_file")
     ip_prefix=$(nmcli con show "$interface" | grep ipv4.addresses | awk '{print $2}')
-    gateway=$(nmcli con show "$interface" | grep ipv4.gateway | awk '{print $2}')
+    gateway=$(nmcli con show "$interface" | grep ipv4.gateway | awk '{print $2}')  
     dns=$(nmcli con show "$interface" | grep ipv4.dns: | awk '{print $2}')
 }
 
@@ -112,7 +99,7 @@ validate_start(){
             else
                 error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
                 show_message $RED "Failed to start DHCP. Check details below."
-                categorize_error "$error_log"
+                show_error_details "$error_log"
             fi
         else
             show_message $YELLOW "DHCP service start aborted by user."
@@ -138,7 +125,7 @@ validate_restart(){
         else
             error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
             show_message $RED "Failed to restart DHCP. Check details below."
-            categorize_error "$error_log"
+            show_error_details "$error_log"
         fi
     fi
 }
@@ -157,7 +144,7 @@ validate_stop(){
             else
                 error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
                 show_message $RED "Failed to stop DHCP. Check details below."
-                categorize_error "$error_log"
+                show_error_details "$error_log"
             fi
         else
             show_message $YELLOW "DHCP service stop aborted by user."
