@@ -39,7 +39,7 @@ check_status() {
     CPU=$(echo "$DHCPDSTATUS" | grep -Po "CPU: \K[\da-z.]*")
 
     # Display the extracted information
-    if [[ "$STATUS" =~ "^active" ]]; then
+    if [[ "$STATUS" == "active" ]]; then
         echo -e "${MAIN_COLOR}Status: ${GREEN}$STATUS"
     else
         echo -e "${MAIN_COLOR}Status: ${RED}$STATUS"
