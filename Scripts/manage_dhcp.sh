@@ -25,7 +25,7 @@ validate_start(){
             echo "${GREEN}Service started succesfully"
         else
             echo -ne "${RED}Error while starting service"
-            journalctl -xeu dhcpd.service | grep dhcpd
+            journalctl -xeu dhcpd.service | grep dhcpd /dev/null 2>&1
         fi
     fi
 }
