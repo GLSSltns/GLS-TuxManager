@@ -14,6 +14,7 @@ NOCOLOR="$(tput sgr0)"
 
 source Utils/show_message.sh
 source Utils/progress_bar.sh
+source Utils/spinner.sh
 
 is_started=0
 
@@ -93,8 +94,7 @@ validate_start(){
     clear
     show_title
     echo ""
-    show_message "!" "Checking for DHCP status..." $YELLOW
-    sleep 2
+    spinner 3 "$(show_message "!" "Checking for DHCP status..." $YELLOW)"
     show_message "!" "Done...\n" $GREEN
     sleep 3
     clear
@@ -176,17 +176,17 @@ validate_stop(){
 
 menu_dhcp_man() {
     show_title $DHCPCOLOR
-    echo -ne "\n${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} Start DHCP service"
-    echo -ne "\n${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} Restart DHCP service"
-    echo -ne "\n${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Stop DHCP service"
-    echo -e "\n${MAIN_COLOR}[${LIGHTBLUE}4${MAIN_COLOR}]${NOCOLOR} Go Back"
+    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} Start DHCP service"
+    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} Restart DHCP service"
+    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Stop DHCP service"
+    echo -e "\n ${MAIN_COLOR}[${LIGHTBLUE}4${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
 menu_dhcp() {
     menu_dhcp_man
     while true; do
-        echo -ne "${MAIN_COLOR}Enter An Option${LIGHTBLUE}\$${MAIN_COLOR}>:${NOCOLOR} "
+        echo -ne "${MAIN_COLOR} Enter An Option${LIGHTBLUE}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
