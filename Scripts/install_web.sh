@@ -93,8 +93,7 @@ update_pkg() {
             show_title
             show_menu
         else
-            show_message "!" "HTTP Service Is Already Up To Date..\n" $GREEN
-        fi
+            show_message "!" "HTTP Service Is Already Up To Date..\n" $YELLOW
     else
         show_message "X" "HTTP Service Is Not Installed, Cannot Update.\n" $RED
     fi
