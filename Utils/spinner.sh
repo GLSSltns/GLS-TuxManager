@@ -9,7 +9,7 @@ spinner() {
   	spin[2]="|"
   	spin[3]="/"
 
- 	echo -e "${msg} ${spin[0]}"
+ 	echo -ne "${msg} ${spin[0]}"
   	local start_time=$(date +%s)
   	while (( $(date +%s) - start_time < duration )); do
   	  	for i in "${spin[@]}"; do
