@@ -93,7 +93,7 @@ update_pkg() {
             show_title
             show_menu
         else
-            show_message "!" "DHCP Service Is Already Up To Date..\n" $GREEN
+            show_message "!" "DHCP Service Is Already Up To Date..\n" $YELLOW
         fi
     else
         show_message "X" "DHCP Service Is Not Installed, Cannot Update.\n" $RED

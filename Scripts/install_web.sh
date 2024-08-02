@@ -23,7 +23,7 @@ show_title() {
 }
 
 is_installed() {
-    is_web_installed=$(yum list installed | grep -q httpD && echo 1 || echo 0)
+    is_web_installed=$(yum list installed | grep -q httpd && echo 1 || echo 0)
 }
 
 install_pkg() {
@@ -85,7 +85,7 @@ update_pkg() {
             echo ""
             show_message "!" "Updating HTTP Service Package (httpd)..." $YELLOW
             progress_bar 10 $YELLOW &
-            yum update -y http > /dev/null 2>&1
+            yum update -y httpd > /dev/null 2>&1
             wait
             show_message "-" "HTTP Service Package Updated Successfully." $GREEN
             echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
