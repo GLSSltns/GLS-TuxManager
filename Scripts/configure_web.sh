@@ -55,6 +55,8 @@ create_directory() {
 
 add_file() {
     while [ true ]; do
+        clear 
+        show_title
         echo -ne "\n Enter the directory to add the file in (${HTTPCOLOR}relative to $HTTPD_ROOT, or leave empty for root${NOCOLOR}): "
         read -r dir_name
         local target_dir="$HTTPD_ROOT/$dir_name"
@@ -68,6 +70,7 @@ add_file() {
             elif validate_input_regex "$file_name" '^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$'; then
                 touch "$target_dir/$file_name"
                 show_message "+" "File '$file_name' created successfully in '$target_dir'." $GREEN
+                echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
                 echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
                 read -r -n 1 -s
                 config_changed=1
@@ -86,6 +89,8 @@ add_file() {
 
 edit_file() {
     while [ true ]; do
+        clear 
+        show_title
         echo -ne "\n Enter the name of the file to edit (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r file_name
         if [ -z "$file_name" ]; then
@@ -97,6 +102,7 @@ edit_file() {
         if [[ -f "$target_file" ]]; then
             nano "$target_file"
             show_message "+" "File '$file_name' edited successfully." $GREEN
+            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
             echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
             read -r -n 1 -s
             config_changed=1
@@ -111,6 +117,8 @@ edit_file() {
 
 view_file_content() {
     while [ true ]; do
+        clear 
+        show_title
         echo -ne "\n Enter the name of the file to view (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r file_name
         if [ -z "$file_name" ]; then
@@ -122,6 +130,7 @@ view_file_content() {
         if [[ -f "$target_file" ]]; then
             echo -e "\n${YELLOW}Content of '$file_name':${NOCOLOR}"
             cat "$target_file"
+            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
             echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
             read -r -n 1 -s
             break
@@ -134,6 +143,8 @@ view_file_content() {
 
 remove_file() {
     while [ true ]; do
+        clear 
+        show_title
         echo -ne "\n Enter the name of the file to remove (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r file_name
         if [ -z "$file_name" ]; then
@@ -148,6 +159,7 @@ remove_file() {
             if [[ "$confirm" =~ ^[Yy]$ ]]; then
                 rm "$target_file"
                 show_message "-" "File '$file_name' deleted successfully." $GREEN
+                echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
                 echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
                 read -r -n 1 -s
                 config_changed=1
@@ -167,6 +179,8 @@ remove_file() {
 
 remove_directory() {
     while [ true ]; do
+        clear 
+        show_title
         echo -ne "\n Enter the name of the directory to remove (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r dir_name
         if [ -z "$dir_name" ]; then
@@ -181,6 +195,7 @@ remove_directory() {
             if [[ "$confirm" =~ ^[Yy]$ ]]; then
                 rm -r "$target_dir"
                 show_message "-" "Directory '$dir_name' deleted successfully." $GREEN
+                echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
                 echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
                 read -r -n 1 -s
                 config_changed=1
@@ -200,6 +215,8 @@ remove_directory() {
 
 upload_file() {
     while [ true ]; do
+        clear 
+        show_title
         echo -ne "\n Enter the path of the file to upload (${HTTPCOLOR}e.g., /path/to/local/file.html${NOCOLOR}): "
         read -r local_file_path
         if [ -z "$local_file_path" ]; then
@@ -213,6 +230,7 @@ upload_file() {
             if [[ -z "$dir_name" || -d "$target_dir" ]]; then
                 cp "$local_file_path" "$target_dir/"
                 show_message "+" "File '$(basename "$local_file_path")' uploaded successfully to '$target_dir'." $GREEN
+                echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
                 echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
                 read -r -n 1 -s
                 config_changed=1
