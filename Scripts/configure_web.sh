@@ -229,15 +229,15 @@ upload_file() {
 list_files() {
     clear
     show_title
-    echo -e "\n${YELLOW}Listing files in $HTTPD_ROOT:${NOCOLOR}"
-    display_tree_structure "$HTTPD_ROOT" ""
+    echo -e "\n ${YELLOW}Listing files in $HTTPD_ROOT:${NOCOLOR}"
+    display_tree_structure "$HTTPD_ROOT" " "
     echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
     echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
     read -r -n 1 -s
 }
 
 display_tree_structure() {
-    local dir_path=$1
+    local dir_path=$1 
     local indent="$2"
 
     for file in "$dir_path"/*; do
