@@ -42,7 +42,8 @@ install_pkg() {
         sleep 1
         show_message "-" "HTTP Service Installed Successfully." $GREEN
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-        sleep 3.5
+        echo -ne " ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+        read -r -n 1 -s
         show_title
         show_menu
     fi
@@ -65,12 +66,14 @@ remove_pkg() {
             wait  # Wait for progress bar to finish
             show_message "-" "HTTP Service Package Removed Successfully." $GREEN
             echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-            sleep 4.5
+            echo -ne " ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+            read -r -n 1 -s
         else
             sleep 1
             show_message "!" "Removal canceled." $YELLOW
             echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-            sleep 2
+            echo -ne " ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+            read -r -n 1 -s
         fi
         
         show_title
@@ -94,7 +97,8 @@ update_pkg() {
             wait  # Wait for progress bar to finish
             show_message "-" "HTTP Service Package Updated Successfully." $GREEN
             echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-            sleep 3.5
+            echo -ne " ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+            read -r -n 1 -s
             show_title
             show_menu
         else

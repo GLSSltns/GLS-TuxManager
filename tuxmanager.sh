@@ -74,8 +74,8 @@ show_info() {
     echo -e " ${MAIN_COLOR}@ Leonardo Aceves ${NOCOLOR}\thttps://github.com/L30AM"
     echo -e " ${MAIN_COLOR}@ Sergio Méndez ${NOCOLOR}\thttps://github.com/sergiomndz15"
     echo -e " ${MAIN_COLOR}@ Alexandra Gonzáles ${NOCOLOR}\thttps://github.com/AlexMangle"
-    echo -ne " \n Press ${MAIN_COLOR}[${LIGHTBLUE}ENTER${MAIN_COLOR}]${NOCOLOR} To Continue..."
-    read -s
+    echo -ne " ${MAIN_COLOR}Press [${LIGHTBLUE}ANY KEY${MAIN_COLOR}] to continue..."
+    read -r -n 1 -s
     echo ""
     clear
 }

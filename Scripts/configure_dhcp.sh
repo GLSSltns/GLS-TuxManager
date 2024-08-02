@@ -208,7 +208,8 @@ save_configuration() {
     show_message "-" "DHCP configuration saved successfully." $GREEN
     dhcp_conf_changed=0
     echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-    sleep 3
+    echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+    read -r -n 1 -s
 }
 
 show_dhcp_menu() {
@@ -286,7 +287,7 @@ dhcp_menu() {
                             dhcp_conf_changed=0
                             read_config "$DEFAULT_DHCP_CONF"
                             echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-                            sleep 2
+                            sleep 3
                             break
                         else
                             echo ""
@@ -383,8 +384,8 @@ toggle_interface() {
         wait
         show_message "!" "Interface $interface is now down." $GREEN
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-        # is_interface_active=0
-        sleep 3
+        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+        read -r -n 1 -s
     elif [ $is_interface_active -eq 0 ]; then
         show_title
         echo ""
@@ -394,10 +395,14 @@ toggle_interface() {
         wait
         show_message "!" "Interface $interface is now up." $GREEN
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}" 
-        sleep 3
+        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+        read -r -n 1 -s
     else
+        echo ""
         show_message "X" "Could not determine the state of $interface." $RED
-        sleep 2
+        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}" 
+        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+        read -r -n 1 -s
     fi
 }
 
@@ -415,7 +420,8 @@ restart_interface() {
         wait
         show_message "!" "Interface $interface has been restarted." $GREEN
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}" 
-        sleep 3
+        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+        read -r -n 1 -s
     elif [ $is_interface_active -eq 0 ]; then
         show_title
         echo ""
@@ -428,10 +434,14 @@ restart_interface() {
         wait
         show_message "!" "Interface $interface is now up." $GREEN
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-        sleep 3
+        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+        read -r -n 1 -s
     else
+        echo ""
         show_message "X" "Could not determine the state of $interface." $RED
-        sleep 2
+        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}" 
+        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+        read -r -n 1 -s
     fi
 }
 
@@ -466,7 +476,8 @@ save_interface_configuration() {
     show_message "-" "Interface configuration saved successfully." $GREEN
     interface_conf_changed=0
     echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-    sleep 3
+    echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+    read -r -n 1 -s
 }
 
 show_interface_menu() {
@@ -539,7 +550,7 @@ interface_menu() {
                             interface_conf_changed=0
                             read_config "$DEFAULT_INTERFACE_CONF"
                             echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-                            sleep 2
+                            sleep 3
                             break
                         else
                             show_interface_menu

@@ -42,7 +42,8 @@ install_pkg() {
         sleep 1
         show_message "-" "DHCP Service Installed Successfully." $GREEN
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-        sleep 3.5
+        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+        read -r -n 1 -s
         show_title
         show_menu
     fi
@@ -70,7 +71,8 @@ remove_pkg() {
             sleep 1
             show_message "!" "Removal canceled." $YELLOW
             echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-            sleep 2
+            echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+            read -r -n 1 -s
         fi
         
         show_title
@@ -94,7 +96,8 @@ update_pkg() {
             wait  # Wait for progress bar to finish
             show_message "-" "DHCP Service Package Updated Successfully." $GREEN
             echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-            sleep 3.5
+            echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+            read -r -n 1 -s
             show_title
             show_menu
         else
