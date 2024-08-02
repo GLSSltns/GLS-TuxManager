@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# COLORS
+# COLORS: Define color codes for terminal output
 MAIN_COLOR='\033[0;1;34;94m'
 DHCPCOLOR='\033[1;33m'
 RED='\033[0;31m'
@@ -10,7 +10,7 @@ YELLOW='\033[0;33m'
 WHITE='\033[1;37m'
 NOCOLOR='\033[0m'
 
-# UTILS
+# UTILS: Source utility scripts for additional functionality
 source Utils/progress_bar.sh
 source Utils/show_message.sh
 source Utils/validate_input_regex.sh
@@ -278,8 +278,7 @@ dhcp_menu() {
                 10) 
                     if [ $dhcp_conf_changed -eq 1 ]; then
                         show_message "!!" "You have unsaved changes." $YELLOW
-                        echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}${MAIN_COLOR}
- NOCOLOR}): "
+                        echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
                         read -r confirm
                         if [[ "$confirm" =~ ^[Yy]$ ]]; then
                             echo ""
@@ -532,8 +531,7 @@ interface_menu() {
                 8)
                     if [ $interface_conf_changed -eq 1 ]; then
                         show_message "!!" "You have unsaved changes." $YELLOW
-                        echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}${MAIN_COLOR}
- NOCOLOR}): "
+                        echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
                         read -r confirm
                         if [[ "$confirm" =~ ^[Yy]$ ]]; then
                             echo ""

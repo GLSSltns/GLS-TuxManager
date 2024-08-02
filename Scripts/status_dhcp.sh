@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# COLORS
+# COLORS: Define color codes for terminal output
 MAIN_COLOR='\033[0;1;34;94m'
 DHCPCOLOR='\033[1;33m'
 RED='\033[0;31m'
@@ -10,7 +10,7 @@ YELLOW='\033[0;33m'
 WHITE='\033[1;37m'
 NOCOLOR='\033[0m'
 
-# UTILS
+# UTILS: Source utility scripts for additional functionality
 source Utils/progress_bar.sh
 source Utils/show_message.sh
 
