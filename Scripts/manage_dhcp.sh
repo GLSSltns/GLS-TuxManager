@@ -94,8 +94,11 @@ validate_start(){
     show_title
     echo ""
     show_message "!" "Checking for DHCP status...\n" $YELLOW
-    echo ""
     sleep 2
+    show_message "!" "Done...\n" $GREEN
+    sleep 3
+    clear
+    show_title
     is_dhcp_started
     if [ $is_started -eq 1 ]; then
         show_message "!" "DHCP is already running." $YELLOW
