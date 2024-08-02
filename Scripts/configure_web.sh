@@ -31,19 +31,20 @@ create_directory() {
         read -r dir_name
         if [ -z "$dir_name" ]; then
         	show_message "!" "Cancelled..." $YELLOW
-        	sleep 2.5
+        	sleep 3
             break
         else
             if validate_input_regex "$dir_name" '^[a-zA-Z0-9_-]+$'; then
                 mkdir -p "$HTTPD_ROOT/$dir_name"
                 show_message "+" "Directory '$dir_name' created successfully." $GREEN
-                sleep 2.5
+                echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+                read -r -n 1 -s
                 config_changed=1
                 clear
                 break
             else
                 show_message "X" "Invalid directory name." $RED
-                sleep 2.5
+                sleep 3
             fi
         fi
     done
@@ -59,22 +60,23 @@ add_file() {
             read -r file_name
             if [ -z "$file_name" ]; then
             	show_message "!" "Cancelled..." $YELLOW
-            	sleep 2.5
+            	sleep 3
             	break
             elif validate_input_regex "$file_name" '^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$'; then
                 touch "$target_dir/$file_name"
                 show_message "+" "File '$file_name' created successfully in '$target_dir'." $GREEN
-                sleep 2.5
+                echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+                read -r -n 1 -s
                 config_changed=1
                 clear
                 break
             else
                 show_message "X" "Invalid file name." $RED
-                sleep 2.5
+                sleep 3
             fi
         else
             show_message "X" "Directory '$dir_name' does not exist." $RED
-            sleep 2.5
+            sleep 3
         fi
     done
 }
@@ -85,20 +87,21 @@ edit_file() {
         read -r file_name
         if [ -z "$file_name" ]; then
         	show_message "!" "Cancelled..." $YELLOW
-        	sleep 2.5
+        	sleep 3
             break
         fi
         local target_file="$HTTPD_ROOT/$file_name"
         if [[ -f "$target_file" ]]; then
             nano "$target_file"
             show_message "+" "File '$file_name' edited successfully." $GREEN
-            sleep 2.5
+            echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+            read -r -n 1 -s
             config_changed=1
             clear
             break
         else
             show_message "X" "File '$file_name' does not exist." $RED
-            sleep 2.5
+            sleep 3
         fi
     done
 }
@@ -109,19 +112,19 @@ view_file_content() {
         read -r file_name
         if [ -z "$file_name" ]; then
         	show_message "!" "Cancelled..." $YELLOW
-        	sleep 2.5
+        	sleep 3
             break
         fi
         local target_file="$HTTPD_ROOT/$file_name"
         if [[ -f "$target_file" ]]; then
             echo -e "\n${YELLOW}Content of '$file_name':${NOCOLOR}"
             cat "$target_file"
-            echo -ne "\n Press ${MAIN_COLOR}[${HTTPCOLOR}ENTER${MAIN_COLOR}]${NOCOLOR} To Continue..."
-            read -r 
+            echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+            read -r -n 1 -s
             break
         else
             show_message "X" "File '$file_name' does not exist." $RED
-            sleep 2.5
+            sleep 3
         fi
     done
 }
@@ -142,19 +145,19 @@ remove_file() {
             if [[ "$confirm" =~ ^[Yy]$ ]]; then
                 rm "$target_file"
                 show_message "-" "File '$file_name' deleted successfully." $GREEN
-                sleep 2.5
-                sleep 3
+                echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+                read -r -n 1 -s
                 config_changed=1
                 clear
                 break
             else
                 show_message "X" "File deletion cancelled." $RED
-                sleep 2.5
+                sleep 3
                 break
             fi
         else
             show_message "X" "File '$file_name' does not exist." $RED
-            sleep 2.5
+            sleep 3
         fi
     done
 }
@@ -175,18 +178,19 @@ remove_directory() {
             if [[ "$confirm" =~ ^[Yy]$ ]]; then
                 rm -r "$target_dir"
                 show_message "-" "Directory '$dir_name' deleted successfully." $GREEN
-                sleep 2.5
+                echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+                read -r -n 1 -s
                 config_changed=1
                 clear
                 break
             else
                 show_message "X" "Directory deletion cancelled." $RED
-                sleep 2.5
+                sleep 3
                 break
             fi
         else
             show_message "X" "Directory '$dir_name' does not exist." $RED
-            sleep 2.5
+            sleep 3
         fi
     done
 }
@@ -206,26 +210,30 @@ upload_file() {
             if [[ -z "$dir_name" || -d "$target_dir" ]]; then
                 cp "$local_file_path" "$target_dir/"
                 show_message "+" "File '$(basename "$local_file_path")' uploaded successfully to '$target_dir'." $GREEN
-                sleep 2.5
+                echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+                read -r -n 1 -s
                 config_changed=1
                 clear
                 break
             else
                 show_message "X" "Directory '$dir_name' does not exist." $RED
-                sleep 2.5
+                sleep 3
             fi
         else
             show_message "X" "Local file '$local_file_path' does not exist." $RED
-            sleep 2.5
+            sleep 3
         fi
     done
 }
 
 list_files() {
+    clear
+    show_title
     echo -e "\n${YELLOW}Listing files in $HTTPD_ROOT:${NOCOLOR}"
     display_tree_structure "$HTTPD_ROOT" ""
-    echo -ne "\n Press ${MAIN_COLOR}[${HTTPCOLOR}ENTER${MAIN_COLOR}]${NOCOLOR} To Continue..."
-    read -r
+    echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+    echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+    read -r -n 1 -s
 }
 
 display_tree_structure() {
@@ -268,7 +276,9 @@ httpd_menu() {
         else
             case $op in
                 1) 
-                    list_files 
+                    clear
+                    show_title
+                    list_files
                     show_httpd_menu
                     ;;
                 2) 
@@ -301,7 +311,7 @@ httpd_menu() {
                     ;;
                 9) break ;;
                 *) show_message "X" "Invalid option." $RED
-                sleep 2.5 ; echo "" ;;
+                sleep 3 ; echo "" ;;
             esac
         fi
     done

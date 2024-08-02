@@ -15,20 +15,32 @@ source Utils/progress_bar.sh
 source Utils/show_message.sh
 
 # FLAGS
-is_dhcp_installed=0 #Track DHCP installation status
-
-show_title() {
-    clear
-    bash Utils/show_title.sh $DHCPCOLOR
-}
+is_dhcp_installed=0 # Track DHCP installation status
+is_connection=0 # Internet connection
 
 # Function to check if DHCP is installed
 is_installed() {
     is_dhcp_installed=$(yum list installed | grep -q dhcp-server && echo 1 || echo 0)
 }
 
+# Function to check internet connection
+check_connection() {
+    is_connection=$(ping -q -w 1 -c 1 8.8.8.8 > /dev/null && echo 1 || echo 0)
+}
+
+show_title() {
+    clear
+    bash Utils/show_title.sh $DHCPCOLOR
+}
+
 # Function to install the DHCP package
 install_pkg() {
+    check_connection
+    if [ $is_connection -eq 0 ]; then
+        show_message "X" "No internet connection. Cannot install DHCP Service.\n" $RED
+        return
+    fi
+
     if [ $is_dhcp_installed -eq 1 ]; then
         show_message "!" "DHCP Service Is Already Installed.\n" $YELLOW
     else
@@ -66,7 +78,7 @@ remove_pkg() {
             wait  # Wait for progress bar to finish
             show_message "-" "DHCP Service Package Removed Successfully." $GREEN
             echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-            sle3p 4.5
+            sleep 4.5
         else
             sleep 1
             show_message "!" "Removal canceled." $YELLOW
@@ -84,6 +96,12 @@ remove_pkg() {
 
 # Function to update the DHCP package
 update_pkg() {
+    check_connection
+    if [ $is_connection -eq 0 ]; then
+        show_message "X" "No internet connection. Cannot update DHCP Service.\n" $RED
+        return
+    fi
+
     if [ $is_dhcp_installed -eq 1 ]; then
         # Check if an update is available for the DHCP server package
         local is_update_needed=$(yum check-update dhcp-server | grep -q 'dhcp-server' && echo 1 || echo 0)

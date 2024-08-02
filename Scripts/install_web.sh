@@ -16,19 +16,31 @@ source Utils/show_message.sh
 
 # FLAGS
 is_web_installed=0 # Track HTTP installation status
-
-show_title() {
-    clear
-    bash Utils/show_title.sh $HTTPCOLOR
-}
+is_connection=0 # Internet connection
 
 # Function to check if HTTP is installed
 is_installed() {
     is_web_installed=$(yum list installed | grep -q httpd && echo 1 || echo 0)
 }
 
+# Function to check internet connection
+check_connection() {
+    is_connection=$(ping -q -w 1 -c 1 8.8.8.8 > /dev/null && echo 1 || echo 0)
+}
+
+show_title() {
+    clear
+    bash Utils/show_title.sh $HTTPCOLOR
+}
+
 # Function to install the HTTP package
 install_pkg() {
+    check_connection
+    if [ $is_connection -eq 0 ]; then
+        show_message "X" "No internet connection. Cannot install HTTP Service.\n" $RED
+        return
+    fi
+
     if [ $is_web_installed -eq 1 ]; then
         show_message "!" "HTTP Service Is Already Installed.\n" $YELLOW
     else
@@ -85,6 +97,12 @@ remove_pkg() {
 
 # Function to update the HTTP package
 update_pkg() {
+    check_connection
+    if [ $is_connection -eq 0 ]; then
+        show_message "X" "No internet connection. Cannot install HTTP Service.\n" $RED
+        return
+    fi
+
     if [ $is_web_installed -eq 1 ]; then
         # Check if an update is available for the HTTP server package
         local is_update_needed=$(yum check-update httpd | grep -q 'httpd' && echo 1 || echo 0)

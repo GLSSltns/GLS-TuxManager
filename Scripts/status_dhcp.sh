@@ -20,7 +20,6 @@ show_title() {
     bash Utils/show_title.sh $DHCPCOLOR
 }
 
-
 # Function to check the status of the DHCP service
 check_status() {
     show_title
