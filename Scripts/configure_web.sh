@@ -38,7 +38,6 @@ create_directory() {
             if validate_input_regex "$dir_name" '^[a-zA-Z0-9_-]+$'; then
                 if [ -d "$HTTPD_ROOT/$dir_name" ]; then
                     show_message "X" "Directory '$dir_name' already exists." $RED
-                    sleep 3
                 else
                     mkdir -p "$HTTPD_ROOT/$dir_name"
                     show_message "+" "Directory '$dir_name' created successfully." $GREEN
@@ -51,7 +50,6 @@ create_directory() {
                 fi
             else
                 show_message "X" "Invalid directory name." $RED
-                sleep 3
             fi
         fi
     done
@@ -74,7 +72,6 @@ add_file() {
             elif validate_input_regex "$file_name" '^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$'; then
                 if [ -f "$target_dir/$file_name" ]; then
                     show_message "X" "File '$file_name' already exists in '$target_dir'." $RED
-                    sleep 3
                 else
                     touch "$target_dir/$file_name"
                     show_message "+" "File '$file_name' created successfully in '$target_dir'." $GREEN
@@ -87,11 +84,9 @@ add_file() {
                 fi
             else
                 show_message "X" "Invalid file name." $RED
-                sleep 3
             fi
         else
             show_message "X" "Directory '$dir_name' does not exist." $RED
-            sleep 3
         fi
     done
 }
@@ -119,7 +114,6 @@ edit_file() {
             break
         else
             show_message "X" "File '$file_name' does not exist." $RED
-            sleep 3
         fi
     done
 }
@@ -145,7 +139,6 @@ view_file_content() {
             break
         else
             show_message "X" "File '$file_name' does not exist." $RED
-            sleep 3
         fi
     done
 }
@@ -176,12 +169,10 @@ remove_file() {
                 break
             else
                 show_message "X" "File deletion cancelled." $RED
-                sleep 3
                 break
             fi
         else
             show_message "X" "File '$file_name' does not exist." $RED
-            sleep 3
         fi
     done
 }
@@ -212,12 +203,10 @@ remove_directory() {
                 break
             else
                 show_message "X" "Directory deletion cancelled." $RED
-                sleep 3
                 break
             fi
         else
             show_message "X" "Directory '$dir_name' does not exist." $RED
-            sleep 3
         fi
     done
 }
@@ -240,7 +229,6 @@ upload_file() {
                 local target_file_path="$target_dir/$(basename "$local_file_path")"
                 if [[ -f "$target_file_path" ]]; then
                     show_message "X" "File '$(basename "$local_file_path")' already exists in '$target_dir'." $RED
-                    sleep 3
                 else
                     cp "$local_file_path" "$target_dir"
                     show_message "+" "File '$(basename "$local_file_path")' uploaded successfully to '$target_dir'." $GREEN
@@ -253,11 +241,9 @@ upload_file() {
                 fi
             else
                 show_message "X" "Directory '$dir_name' does not exist." $RED
-                sleep 3
             fi
         else
             show_message "X" "File '$local_file_path' does not exist." $RED
-            sleep 3
         fi
     done
 }
