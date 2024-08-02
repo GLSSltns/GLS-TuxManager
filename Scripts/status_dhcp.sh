@@ -49,17 +49,13 @@ show_logs() {
     echo -e "${MAIN_COLOR}--------------------------------------------------${NOCOLOR}"
     printf "${MAIN_COLOR}│ ${WHITE}%-10s${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-17s${MAIN_COLOR} │${NOCOLOR}\n" "HOSTNAME" "ADDRESS" "MAC"
     echo -e "${MAIN_COLOR}--------------------------------------------------${NOCOLOR}"
-
-    IFS=$'\n'
-
+    
     for i in $(seq 1 $(echo "$HOSTNAMES" | wc -l)); do
         HOSTNAME=$(echo "$HOSTNAMES" | sed -n "${i}p")
         ADDRESS=$(echo "$ADDRESSES" | sed -n "${i}p")
         MAC=$(echo "$MACS" | sed -n "${i}p")
         printf "${MAIN_COLOR}│ ${WHITE}%-10s${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-17s${MAIN_COLOR} │${NOCOLOR}\n" "$HOSTNAME" "$ADDRESS" "$MAC"
     done
-
-    unset IFS
 
     echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
     echo -e "${MAIN_COLOR}Press any key to return to the main menu.${NOCOLOR}"
