@@ -156,7 +156,6 @@ menu_config() {
 
 # MENU: MANAGE
 show_menu_manage() {
-    clear
     show_title
 
     echo -ne "\n ${BLUE}[${LIGHTBLUE}1${BLUE}]${NOCOLOR} Manage DHCP Service"
@@ -174,12 +173,10 @@ menu_manage() {
         read -r op
         case $op in
             1)
-                bash Scripts/manage_dhcp.sh
-                show_menu_manage
+                check_and_continue "DHCP" $ISDHCP "Scripts/configure_dhcp.sh" "show_menu_manage"
                 ;;
             2)
-                bash Scripts/manage_web.sh
-                show_menu_manage
+                check_and_continue "WEB" $ISHTTP "Scripts/configure_web.sh" "show_menu_manage"
                 ;;
             3)
                 clear
@@ -194,7 +191,6 @@ menu_manage() {
 
 # MENU: STATUS
 show_menu_status() {
-    clear
     show_title
 
     echo -ne "\n ${BLUE}[${LIGHTBLUE}1${BLUE}]${NOCOLOR} DHCP Service Status"
@@ -212,12 +208,10 @@ menu_status() {
         read -r op
         case $op in
             1)
-                bash Scripts/status_dhcp.sh
-                show_menu_status
+                check_and_continue "DHCP" $ISDHCP "Scripts/status_dhcp.sh" "show_menu_status"
                 ;;
             2)
-                bash Scripts/status_web.sh
-                show_menu_status
+                check_and_continue "WEB" $ISHTTP "Scripts/status_web.sh" "show_menu_status"
                 ;;
             3)
                 clear
