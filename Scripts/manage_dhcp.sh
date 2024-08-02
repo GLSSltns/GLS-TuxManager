@@ -14,52 +14,28 @@ source Utils/show_message.sh
 source Utils/progress_bar.sh
 source Utils/show_title.sh
 
+is_Started=0
+
+
+is_dhcp_started(){
+    isStarted=$(systemctl status dhcpd | grep -Po "Active: \K[a-z\(\)_]*" | grep -q ac && echo 1 || echo 0)
+}
 
 validate_start(){
     clear
-    progress_bar "5" "${YELLOW}"
-    if systemctl is-active --quiet dhcpd; then
-        echo "${YELLOW}Service is now started"
+    show_title
+    is_dhcp_started
+    if [ $isStarted -eq 1 ]; then
+        echo -e "${YELLOW}Service is already started${NOCOLOR}"
     else
-        systemctl start dhcpd
-        if [ $? -eq 0 ]; then
-            echo "${GREEN}Service started succesfully"
+        systemctl start dhcpd > /dev/null 2>&1
+        if [ echo $? -eq 0 ]; then
+            echo -e "${GREEN}Service started successfully${NOCOLOR}"
         else
-            echo -e "${RED}Error while starting service"
-            journalctl -xeu dhcpd.service | grep dhcpd > /dev/null 2>&1
+            error=$(journalctl -xeu dhcpd.service | grep -q "/etc/dhcp/dhcpd.conf" > /dev/null 2>&1)
+            echo -e "${RED}Failed to start dhcp"
+            echo "$error"
         fi
-    fi
-}
-
-validate_stop(){
-    clear
-    progress_bar "5" "${YELLOW}"
-    if systemctl is-active --quiet dhcpd; then
-        systemctl stop dhcpd
-        if [ $? -eq 0 ]; then
-            echo -e "${GREEN}Service stopped succesfully"
-        else
-            echo -e "${RED}Error while stopping service"
-            journalctl -xeu dhcpd.service | grep dhcpd
-        fi
-    else
-        echo -e "${YELLOW}Service is not running"
-    fi
-}
-
-validate_restart(){
-    clear
-    progress_bar "5" "${YELLOW}"
-    if systemctl is-active --quiet dhcpd; then
-        systemctl restart dhcpd
-        if [ $? -eq 0 ]; then
-            echo -e "${GREEN}Service restarted succesfully"
-        else
-            echo -e "${RED}Error while restarting service"
-            journalctl -xeu dhcpd.service | grep dhcpd
-        fi
-    else
-        echo -e "${YELLOW}Service is not running"
     fi
 }
 
