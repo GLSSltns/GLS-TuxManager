@@ -18,9 +18,9 @@ source Utils/progress_bar.sh
 is_started=0
 
 show_title() {
+    clear
     bash Utils/show_title.sh $DHCPCOLOR
 }
-
 
 is_dhcp_started(){
     is_started=$(systemctl is-active dhcpd | grep -Po "^active" | grep -q ac && echo 1 || echo 0)
@@ -46,47 +46,91 @@ categorize_error() {
     fi
 }
 
+show_dhcp_config() {
+    echo -e "${YELLOW}Current DHCP Configuration:${NOCOLOR}"
+    grep -E "^(subnet|interface|option)" /etc/dhcp/dhcpd.conf | while read -r line; do
+        echo -e "${WHITE}$line${NOCOLOR}"
+    done
+}
+
+prompt_confirmation() {
+    prompt_message=$1
+    while true; do
+        read -rp "$prompt_message [y/n]: " yn
+        case $yn in
+            [Yy]*) return 0 ;;
+            [Nn]*) return 1 ;;
+            *) echo "Please answer yes or no." ;;
+        esac
+    done
+}
+
 validate_start(){
     clear
+    show_title $YELLOW
     is_dhcp_started
     if [ $is_started -eq 1 ]; then
         show_message $RED "DHCP is already running."
     else
-        systemctl start dhcpd > /dev/null 2>&1
-        is_dhcp_started
-        if [ $is_started -eq 1 ]; then
-            show_message $GREEN "DHCP service started successfully."
+        show_dhcp_config
+        if prompt_confirmation "Are you sure you want to start the DHCP service with this configuration?"; then
+            systemctl start dhcpd > /dev/null 2>&1
+            is_dhcp_started
+            if [ $is_started -eq 1 ]; then
+                show_message $GREEN "DHCP service started successfully."
+            else
+                error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
+                show_message $RED "Failed to start DHCP. Check details below."
+                categorize_error "$error_log"
+            fi
         else
-            error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
-            show_message $RED "Failed to start DHCP. Check details below."
-            categorize_error "$error_log"
+            show_message $YELLOW "DHCP service start aborted by user."
         fi
     fi
 }
 
 validate_restart(){
     clear
-    systemctl restart dhcpd > /dev/null 2>&1
+    show_title $YELLOW
     is_dhcp_started
-    if [ $is_started -eq 1 ]; then
-        show_message $GREEN "DHCP service restarted successfully."
+    if [ $is_started -eq 0 ]; then
+        show_message $RED "DHCP service is not running. Would you like to start it instead?"
+        if prompt_confirmation "Start DHCP service?"; then
+            validate_start
+        else
+            show_message $YELLOW "DHCP service restart aborted by user."
+        fi
     else
-        error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
-        show_message $RED "Failed to restart DHCP. Check details below."
-        categorize_error "$error_log"
+        systemctl restart dhcpd > /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            show_message $GREEN "DHCP service restarted successfully."
+        else
+            error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
+            show_message $RED "Failed to restart DHCP. Check details below."
+            categorize_error "$error_log"
+        fi
     fi
 }
 
 validate_stop(){
     clear
-    systemctl stop dhcpd > /dev/null 2>&1
+    show_title $YELLOW
     is_dhcp_started
     if [ $is_started -eq 0 ]; then
-        show_message $GREEN "DHCP service stopped successfully."
+        show_message $RED "DHCP service is already stopped."
     else
-        error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
-        show_message $RED "Failed to stop DHCP. Check details below."
-        categorize_error "$error_log"
+        if prompt_confirmation "Are you sure you want to stop the DHCP service?"; then
+            systemctl stop dhcpd > /dev/null 2>&1
+            if [ $? -eq 0 ]; then
+                show_message $GREEN "DHCP service stopped successfully."
+            else
+                error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
+                show_message $RED "Failed to stop DHCP. Check details below."
+                categorize_error "$error_log"
+            fi
+        else
+            show_message $YELLOW "DHCP service stop aborted by user."
+        fi
     fi
 }
 
