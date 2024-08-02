@@ -8,7 +8,8 @@ spin[2]="|"
 spin[3]="/"
 
 spinner() {
-  echo -n "[$msg] ${spin[0]}"
+  msg="$1"
+  echo -n "[${msg}] ${spin[0]}"
   while [ kill -0 $pid ]
   do
     for i in "${spin[@]}"
@@ -17,5 +18,5 @@ spinner() {
           sleep 0.1
     done
   done
-  
+
 }
