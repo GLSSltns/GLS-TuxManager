@@ -29,7 +29,7 @@ is_dhcp_started(){
 
 show_error_details() {
     error_log=$(journalctl -xeu dhcpd.service)
-    error_start=$(echo "$error_log" | grep -n "Wrote 0 leases to leases file." | cut -d: -f1)
+    error_start=$(echo "$error_log" | grep -n "Wrote 0 leases to leases file." | head -n 1 | cut -d: -f1)
     if [ -n "$error_start" ]; then
         error_log=$(echo "$error_log" | tail -n +$((error_start+1)))
     fi
