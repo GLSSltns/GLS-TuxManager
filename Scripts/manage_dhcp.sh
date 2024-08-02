@@ -93,7 +93,7 @@ validate_start(){
     clear
     show_title
     echo ""
-    show_message "!" "Checking for DHCP status...\n" $YELLOW
+    show_message "!" "Checking for DHCP status..." $YELLOW
     sleep 2
     show_message "!" "Done...\n" $GREEN
     sleep 3
