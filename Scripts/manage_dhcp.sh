@@ -21,7 +21,7 @@ validate_start(){
         echo "${YELLOW}Service is now started"
     else
         systemctl start dhcpd
-        if [ $? -eq 0]; then
+        if [ $? -eq 0 ]; then
             echo "${GREEN}Service started succesfully"
         else
             echo -e "${RED}Error while starting service"
