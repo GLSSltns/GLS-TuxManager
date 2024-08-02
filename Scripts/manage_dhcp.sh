@@ -19,17 +19,17 @@ show_title() {
 
 menu_dhcp_man() {
     show_title
-    echo -ne "\n${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} Start DHCP service"
-    echo -ne "\n${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} Restart DHCP service"
-    echo -ne "\n${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Stop DHCP service"
-    echo -e "\n${MAIN_COLOR}[${LIGHTBLUE}4${MAIN_COLOR}]${NOCOLOR} Go Back"
+    echo -ne "\n${MAIN_COLOR}[${BLUE}1${MAIN_COLOR}]${NOCOLOR} Start DHCP service"
+    echo -ne "\n${MAIN_COLOR}[${BLUE}2${MAIN_COLOR}]${NOCOLOR} Restart DHCP service"
+    echo -ne "\n${MAIN_COLOR}[${BLUE}3${MAIN_COLOR}]${NOCOLOR} Stop DHCP service"
+    echo -e "\n${MAIN_COLOR}[${BLUE}4${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
 menu_dhcp() {
     menu_dhcp_man
     while true; do
-        echo -ne "${MAIN_COLOR}Enter An Option${LIGHTBLUE}\$${MAIN_COLOR}>:${NOCOLOR} "
+        echo -ne "${MAIN_COLOR}Enter An Option${BLUE}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
