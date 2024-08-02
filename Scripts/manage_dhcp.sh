@@ -101,6 +101,7 @@ validate_start(){
     show_title
     is_dhcp_started
     if [ $is_started -eq 1 ]; then
+        echo ""
         show_message "!" "DHCP is already running." $YELLOW
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
         echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
