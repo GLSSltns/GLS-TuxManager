@@ -13,6 +13,7 @@ NOCOLOR='\033[0m'
 # UTILS
 source Utils/progress_bar.sh
 source Utils/show_message.sh
+source Utils/validate_input_regex.sh
 
 HTTPD_ROOT="/var/www/html"
 
@@ -24,23 +25,6 @@ show_title() {
     bash Utils/show_title.sh $HTTPCOLOR
 }
 
-show_message() {
-    local c=$1
-    local message=$2
-    local color=$3
-    echo -e " ${MAIN_COLOR}[${color}${c}${MAIN_COLOR}]${color} ${message}${NOCOLOR}"
-}
-
-validate_input() {
-    local input=$1
-    local regex=$2
-    if [[ $input =~ $regex ]]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
 create_directory() {
     while [ true ]; do
         echo -ne "\n Enter the name of the directory to create: "
@@ -50,7 +34,7 @@ create_directory() {
         	sleep 2.5
             break
         else
-            if validate_input "$dir_name" '^[a-zA-Z0-9_-]+$'; then
+            if validate_input_regex "$dir_name" '^[a-zA-Z0-9_-]+$'; then
                 mkdir -p "$HTTPD_ROOT/$dir_name"
                 show_message "+" "Directory '$dir_name' created successfully." $GREEN
                 sleep 2.5
@@ -77,7 +61,7 @@ add_file() {
             	show_message "!" "Cancelled..." $YELLOW
             	sleep 2.5
             	break
-            elif validate_input "$file_name" '^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$'; then
+            elif validate_input_regex "$file_name" '^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$'; then
                 touch "$target_dir/$file_name"
                 show_message "+" "File '$file_name' created successfully in '$target_dir'." $GREEN
                 sleep 2.5
@@ -154,8 +138,8 @@ remove_file() {
         local target_file="$HTTPD_ROOT/$file_name"
         if [[ -f "$target_file" ]]; then
             echo -ne "Are you sure you want to delete '$file_name'? (y/n${NOCOLOR}): "
-            read -r confirmation
-            if [[ "$confirmation" =~ ^[Yy]$ ]]; then
+            read -r confirm
+            if [[ "$confirm" =~ ^[Yy]$ ]]; then
                 rm "$target_file"
                 show_message "-" "File '$file_name' deleted successfully." $GREEN
                 sleep 2.5
@@ -187,8 +171,8 @@ remove_directory() {
         local target_dir="$HTTPD_ROOT/$dir_name"
         if [[ -d "$target_dir" ]]; then
             echo -ne "Are you sure you want to delete directory '$dir_name' and all its contents? (y/n${NOCOLOR}): "
-            read -r confirmation
-            if [[ "$confirmation" =~ ^[Yy]$ ]]; then
+            read -r confirm
+            if [[ "$confirm" =~ ^[Yy]$ ]]; then
                 rm -r "$target_dir"
                 show_message "-" "Directory '$dir_name' deleted successfully." $GREEN
                 sleep 2.5

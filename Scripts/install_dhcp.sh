@@ -53,12 +53,7 @@ remove_pkg() {
         show_message "!?" "The DHCP Service Package (dhcp-server) Will Be REMOVED!!" $RED
         echo -ne " Is It Okay? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
         read -r confirm
-        if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
-            sleep 1
-            show_message "!" "Removal canceled." $YELLOW
-            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-            sleep 2
-        else
+        if [[ "$confirm" =~ ^[Yy]$ ]]; then
             echo ""
             sleep 2
             show_message "!" "Removing DHCP Service Package..." $YELLOW
@@ -68,6 +63,11 @@ remove_pkg() {
             show_message "-" "DHCP Service Package Removed Successfully." $GREEN
             echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
             sle3p 4.5
+        else
+            sleep 1
+            show_message "!" "Removal canceled." $YELLOW
+            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+            sleep 2
         fi
         
         show_title

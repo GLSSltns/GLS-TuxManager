@@ -13,6 +13,7 @@ NOCOLOR='\033[0m'
 # UTILS
 source Utils/progress_bar.sh
 source Utils/show_message.sh
+source Utils/validate_input_regex.sh
 
 DEFAULT_DHCP_CONF="/etc/dhcp/dhcpd.conf"
 DEFAULT_INTERFACE_CONF="/etc/sysconfig/dhcpd"
@@ -25,16 +26,6 @@ is_interface_active=0
 show_title() {
     clear
     bash Utils/show_title.sh $DHCPCOLOR
-}
-
-validate_input() {
-    local input=$1
-    local regex=$2
-    if [[ $input =~ $regex ]]; then
-        return 0
-    else
-        return 1
-    fi
 }
 
 interface_state(){
@@ -77,7 +68,7 @@ configure_subnet() {
             show_message "!" "Cancelled..." $YELLOW
             sleep 2.5
             break
-        elif validate_input "$subnet" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        elif validate_input_regex "$subnet" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_conf_changed=1
             break
         else
@@ -94,7 +85,7 @@ configure_netmask() {
             show_message "!" "Cancelled..." $YELLOW
             sleep 2.5
             break
-        elif validate_input "$netmask" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        elif validate_input_regex "$netmask" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_conf_changed=1
             break
         else
@@ -111,7 +102,7 @@ configure_range() {
             show_message "!" "Cancelled..." $YELLOW
             sleep 2.5
             break
-        elif validate_input "$range" '^[0-9]{1,3}(\.[0-9]{1,3}){3} [0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        elif validate_input_regex "$range" '^[0-9]{1,3}(\.[0-9]{1,3}){3} [0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_conf_changed=1
             break
         else
@@ -128,7 +119,7 @@ configure_routers() {
             show_message "!" "Cancelled..." $YELLOW
             sleep 2.5
             break
-        elif validate_input "$routers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        elif validate_input_regex "$routers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_conf_changed=1
             break
         else
@@ -145,7 +136,7 @@ configure_domain_name() {
             show_message "!" "Cancelled..." $YELLOW
             sleep 2.5
             break
-        elif validate_input "$domain_name" '^[a-zA-Z0-9.-]+$'; then
+        elif validate_input_regex "$domain_name" '^[a-zA-Z0-9.-]+$'; then
             dhcp_conf_changed=1
             break
         else
@@ -162,7 +153,7 @@ configure_domain_name_servers() {
             show_message "!" "Cancelled..." $YELLOW
             sleep 2.5
             break
-        elif validate_input "$domain_name_servers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}(, [0-9]{1,3}(\.[0-9]{1,3}){3})*$'; then
+        elif validate_input_regex "$domain_name_servers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}(, [0-9]{1,3}(\.[0-9]{1,3}){3})*$'; then
             dhcp_conf_changed=1
             break
         else
@@ -179,7 +170,7 @@ configure_default_lease_time() {
             show_message "!" "Cancelled..." $YELLOW
             sleep 2.5
             break
-        elif validate_input "$default_lease_time" '^[0-9]+$'; then
+        elif validate_input_regex "$default_lease_time" '^[0-9]+$'; then
             dhcp_conf_changed=1
             break
         else
@@ -196,7 +187,7 @@ configure_max_lease_time() {
             show_message "!" "Cancelled..." $YELLOW
             sleep 2.5
             break
-        elif validate_input "$max_lease_time" '^[0-9]+$'; then
+        elif validate_input_regex "$max_lease_time" '^[0-9]+$'; then
             dhcp_conf_changed=1
             break
         else
@@ -289,10 +280,7 @@ dhcp_menu() {
                         show_message "!!" "You have unsaved changes." $YELLOW
                         echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
                         read -r confirm
-                        if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
-                            echo ""
-                            sleep 1
-                        else
+                        if [[ "$confirm" =~ ^[Yy]$ ]]; then
                             echo ""
                             show_message "!" "Quitting without saving." $YELLOW
                             dhcp_conf_changed=0
@@ -300,6 +288,9 @@ dhcp_menu() {
                             echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
                             sleep 2
                             break
+                        else
+                            echo ""
+                            sleep 1
                         fi
                     else
                         break
@@ -320,7 +311,7 @@ configure_interface() {
             show_message "!" "Cancelled..." $YELLOW
             sleep 2.5
             break
-        elif validate_input "$interface" '^[a-zA-Z0-9]+$'; then
+        elif validate_input_regex "$interface" '^[a-zA-Z0-9]+$'; then
             interface_conf_changed=1
             break
         else
@@ -337,7 +328,7 @@ configure_ip_prefix() {
             show_message "!" "Cancelled..." $YELLOW
             sleep 2.5
             break
-        elif validate_input "$ip_prefix" '^[0-9]{1,3}(\.[0-9]{1,3}){3}/[0-9]+$'; then
+        elif validate_input_regex "$ip_prefix" '^[0-9]{1,3}(\.[0-9]{1,3}){3}/[0-9]+$'; then
             interface_conf_changed=1
             break
         else
@@ -354,7 +345,7 @@ configure_gateway() {
             show_message "!" "Cancelled..." $YELLOW
             sleep 2.5
             break
-        elif validate_input "$gateway" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        elif validate_input_regex "$gateway" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             interface_conf_changed=1
             break
         else
@@ -371,7 +362,7 @@ configure_dns() {
             show_message "!" "Cancelled..." $YELLOW
             sleep 2.5
             break
-        elif validate_input "$dns" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+        elif validate_input_regex "$dns" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             interface_conf_changed=1
             break
         else
@@ -402,8 +393,7 @@ toggle_interface() {
         nmcli con up "$interface" > /dev/null 2>&1
         wait
         show_message "!" "Interface $interface is now up." $GREEN
-        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-        # is_interface_active=1
+        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}" 
         sleep 3
     else
         show_message "X" "Could not determine the state of $interface." $RED
@@ -424,8 +414,7 @@ restart_interface() {
         nmcli con up "$interface" > /dev/null 2>&1
         wait
         show_message "!" "Interface $interface has been restarted." $GREEN
-        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-        # is_interface_active=1
+        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}" 
         sleep 3
     elif [ $is_interface_active -eq 0 ]; then
         show_title
@@ -439,7 +428,6 @@ restart_interface() {
         wait
         show_message "!" "Interface $interface is now up." $GREEN
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-        # is_interface_active=1
         sleep 3
     else
         show_message "X" "Could not determine the state of $interface." $RED
@@ -545,10 +533,7 @@ interface_menu() {
                         show_message "!!" "You have unsaved changes." $YELLOW
                         echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
                         read -r confirm
-                        if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
-                            show_interface_menu
-                            sleep 1
-                        else
+                        if [[ "$confirm" =~ ^[Yy]$ ]]; then
                             echo ""
                             show_message "!" "Quitting without saving." $YELLOW
                             interface_conf_changed=0
@@ -556,6 +541,9 @@ interface_menu() {
                             echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
                             sleep 2
                             break
+                        else
+                            show_interface_menu
+                            sleep 1
                         fi
                     else
                         break
