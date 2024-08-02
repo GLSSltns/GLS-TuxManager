@@ -21,7 +21,6 @@ HTTPD_ROOT="/var/www/html"
 config_changed=0
 
 show_title() {
-    clear
     bash Utils/show_title.sh $HTTPCOLOR
 }
 
@@ -288,6 +287,7 @@ display_tree_structure() {
 }
 
 show_httpd_menu() {
+    clear
     show_title
     echo -e "\t\t\t\t\t ${HTTPCOLOR}HTTPD CONFIGURATION:${NOCOLOR}"
     echo -e " ${MAIN_COLOR}[${HTTPCOLOR}1${MAIN_COLOR}]${NOCOLOR} List Files"
