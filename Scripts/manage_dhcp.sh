@@ -56,19 +56,23 @@ read_interface_config() {
 show_dhcp_config() {
     read_config /etc/dhcp/dhcpd.conf
     read_interface_config /etc/sysconfig/dhcpd
-    echo -e "${YELLOW}Current DHCP Configuration:${NOCOLOR}"
-    echo -e "${WHITE}Interface: $interface"
-    echo -e "IP Prefix: $ip_prefix"
-    echo -e "Gateway: $gateway"
-    echo -e "DNS: $dns"
-    echo -e "Subnet: $subnet"
-    echo -e "Netmask: $netmask"
-    echo -e "Range: $range"
-    echo -e "Routers: $routers"
-    echo -e "Domain Name: $domain_name"
-    echo -e "Domain Name Servers: $domain_name_servers"
-    echo -e "Default Lease Time: $default_lease_time"
-    echo -e "Max Lease Time: $max_lease_time${NOCOLOR}"
+    echo -e " ${YELLOW}Current DHCP Configuration:${NOCOLOR}"
+    echo ""
+    echo -e " ${YELLOW}Interface configuration: "
+    echo -e " ${MAIN_COLOR}Interface: ${NOCOLOR}$interface"
+    echo -e " ${MAIN_COLOR}IP Prefix: ${NOCOLOR}$ip_prefix"
+    echo -e " ${MAIN_COLOR}Gateway: ${NOCOLOR}$gateway"
+    echo -e " ${MAIN_COLOR}DNS: ${NOCOLOR}$dns"
+
+    echo -e "\n${YELLOW} DHCP configuration: "
+    echo -e " ${MAIN_COLOR}Subnet: ${NOCOLOR}$subnet"
+    echo -e " ${MAIN_COLOR}Netmask: ${NOCOLOR}$netmask"
+    echo -e " ${MAIN_COLOR}Range: ${NOCOLOR}$range"
+    echo -e " ${MAIN_COLOR}Routers: ${NOCOLOR}$routers"
+    echo -e " ${MAIN_COLOR}Domain Name: ${NOCOLOR}$domain_name"
+    echo -e " ${MAIN_COLOR}Domain Name Servers: ${NOCOLOR}$domain_name_servers"
+    echo -e " ${MAIN_COLOR}Default Lease Time: ${NOCOLOR}$default_lease_time"
+    echo -e " ${MAIN_COLOR}Max Lease Time: ${NOCOLOR}$max_lease_time${NOCOLOR}"
 }
 
 prompt_confirmation() {
@@ -88,21 +92,23 @@ validate_start(){
     show_title $YELLOW
     is_dhcp_started
     if [ $is_started -eq 1 ]; then
-        show_message $RED "DHCP is already running."
+        show_message "!" "DHCP is already running." $YELLOW
     else
         show_dhcp_config
-        if prompt_confirmation "Are you sure you want to start the DHCP service with this configuration?"; then
+        if prompt_confirmation "\n Are you sure you want to start the DHCP service with this configuration?"; then
+            show_message "!" "Starting DHCP service..." $GREEN
             systemctl start dhcpd > /dev/null 2>&1
             is_dhcp_started
+            sleep 2
             if [ $is_started -eq 1 ]; then
-                show_message $GREEN "DHCP service started successfully."
+                show_message "-" "DHCP service started successfully." $GREEN
             else
                 error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
-                show_message $RED "Failed to start DHCP. Check details below."
+                show_message "X" "Failed to start DHCP. Check details below." $RED
                 show_error_details "$error_log"
             fi
         else
-            show_message $YELLOW "DHCP service start aborted by user."
+            show_message "!" "DHCP service start aborted." $YELLOW
         fi
     fi
 }
