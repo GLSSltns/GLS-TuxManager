@@ -253,7 +253,8 @@ show_httpd_menu() {
     echo -e " ${MAIN_COLOR}[${HTTPCOLOR}6${MAIN_COLOR}]${NOCOLOR} Edit File"
     echo -e " ${MAIN_COLOR}[${HTTPCOLOR}7${MAIN_COLOR}]${NOCOLOR} Remove File"
     echo -e " ${MAIN_COLOR}[${HTTPCOLOR}8${MAIN_COLOR}]${NOCOLOR} View File Content"
-    echo -e " ${MAIN_COLOR}[${HTTPCOLOR}9${MAIN_COLOR}]${NOCOLOR} Exit"
+    echo ""
+    echo -e " ${MAIN_COLOR}[${HTTPCOLOR}9${MAIN_COLOR}]${NOCOLOR} Exit WEB Configuration"
     echo ""
 }
 httpd_menu() {

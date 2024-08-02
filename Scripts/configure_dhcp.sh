@@ -224,7 +224,7 @@ show_dhcp_menu() {
     echo -e " ${MAIN_COLOR}[${DHCPCOLOR}8${MAIN_COLOR}]${NOCOLOR} Max Lease Time: \t\t\t [${DHCPCOLOR}$max_lease_time${NOCOLOR}]"
     echo ""
     echo -e " ${MAIN_COLOR}[${DHCPCOLOR}9${MAIN_COLOR}]${NOCOLOR} Save Configuration"
-    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}10${MAIN_COLOR}]${NOCOLOR} Back to Main Menu"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}10${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
@@ -477,15 +477,15 @@ show_interface_menu() {
     echo -e " ${MAIN_COLOR}[${DHCPCOLOR}2${MAIN_COLOR}]${NOCOLOR} IP and Prefix: \t\t\t [${DHCPCOLOR}$ip_prefix${NOCOLOR}]"
     echo -e " ${MAIN_COLOR}[${DHCPCOLOR}3${MAIN_COLOR}]${NOCOLOR} Gateway: \t\t\t\t [${DHCPCOLOR}$gateway${NOCOLOR}]"
     echo -e " ${MAIN_COLOR}[${DHCPCOLOR}4${MAIN_COLOR}]${NOCOLOR} DNS: \t\t\t\t [${DHCPCOLOR}$dns${NOCOLOR}]"
-    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}5${MAIN_COLOR}]${NOCOLOR} Save Configuration"
-    echo ""
     if [ $is_interface_active -eq 1 ]; then
-        echo -e " ${MAIN_COLOR}[${DHCPCOLOR}6${MAIN_COLOR}]${NOCOLOR} Shut Down Interface"
+        echo -e " ${MAIN_COLOR}[${DHCPCOLOR}5${MAIN_COLOR}]${NOCOLOR} Shut Down Interface"
     else
-        echo -e " ${MAIN_COLOR}[${DHCPCOLOR}6${MAIN_COLOR}]${NOCOLOR} Start Up Interface"
+        echo -e " ${MAIN_COLOR}[${DHCPCOLOR}5${MAIN_COLOR}]${NOCOLOR} Start Up Interface"
     fi
-    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}7${MAIN_COLOR}]${NOCOLOR} Restart Interface"
-    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}8${MAIN_COLOR}]${NOCOLOR} Back to Main Menu"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}6${MAIN_COLOR}]${NOCOLOR} Restart Interface"
+    echo ""
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}7${MAIN_COLOR}]${NOCOLOR} Save Configuration"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}8${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
@@ -516,16 +516,16 @@ interface_menu() {
                     show_interface_menu
                     ;;
                 5) 
-                    clear
-                    save_interface_configuration
-                    show_interface_menu
-                    ;;
-                6) 
                     toggle_interface
                     show_interface_menu 
                     ;;
-                7) 
+                6) 
                     restart_interface
+                    show_interface_menu
+                    ;;
+                7) 
+                    clear
+                    save_interface_configuration
                     show_interface_menu
                     ;;
                 8)
@@ -562,7 +562,8 @@ main_menu() {
         echo ""
         echo -e " ${MAIN_COLOR}[${DHCPCOLOR}1${MAIN_COLOR}]${NOCOLOR} Configure DHCP"
         echo -e " ${MAIN_COLOR}[${DHCPCOLOR}2${MAIN_COLOR}]${NOCOLOR} Configure Interface"
-        echo -e " ${MAIN_COLOR}[${DHCPCOLOR}3${MAIN_COLOR}]${NOCOLOR} Exit"
+        echo ""
+        echo -e " ${MAIN_COLOR}[${DHCPCOLOR}3${MAIN_COLOR}]${NOCOLOR} Exit DHCP configuration"
         echo ""
         echo -ne " ${MAIN_COLOR}Enter an option ${YELLOW}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
