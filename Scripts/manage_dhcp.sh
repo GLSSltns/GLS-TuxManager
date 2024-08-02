@@ -14,20 +14,26 @@ source Utils/show_message.sh
 source Utils/progress_bar.sh
 source Utils/show_title.sh
 
+is_started=0
 
+is_dhcp_started(){
+    is_started=$(systemctl status dhcpd | grep -Po "Active: \K[a-z\(\)_]*" | grep -q ac && echo 1 || echo 0)
+}
 validate_start(){
-    echo "Iniciando el servicio DHCP..."
-    if systemctl is-active --quiet dhcpd; then
-        echo "El servicio DHCP ya está iniciado."
+    clear
+    show_title $YELLOW
+    is_dhcp_started
+    if [ $is_started -eq 1 ]; then
+        show_message $RED "DHCP is already running."
     else
-        systemctl start dhcpd
-        if [ $? -eq 0 ]; then
-            echo "El servicio DHCP se ha iniciado correctamente."
-            systemctl enable dhcpd
+        systemctl start dhcpd > /dev/null 2>&1
+        is_dhcp_started
+        if [ $is_started -eq 1 ]; then
+            show_message $GREEN "DHCP service started successfully."
         else
-            echo "Error al iniciar el servicio DHCP."
-            journalctl -xeu dhcpd.service | grep dhcpd > /dev/null 2>&1
-        fi
+            error=$(journalctl -xeu dhcpd.service | "/etc/dhcp/dhcpd.conf")
+            echo -e "${RED}Failed to start DHCP"
+            echo "$error"
     fi
 }
 
