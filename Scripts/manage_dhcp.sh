@@ -11,44 +11,96 @@ WHITE='\033[1;37m'
 NOCOLOR='\033[0m'
 
 source Utils/show_message.sh
+source Utils/progress_bar.sh
+source Utils/show_title.sh
 
-show_title() {
-    clear
-    bash Utils/show_title.sh
+
+validate_start(){
+    progress_bar "5" "${YELLOW}"
+    if systemctl is-active --quiet dhcpd; then
+        echo "${YELLOW}Service is now started"
+    else
+        systemctl start dhcpd
+        if [ $? -eq 0]; then
+            echo "${GREEN}Service started succesfully"
+        else
+            echo -ne "${RED}Error while starting service"
+            journalctl -xeu dhcpd.service | grep dhcpd
+        fi
+    fi
 }
+
+validate_stop(){
+    progress_bar "5" "${YELLOW}"
+    if systemctl is-active --quiet dhcpd; then
+        systemctl stop dhcpd
+        if [ $? -eq 0 ]; then
+            echo "${GREEN}Service stopped succesfully"
+        else
+            echo "${RED}Error while stopping service"
+            journalctl -xeu dhcpd.service | grep dhcpd
+        fi
+    else
+        echo -ne "${YELLOW}Service is not running"
+    fi
+}
+
+validate_restart(){
+    progress_bar "5" "${YELLOW}"
+    if systemctl is-active --quiet dhcpd; then
+        systemctl restart dhcpd
+        if [ $? -eq 0 ]; then
+            echo "${GREEN}Service restarted succesfully"
+        else
+            echo -ne "${RED}Error while restarting service"
+            journalctl -xeu dhcpd.service | grep dhcpd
+        fi
+    else
+        echo -ne "${YELLOW}Service is not running"
+    fi
+}
+
 
 menu_dhcp_man() {
     show_title
-    echo -ne "\n${MAIN_COLOR}[${BLUE}1${MAIN_COLOR}]${NOCOLOR} Start DHCP service"
-    echo -ne "\n${MAIN_COLOR}[${BLUE}2${MAIN_COLOR}]${NOCOLOR} Restart DHCP service"
-    echo -ne "\n${MAIN_COLOR}[${BLUE}3${MAIN_COLOR}]${NOCOLOR} Stop DHCP service"
-    echo -e "\n${MAIN_COLOR}[${BLUE}4${MAIN_COLOR}]${NOCOLOR} Go Back"
+    echo -ne "\n${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} Start DHCP service"
+    echo -ne "\n${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} Restart DHCP service"
+    echo -ne "\n${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Stop DHCP service"
+    echo -e "\n${MAIN_COLOR}[${LIGHTBLUE}4${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
 menu_dhcp() {
     menu_dhcp_man
     while true; do
-        echo -ne "${MAIN_COLOR}Enter An Option${BLUE}\$${MAIN_COLOR}>:${NOCOLOR} "
+        echo -ne "${MAIN_COLOR}Enter An Option${LIGHTBLUE}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
-                sudo systemctl start dhcpd
-                sleep 1
-                echo -e "${GREEN}DHCP Started successfully"
+                #DHCP start
+                echo -e "${YELLOW}Checking for DHCP status"
+                sleep 2
+                validate_start
+                ;;
             2)
-                sudo systemctl restart dhcpd
-                sleep 1
-                echo -e "${GREEN}DHCP Restarted successfully"
+                #DHCP restart
+                echo -e "${YELLOW}Checking for DHCP status"
+                sleep 2
+                validate_restart
+                ;;
             3)
-                sudo systemctl stop dhcpd
-                sleep 1
-                echo -e "${GREEN}DHCP Stopped successfully"
+                #DHCP stop
+                echo -e "${YELLOW}Checking for DHCP status"
+                sleep 2
+                validate_stop
+                ;;
             4)
+                #Go back to main menu
                 break
                 ;;
             *)
-                echo -e "${RED}Invalid option. Please try again.${NOCOLOR}"
+                #Invalid option
+                show_message
                 ;;
         esac
     done
@@ -59,3 +111,4 @@ main() {
 }
 
 main
+
