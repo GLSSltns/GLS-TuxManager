@@ -15,10 +15,13 @@ is_dhcp=0 # Check DHCP install
 is_http=0 # Check HTTP install
 
 source Utils/show_message.sh
+source Utils/spinner.sh
 
 check_services_install() {
     is_dhcp=$(yum list installed | grep -q dhcp-server && echo 1 || echo 0)
     is_http=$(yum list installed | grep -q httpd && echo 1 || echo 0)
+    show_message "!" "Checking Packages..." $YELLOW
+    spinner "Wait..."
 }
 
 check_and_continue() {
@@ -224,8 +227,8 @@ menu_status() {
 # MENU: MAIN
 main_menu() {
 	clear
-    check_services_install 
     show_menu
+    check_services_install 
     while true; do
         echo -ne " ${MAIN_COLOR}Enter An Option ${LIGHTBLUE}\$${MAIN_COLOR}>: ${NOCOLOR}"
         read -r op
