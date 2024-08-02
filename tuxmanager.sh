@@ -1,14 +1,11 @@
 #!/bin/bash
 
 # COLORS
-BLUE='\033[0;1;34;94m'
+MAIN_COLOR='\033[0;1;34;94m'
 LIGHTBLUE='\033[36;40m'
-PURPLE='\033[0;1;35;95m'
-ORANGE='\033[0;1;33;93m'
+BLUE='\033[0;1;34;94m'
 RED='\033[0;31m'
 GREEN='\033[0;0;32;92m'
-GREEN2='\033[0;32m'
-PINK='\033[1;36m'
 YELLOW='\033[0;33m'
 WHITE='\033[1;37m'
 NOCOLOR='\033[0m'
@@ -42,11 +39,6 @@ check_and_continue() {
     fi
 }
 
-
-show_title() {
-    bash Utils/show_title.sh $LIGHTBLUE 
-}
-
 display_not_installed_message() {
     local service=$1
     local flag=$2
@@ -55,12 +47,17 @@ display_not_installed_message() {
     fi
 }
 
+show_title() {
+    bash Utils/show_title.sh $LIGHTBLUE 
+}
+
+
 show_menu() {
     show_title
-    echo -e " \n ${BLUE}[${LIGHTBLUE}1${BLUE}]${NOCOLOR} Service Installation\t\t${BLUE}[${LIGHTBLUE}5${BLUE}]${NOCOLOR} Info"
-    echo -e " ${BLUE}[${LIGHTBLUE}2${BLUE}]${NOCOLOR} Service Configuration\t\t${BLUE}[${LIGHTBLUE}6${BLUE}]${NOCOLOR} Quit"
-    echo -e " ${BLUE}[${LIGHTBLUE}3${BLUE}]${NOCOLOR} Service Management"
-    echo -e " ${BLUE}[${LIGHTBLUE}4${BLUE}]${NOCOLOR} Service Monitoring"
+    echo -e " \n ${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} Service Installation\t\t${MAIN_COLOR}[${LIGHTBLUE}5${MAIN_COLOR}]${NOCOLOR} Info"
+    echo -e " ${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} Service Configuration\t\t${MAIN_COLOR}[${LIGHTBLUE}6${MAIN_COLOR}]${NOCOLOR} Quit"
+    echo -e " ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Service Management"
+    echo -e " ${MAIN_COLOR}[${LIGHTBLUE}4${MAIN_COLOR}]${NOCOLOR} Service Monitoring"
     echo ""
 }
 
@@ -69,15 +66,15 @@ show_info() {
     echo -e "${YELLOW}"
     echo -e '  / ` /  /_`__ /_` _  /   _/_ . _  _   _'
     echo -ne ' /_; /_,._/   ._/ /_// /_//  / /_// /_\ ' 
-    echo -e "${BLUE} <\\"
-    echo -e "${BLUE} <_______________________________________[]${YELLOW}#######${BLUE}]"
+    echo -e "${MAIN_COLOR} <\\"
+    echo -e "${MAIN_COLOR} <_______________________________________[]${YELLOW}#######${MAIN_COLOR}]"
     echo -e '                                         </'
-    echo -e " ${BLUE}AUTHORS:"	
-    echo -e " ${BLUE}@ Gael Landa ${NOCOLOR}\t\thttps://github.com/GsusLnd"
-    echo -e " ${BLUE}@ Leonardo Aceves ${NOCOLOR}\thttps://github.com/L30AM"
-    echo -e " ${BLUE}@ Sergio Méndez ${NOCOLOR}\thttps://github.com/sergiomndz15"
-    echo -e " ${BLUE}@ Alexandra Gonzáles ${NOCOLOR}\thttps://github.com/AlexMangle"
-    echo -ne " \n Press ${BLUE}[${LIGHTBLUE}ENTER${BLUE}]${NOCOLOR} To Continue..."
+    echo -e " ${MAIN_COLOR}AUTHORS:"	
+    echo -e " ${MAIN_COLOR}@ Gael Landa ${NOCOLOR}\t\thttps://github.com/GsusLnd"
+    echo -e " ${MAIN_COLOR}@ Leonardo Aceves ${NOCOLOR}\thttps://github.com/L30AM"
+    echo -e " ${MAIN_COLOR}@ Sergio Méndez ${NOCOLOR}\thttps://github.com/sergiomndz15"
+    echo -e " ${MAIN_COLOR}@ Alexandra Gonzáles ${NOCOLOR}\thttps://github.com/AlexMangle"
+    echo -ne " \n Press ${MAIN_COLOR}[${LIGHTBLUE}ENTER${MAIN_COLOR}]${NOCOLOR} To Continue..."
     read -s
     echo ""
     clear
@@ -88,16 +85,16 @@ show_menu_install() {
     clear
     show_title
     echo ""
-    echo -e " ${BLUE}[${LIGHTBLUE}1${BLUE}]${NOCOLOR} Install DHCP Service"
-    echo -e " ${BLUE}[${LIGHTBLUE}2${BLUE}]${NOCOLOR} Install WEB Service"
-    echo -e " ${BLUE}[${LIGHTBLUE}3${BLUE}]${NOCOLOR} Go Back"
+    echo -e " ${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} Install DHCP Service"
+    echo -e " ${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} Install WEB Service"
+    echo -e " ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
 menu_install() {
     show_menu_install
     while true; do
-        echo -ne " ${BLUE}Enter An Option ${LIGHTBLUE}\$${BLUE}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter An Option ${LIGHTBLUE}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
@@ -123,18 +120,18 @@ menu_install() {
 show_menu_config() {
     show_title
 
-    echo -ne "\n ${BLUE}[${LIGHTBLUE}1${BLUE}]${NOCOLOR} Configure DHCP Service"
+    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} Configure DHCP Service"
     display_not_installed_message "DHCP" $ISDHCP
-    echo -ne "\n ${BLUE}[${LIGHTBLUE}2${BLUE}]${NOCOLOR} Configure WEB Service"
+    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} Configure WEB Service"
     display_not_installed_message "WEB (HTTP)" $ISHTTP
-    echo -e "\n ${BLUE}[${LIGHTBLUE}3${BLUE}]${NOCOLOR} Go Back"
+    echo -e "\n ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
 menu_config() {
     show_menu_config
     while true; do
-        echo -ne " ${BLUE}Enter An Option ${LIGHTBLUE}\$${BLUE}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter An Option ${LIGHTBLUE}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
@@ -158,18 +155,18 @@ menu_config() {
 show_menu_manage() {
     show_title
 
-    echo -ne "\n ${BLUE}[${LIGHTBLUE}1${BLUE}]${NOCOLOR} Manage DHCP Service"
+    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} Manage DHCP Service"
     display_not_installed_message "DHCP" $ISDHCP
-    echo -ne "\n ${BLUE}[${LIGHTBLUE}2${BLUE}]${NOCOLOR} Manage WEB Service"
+    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} Manage WEB Service"
     display_not_installed_message "WEB (HTTP)" $ISHTTP
-    echo -e "\n ${BLUE}[${LIGHTBLUE}3${BLUE}]${NOCOLOR} Go Back"
+    echo -e "\n ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
 menu_manage() {
     show_menu_manage
     while true; do
-        echo -ne " ${BLUE}Enter An Option ${LIGHTBLUE}\$${BLUE}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter An Option ${LIGHTBLUE}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
@@ -193,18 +190,18 @@ menu_manage() {
 show_menu_status() {
     show_title
 
-    echo -ne "\n ${BLUE}[${LIGHTBLUE}1${BLUE}]${NOCOLOR} DHCP Service Status"
+    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} DHCP Service Status"
     display_not_installed_message "DHCP" $ISDHCP
-    echo -ne "\n ${BLUE}[${LIGHTBLUE}2${BLUE}]${NOCOLOR} WEB Service Status"
+    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} WEB Service Status"
     display_not_installed_message "WEB (HTTP)" $ISHTTP
-    echo -e "\n ${BLUE}[${LIGHTBLUE}3${BLUE}]${NOCOLOR} Go Back"
+    echo -e "\n ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
 menu_status() {
     show_menu_status
     while true; do
-        echo -ne " ${BLUE}Enter An Option ${LIGHTBLUE}\$${BLUE}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter An Option ${LIGHTBLUE}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
@@ -230,42 +227,46 @@ main_menu() {
     check_services_install 
     show_menu
     while true; do
-        echo -ne " ${BLUE}Enter An Option ${LIGHTBLUE}\$${BLUE}>: ${NOCOLOR}"
+        echo -ne " ${MAIN_COLOR}Enter An Option ${LIGHTBLUE}\$${MAIN_COLOR}>: ${NOCOLOR}"
         read -r op
-        case $op in 
-            1)
-                clear
-                menu_install
-                show_menu
-                check_services_install
-                ;;
-            2)
-                clear
-                menu_config
-                show_menu
-                ;;
-            3)
-                clear
-                menu_manage
-                show_menu
-                ;;
-            4)
-                clear
-                menu_status
-                show_menu
-                ;;
-            5)
-                clear
-                show_info
-                show_menu
-                ;;
-            6)
-                break
-                ;;
-            *)
-                show_message "X" "Invalid Option" $RED
-                ;;
-        esac
+        if [ -z "$op" ]; then
+            echo "" > /dev/null
+        else
+            case $op in 
+                1)
+                    clear
+                    menu_install
+                    show_menu
+                    check_services_install
+                    ;;
+                2)
+                    clear
+                    menu_config
+                    show_menu
+                    ;;
+                3)
+                    clear
+                    menu_manage
+                    show_menu
+                    ;;
+                4)
+                    clear
+                    menu_status
+                    show_menu
+                    ;;
+                5)
+                    clear
+                    show_info
+                    show_menu
+                    ;;
+                6)
+                    break
+                    ;;
+                *)
+                    show_message "X" "Invalid Option" $RED
+                    ;;
+            esac
+        fi
     done
 }
 

@@ -1,39 +1,30 @@
 #!/bin/bash
 
 # COLORS
-BLUE='\033[0;1;34;94m'
-PURPLE='\033[0;1;35;95m'
-ORANGE='\033[0;1;33;93m'
+MAIN_COLOR='\033[0;1;34;94m'
+DHCPCOLOR='\033[1;33m'
 RED='\033[0;31m'
 GREEN='\033[0;0;32;92m'
-GREEN2='\033[0;32m'
-PINK='\033[1;36m'
+BLUE='\033[0;1;34;94m'
 YELLOW='\033[0;33m'
 WHITE='\033[1;37m'
 NOCOLOR='\033[0m'
 
-DHCPCOLOR='\033[1;33m'
+# UTILS
+source Utils/progress_bar.sh
+source Utils/show_message.sh
 
 DEFAULT_DHCP_CONF="/etc/dhcp/dhcpd.conf"
 DEFAULT_INTERFACE_CONF="/etc/sysconfig/dhcpd"
 
+#FLAGS
 dhcp_conf_changed=0
 interface_conf_changed=0
-INTACTIVE=0
-
-# Utils
-source Utils/progress_bar.sh
+is_interface_active=0
 
 show_title() {
     clear
     bash Utils/show_title.sh $DHCPCOLOR
-}
-
-show_message() {
-    local c=$1
-    local message=$2
-    local color=$3
-    echo -e " ${BLUE}[${color}${c}${BLUE}]${color} ${message}${NOCOLOR}"
 }
 
 validate_input() {
@@ -47,7 +38,7 @@ validate_input() {
 }
 
 interface_state(){
-    INTACTIVE=$(nmcli con show "$interface" | grep -q GENERAL.STATE && echo 1 || echo 0)
+    is_interface_active=$(nmcli con show "$interface" | grep -q GENERAL.STATE && echo 1 || echo 0)
 }
 
 read_config() {
@@ -225,24 +216,24 @@ save_configuration() {
     wait
     show_message "-" "DHCP configuration saved successfully." $GREEN
     dhcp_conf_changed=0
-    echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+    echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
     sleep 3
 }
 
 show_dhcp_menu() {
     show_title
     echo -e "\t\t\t\t\t ${DHCPCOLOR}CURRENT CONFIG:${NOCOLOR}"
-    echo -e " ${BLUE}[${DHCPCOLOR}1${BLUE}]${NOCOLOR} Subnet: \t\t\t\t [${DHCPCOLOR}$subnet${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}2${BLUE}]${NOCOLOR} Netmask: \t\t\t\t [${DHCPCOLOR}$netmask${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}3${BLUE}]${NOCOLOR} Range: \t\t\t\t [${DHCPCOLOR}$range${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}4${BLUE}]${NOCOLOR} Routers: \t\t\t\t [${DHCPCOLOR}$routers${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}5${BLUE}]${NOCOLOR} Domain Name: \t\t\t [${DHCPCOLOR}$domain_name${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}6${BLUE}]${NOCOLOR} Domain Name Servers: \t\t [${DHCPCOLOR}$domain_name_servers${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}7${BLUE}]${NOCOLOR} Default Lease Time: \t\t [${DHCPCOLOR}$default_lease_time${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}8${BLUE}]${NOCOLOR} Max Lease Time: \t\t\t [${DHCPCOLOR}$max_lease_time${NOCOLOR}]"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}1${MAIN_COLOR}]${NOCOLOR} Subnet: \t\t\t\t [${DHCPCOLOR}$subnet${NOCOLOR}]"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}2${MAIN_COLOR}]${NOCOLOR} Netmask: \t\t\t\t [${DHCPCOLOR}$netmask${NOCOLOR}]"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}3${MAIN_COLOR}]${NOCOLOR} Range: \t\t\t\t [${DHCPCOLOR}$range${NOCOLOR}]"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}4${MAIN_COLOR}]${NOCOLOR} Routers: \t\t\t\t [${DHCPCOLOR}$routers${NOCOLOR}]"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}5${MAIN_COLOR}]${NOCOLOR} Domain Name: \t\t\t [${DHCPCOLOR}$domain_name${NOCOLOR}]"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}6${MAIN_COLOR}]${NOCOLOR} Domain Name Servers: \t\t [${DHCPCOLOR}$domain_name_servers${NOCOLOR}]"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}7${MAIN_COLOR}]${NOCOLOR} Default Lease Time: \t\t [${DHCPCOLOR}$default_lease_time${NOCOLOR}]"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}8${MAIN_COLOR}]${NOCOLOR} Max Lease Time: \t\t\t [${DHCPCOLOR}$max_lease_time${NOCOLOR}]"
     echo ""
-    echo -e " ${BLUE}[${DHCPCOLOR}9${BLUE}]${NOCOLOR} Save Configuration"
-    echo -e " ${BLUE}[${DHCPCOLOR}10${BLUE}]${NOCOLOR} Back to Main Menu"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}9${MAIN_COLOR}]${NOCOLOR} Save Configuration"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}10${MAIN_COLOR}]${NOCOLOR} Back to Main Menu"
     echo ""
 }
 
@@ -250,7 +241,7 @@ dhcp_menu() {
     clear    
     show_dhcp_menu
     while [ true ]; do
-        echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter an option ${YELLOW}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         if [ -z "$op" ]; then
             echo "" > /dev/null
@@ -306,7 +297,7 @@ dhcp_menu() {
                             show_message "!" "Quitting without saving." $YELLOW
                             dhcp_conf_changed=0
                             read_config "$DEFAULT_DHCP_CONF"
-                            echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+                            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
                             sleep 2
                             break
                         fi
@@ -392,7 +383,7 @@ configure_dns() {
 toggle_interface() {
     interface_state 
 
-    if [ $INTACTIVE -eq 1 ]; then
+    if [ $is_interface_active -eq 1 ]; then
         show_title
         echo ""
         show_message "!" "Shutting down interface $interface..." $YELLOW
@@ -400,10 +391,10 @@ toggle_interface() {
         nmcli con down "$interface" > /dev/null 2>&1
         wait
         show_message "!" "Interface $interface is now down." $GREEN
-        echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
-        # INTACTIVE=0
+        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+        # is_interface_active=0
         sleep 3
-    elif [ $INTACTIVE -eq 0 ]; then
+    elif [ $is_interface_active -eq 0 ]; then
         show_title
         echo ""
         show_message "!" "Starting up interface $interface..." $YELLOW
@@ -411,8 +402,8 @@ toggle_interface() {
         nmcli con up "$interface" > /dev/null 2>&1
         wait
         show_message "!" "Interface $interface is now up." $GREEN
-        echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
-        # INTACTIVE=1
+        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+        # is_interface_active=1
         sleep 3
     else
         show_message "X" "Could not determine the state of $interface." $RED
@@ -423,7 +414,7 @@ toggle_interface() {
 restart_interface() {
     interface_state
 
-    if [ $INTACTIVE -eq 1 ]; then
+    if [ $is_interface_active -eq 1 ]; then
         show_title
         echo ""
         show_message "!" "Restarting interface $interface..." $YELLOW
@@ -433,10 +424,10 @@ restart_interface() {
         nmcli con up "$interface" > /dev/null 2>&1
         wait
         show_message "!" "Interface $interface has been restarted." $GREEN
-        echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
-        # INTACTIVE=1
+        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+        # is_interface_active=1
         sleep 3
-    elif [ $INTACTIVE -eq 0 ]; then
+    elif [ $is_interface_active -eq 0 ]; then
         show_title
         echo ""
         show_message "!" "The Interface is currently down." $YELLOW
@@ -447,8 +438,8 @@ restart_interface() {
         nmcli con up "$interface" > /dev/null 2>&1
         wait
         show_message "!" "Interface $interface is now up." $GREEN
-        echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
-        # INTACTIVE=1
+        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+        # is_interface_active=1
         sleep 3
     else
         show_message "X" "Could not determine the state of $interface." $RED
@@ -486,7 +477,7 @@ save_interface_configuration() {
     wait
     show_message "-" "Interface configuration saved successfully." $GREEN
     interface_conf_changed=0
-    echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+    echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
     sleep 3
 }
 
@@ -494,19 +485,19 @@ show_interface_menu() {
     show_title
     interface_state
     echo -e "\t\t\t\t\t ${DHCPCOLOR}CURRENT CONFIG:${NOCOLOR}"
-    echo -e " ${BLUE}[${DHCPCOLOR}1${BLUE}]${NOCOLOR} Interface: \t\t\t [${DHCPCOLOR}$interface${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}2${BLUE}]${NOCOLOR} IP and Prefix: \t\t\t [${DHCPCOLOR}$ip_prefix${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}3${BLUE}]${NOCOLOR} Gateway: \t\t\t\t [${DHCPCOLOR}$gateway${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}4${BLUE}]${NOCOLOR} DNS: \t\t\t\t [${DHCPCOLOR}$dns${NOCOLOR}]"
-    echo -e " ${BLUE}[${DHCPCOLOR}5${BLUE}]${NOCOLOR} Save Configuration"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}1${MAIN_COLOR}]${NOCOLOR} Interface: \t\t\t [${DHCPCOLOR}$interface${NOCOLOR}]"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}2${MAIN_COLOR}]${NOCOLOR} IP and Prefix: \t\t\t [${DHCPCOLOR}$ip_prefix${NOCOLOR}]"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}3${MAIN_COLOR}]${NOCOLOR} Gateway: \t\t\t\t [${DHCPCOLOR}$gateway${NOCOLOR}]"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}4${MAIN_COLOR}]${NOCOLOR} DNS: \t\t\t\t [${DHCPCOLOR}$dns${NOCOLOR}]"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}5${MAIN_COLOR}]${NOCOLOR} Save Configuration"
     echo ""
-    if [ $INTACTIVE -eq 1 ]; then
-        echo -e " ${BLUE}[${DHCPCOLOR}6${BLUE}]${NOCOLOR} Shut Down Interface"
+    if [ $is_interface_active -eq 1 ]; then
+        echo -e " ${MAIN_COLOR}[${DHCPCOLOR}6${MAIN_COLOR}]${NOCOLOR} Shut Down Interface"
     else
-        echo -e " ${BLUE}[${DHCPCOLOR}6${BLUE}]${NOCOLOR} Start Up Interface"
+        echo -e " ${MAIN_COLOR}[${DHCPCOLOR}6${MAIN_COLOR}]${NOCOLOR} Start Up Interface"
     fi
-    echo -e " ${BLUE}[${DHCPCOLOR}7${BLUE}]${NOCOLOR} Restart Interface"
-    echo -e " ${BLUE}[${DHCPCOLOR}8${BLUE}]${NOCOLOR} Back to Main Menu"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}7${MAIN_COLOR}]${NOCOLOR} Restart Interface"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}8${MAIN_COLOR}]${NOCOLOR} Back to Main Menu"
     echo ""
 }
 
@@ -514,7 +505,7 @@ interface_menu() {
     show_interface_menu
     while [ true ]; do
         interface_state
-        echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter an option ${YELLOW}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         if [ -z "$op" ]; then
             echo "" > /dev/null
@@ -562,7 +553,7 @@ interface_menu() {
                             show_message "!" "Quitting without saving." $YELLOW
                             interface_conf_changed=0
                             read_config "$DEFAULT_INTERFACE_CONF"
-                            echo -e "${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+                            echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
                             sleep 2
                             break
                         fi
@@ -581,11 +572,11 @@ main_menu() {
     while [ true ]; do
         show_title
         echo ""
-        echo -e " ${BLUE}[${DHCPCOLOR}1${BLUE}]${NOCOLOR} Configure DHCP"
-        echo -e " ${BLUE}[${DHCPCOLOR}2${BLUE}]${NOCOLOR} Configure Interface"
-        echo -e " ${BLUE}[${DHCPCOLOR}3${BLUE}]${NOCOLOR} Exit"
+        echo -e " ${MAIN_COLOR}[${DHCPCOLOR}1${MAIN_COLOR}]${NOCOLOR} Configure DHCP"
+        echo -e " ${MAIN_COLOR}[${DHCPCOLOR}2${MAIN_COLOR}]${NOCOLOR} Configure Interface"
+        echo -e " ${MAIN_COLOR}[${DHCPCOLOR}3${MAIN_COLOR}]${NOCOLOR} Exit"
         echo ""
-        echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter an option ${YELLOW}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         if [ -z "$op" ]; then
             echo "" > /dev/null

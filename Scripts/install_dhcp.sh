@@ -1,43 +1,33 @@
 #!/bin/bash
 
 # COLORS
-BLUE='\033[0;1;34;94m'
-PURPLE='\033[0;1;35;95m'
-ORANGE='\033[0;1;33;93m'
+MAIN_COLOR='\033[0;1;34;94m'
+DHCPCOLOR='\033[1;33m'
 RED='\033[0;31m'
 GREEN='\033[0;0;32;92m'
-GREEN2='\033[0;32m'
-PINK='\033[1;36m'
+BLUE='\033[0;1;34;94m'
 YELLOW='\033[0;33m'
 WHITE='\033[1;37m'
 NOCOLOR='\033[0m'
 
-DHCPCOLOR='\033[1;33m'
-
-ISINSTALLED=0
-
+# UTILS
 source Utils/progress_bar.sh
+source Utils/show_message.sh
+
+# FLAGS
+is_dhcp_installed=0
 
 show_title() {
     clear
     bash Utils/show_title.sh $DHCPCOLOR
 }
 
-show_message()
-{
-    local c=$1
-    local message=$2
-    local color=$3
-
-    echo -e " ${BLUE}[${color}${c}${BLUE}]${color} ${message}${NOCOLOR}"
-}
-
 is_installed() {
-    ISINSTALLED=$(yum list installed | grep -q dhcp-server && echo 1 || echo 0)
+    is_dhcp_installed=$(yum list installed | grep -q dhcp-server && echo 1 || echo 0)
 }
 
 install_pkg() {
-    if [ $ISINSTALLED -eq 1 ]; then
+    if [ $is_dhcp_installed -eq 1 ]; then
         show_message "!" "DHCP Service Is Already Installed.\n" $YELLOW
     else
         show_title
@@ -49,7 +39,7 @@ install_pkg() {
         wait
         sleep 1
         show_message "-" "DHCP Service Installed Successfully." $GREEN
-        echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
         sleep 3.5
         show_title
         show_menu
@@ -57,7 +47,7 @@ install_pkg() {
 }
 
 remove_pkg() {
-    if [ $ISINSTALLED -eq 1 ]; then
+    if [ $is_dhcp_installed -eq 1 ]; then
         show_title
         echo ""
         show_message "!?" "The DHCP Service Package (dhcp-server) Will Be REMOVED!!" $RED
@@ -66,7 +56,7 @@ remove_pkg() {
         if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
             sleep 1
             show_message "!" "Removal canceled." $YELLOW
-            echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
             sleep 2
         else
             echo ""
@@ -76,7 +66,7 @@ remove_pkg() {
             yum remove -y dhcp-server > /dev/null 2>&1
             wait
             show_message "-" "DHCP Service Package Removed Successfully." $GREEN
-            echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
             sle3p 4.5
         fi
         
@@ -88,7 +78,7 @@ remove_pkg() {
 }
 
 update_pkg() {
-    if [ $ISINSTALLED -eq 1 ]; then
+    if [ $is_dhcp_installed -eq 1 ]; then
         local is_update_needed=$(yum check-update dhcp-server | grep -q 'dhcp-server' && echo 1 || echo 0)
         if [ $is_update_needed -eq 1 ]; then
             show_title
@@ -98,7 +88,7 @@ update_pkg() {
             yum update -y dhcp-server > /dev/null 2>&1
             wait
             show_message "-" "DHCP Service Package Updated Successfully." $GREEN
-            echo -e "\n${BLUE}----------------------------------------------------------------------------------${NOCOLOR}"
+            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
             sleep 3.5
             show_title
             show_menu
@@ -112,10 +102,10 @@ update_pkg() {
 
 show_menu() {
     echo ""
-    echo -e " ${BLUE}[${DHCPCOLOR}1${BLUE}]${NOCOLOR} Install DHCP"
-    echo -e " ${BLUE}[${DHCPCOLOR}2${BLUE}]${NOCOLOR} Remove DHCP"
-    echo -e " ${BLUE}[${DHCPCOLOR}3${BLUE}]${NOCOLOR} Update DHCP"
-    echo -e " ${BLUE}[${DHCPCOLOR}4${BLUE}]${NOCOLOR} Go Back"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}1${MAIN_COLOR}]${NOCOLOR} Install DHCP"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}2${MAIN_COLOR}]${NOCOLOR} Remove DHCP"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}3${MAIN_COLOR}]${NOCOLOR} Update DHCP"
+    echo -e " ${MAIN_COLOR}[${DHCPCOLOR}4${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
@@ -124,7 +114,7 @@ menu()
     show_title
     show_menu
     while true; do
-        echo -ne " ${BLUE}Enter An Option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter An Option ${YELLOW}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
@@ -143,7 +133,7 @@ menu()
                 break
                 ;;
             *)
-                echo -e " ${BLUE}[${RED}X${BLUE}]${RED} Invalid Option\n"
+                echo -e " ${MAIN_COLOR}[${RED}X${MAIN_COLOR}]${RED} Invalid Option\n"
                 ;;
         esac
     done

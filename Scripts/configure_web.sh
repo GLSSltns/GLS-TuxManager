@@ -1,24 +1,23 @@
 #!/bin/bash
 
 # COLORS
-BLUE='\033[0;1;34;94m'
-PURPLE='\033[0;1;35;95m'
-ORANGE='\033[0;1;33;93m'
+MAIN_COLOR='\033[0;1;34;94m'
+HTTPCOLOR='\033[1;35m'
 RED='\033[0;31m'
 GREEN='\033[0;0;32;92m'
-GREEN2='\033[0;32m'
-PINK='\033[1;36m'
+BLUE='\033[0;1;34;94m'
 YELLOW='\033[0;33m'
 WHITE='\033[1;37m'
 NOCOLOR='\033[0m'
 
-HTTPCOLOR='\033[0;35m'
+# UTILS
+source Utils/progress_bar.sh
+source Utils/show_message.sh
 
 HTTPD_ROOT="/var/www/html"
-config_changed=0
 
-# Utils
-source Utils/progress_bar.sh
+# FLAGS
+config_changed=0
 
 show_title() {
     clear
@@ -29,7 +28,7 @@ show_message() {
     local c=$1
     local message=$2
     local color=$3
-    echo -e " ${BLUE}[${color}${c}${BLUE}]${color} ${message}${NOCOLOR}"
+    echo -e " ${MAIN_COLOR}[${color}${c}${MAIN_COLOR}]${color} ${message}${NOCOLOR}"
 }
 
 validate_input() {
@@ -133,7 +132,7 @@ view_file_content() {
         if [[ -f "$target_file" ]]; then
             echo -e "\n${YELLOW}Content of '$file_name':${NOCOLOR}"
             cat "$target_file"
-            echo -ne "\n Press ${BLUE}[${HTTPCOLOR}ENTER${BLUE}]${NOCOLOR} To Continue..."
+            echo -ne "\n Press ${MAIN_COLOR}[${HTTPCOLOR}ENTER${MAIN_COLOR}]${NOCOLOR} To Continue..."
             read -r 
             break
         else
@@ -241,7 +240,7 @@ upload_file() {
 list_files() {
     echo -e "\n${YELLOW}Listing files in $HTTPD_ROOT:${NOCOLOR}"
     display_tree_structure "$HTTPD_ROOT" ""
-    echo -ne "\n Press ${BLUE}[${HTTPCOLOR}ENTER${BLUE}]${NOCOLOR} To Continue..."
+    echo -ne "\n Press ${MAIN_COLOR}[${HTTPCOLOR}ENTER${MAIN_COLOR}]${NOCOLOR} To Continue..."
     read -r
 }
 
@@ -251,7 +250,7 @@ display_tree_structure() {
 
     for file in "$dir_path"/*; do
         if [[ -d "$file" ]]; then
-            echo -e "${indent}${BLUE}+-- ${NOCOLOR}$(basename "$file")/"
+            echo -e "${indent}${MAIN_COLOR}+-- ${NOCOLOR}$(basename "$file")/"
             display_tree_structure "$file" "$indent    |"
         elif [[ -f "$file" ]]; then
             echo -e "${indent}${GREEN}+-- ${NOCOLOR}$(basename "$file")"
@@ -262,22 +261,22 @@ display_tree_structure() {
 show_httpd_menu() {
     show_title
     echo -e "\t\t\t\t\t ${HTTPCOLOR}HTTPD CONFIGURATION:${NOCOLOR}"
-    echo -e " ${BLUE}[${HTTPCOLOR}1${BLUE}]${NOCOLOR} List Files"
-    echo -e " ${BLUE}[${HTTPCOLOR}2${BLUE}]${NOCOLOR} Create Directory"
-    echo -e " ${BLUE}[${HTTPCOLOR}3${BLUE}]${NOCOLOR} Remove Directory"
-    echo -e " ${BLUE}[${HTTPCOLOR}4${BLUE}]${NOCOLOR} Add File"
-    echo -e " ${BLUE}[${HTTPCOLOR}5${BLUE}]${NOCOLOR} Upload File"
-    echo -e " ${BLUE}[${HTTPCOLOR}6${BLUE}]${NOCOLOR} Edit File"
-    echo -e " ${BLUE}[${HTTPCOLOR}7${BLUE}]${NOCOLOR} Remove File"
-    echo -e " ${BLUE}[${HTTPCOLOR}8${BLUE}]${NOCOLOR} View File Content"
-    echo -e " ${BLUE}[${HTTPCOLOR}9${BLUE}]${NOCOLOR} Exit"
+    echo -e " ${MAIN_COLOR}[${HTTPCOLOR}1${MAIN_COLOR}]${NOCOLOR} List Files"
+    echo -e " ${MAIN_COLOR}[${HTTPCOLOR}2${MAIN_COLOR}]${NOCOLOR} Create Directory"
+    echo -e " ${MAIN_COLOR}[${HTTPCOLOR}3${MAIN_COLOR}]${NOCOLOR} Remove Directory"
+    echo -e " ${MAIN_COLOR}[${HTTPCOLOR}4${MAIN_COLOR}]${NOCOLOR} Add File"
+    echo -e " ${MAIN_COLOR}[${HTTPCOLOR}5${MAIN_COLOR}]${NOCOLOR} Upload File"
+    echo -e " ${MAIN_COLOR}[${HTTPCOLOR}6${MAIN_COLOR}]${NOCOLOR} Edit File"
+    echo -e " ${MAIN_COLOR}[${HTTPCOLOR}7${MAIN_COLOR}]${NOCOLOR} Remove File"
+    echo -e " ${MAIN_COLOR}[${HTTPCOLOR}8${MAIN_COLOR}]${NOCOLOR} View File Content"
+    echo -e " ${MAIN_COLOR}[${HTTPCOLOR}9${MAIN_COLOR}]${NOCOLOR} Exit"
     echo ""
 }
 httpd_menu() {
     clear
     show_httpd_menu
     while [ true ]; do
-        echo -ne " ${BLUE}Enter an option ${YELLOW}\$${BLUE}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter an option ${YELLOW}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         if [ -z "$op" ]; then
             echo "" > /dev/null
