@@ -20,28 +20,35 @@ show_title() {
     bash Utils/show_title.sh $DHCPCOLOR
 }
 
+
 # Function to check the status of the DHCP service
 check_status() {
     show_title
-    echo -e "${MAIN_COLOR}Checking DHCP service status...${NOCOLOR}"
+    show_message "-" "Checking DHCP service status..." $GREEN
 
     # Get the status of the DHCP service
     DHCPDSTATUS=$(systemctl status dhcpd)
 
     # Extract the relevant information from the status
-    STATUS=$(echo $DHCPDSTATUS | grep -Po "Active: \K[a-z\(\)_]*")
-    PID=$(echo $DHCPDSTATUS | grep -Po "PID: \K[\d]*")
-    MEMORY=$(echo $DHCPDSTATUS | grep -Po "Memory: \K[\dA-Z.]*")
-    CPU=$(echo $DHCPDSTATUS | grep -Po "CPU: \K[\da-z.]*")
+    STATUS=$(systemctl is-active dhcpd)
+    PID=$(echo "$DHCPDSTATUS" | grep -Po "PID: \K[\d]*")
+    MEMORY=$(echo "$DHCPDSTATUS" | grep -Po "Memory: \K[\dA-Z.]*")
+    CPU=$(echo "$DHCPDSTATUS" | grep -Po "CPU: \K[\da-z.]*")
 
     # Display the extracted information
-    echo -e "${MAIN_COLOR}Status: ${NOCOLOR}$STATUS"
+    if [[ "$STATUS" =~ "active" ]]; then
+        echo -e "${MAIN_COLOR}Status: ${GREEN}$STATUS"
+    else
+        echo -e "${MAIN_COLOR}Status: ${RED}$STATUS"
+    fi
     echo -e "${MAIN_COLOR}PID: ${NOCOLOR}$PID"
     echo -e "${MAIN_COLOR}Memory: ${NOCOLOR}$MEMORY"
     echo -e "${MAIN_COLOR}CPU: ${NOCOLOR}$CPU"
+
     echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-    echo -e "${MAIN_COLOR}Press any key to return to the main menu.${NOCOLOR}"
-    read -r -n 1 #Wait for user input to return to the main menu
+    # Wait for user input to return to the main menu
+    echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+    read -r -n 1 -s 
 }
 
 # Function to show DHCP leases log
@@ -68,8 +75,8 @@ show_logs() {
     done
 
     echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-    echo -e "${MAIN_COLOR}Press any key to return to the main menu.${NOCOLOR}"
-    read -r -n 1 # Wait for user input to return to the main menu
+    echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+    read -r -n 1 -s 
 }
 
 #Function to navigate through options
