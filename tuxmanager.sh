@@ -1,14 +1,15 @@
 #!/bin/bash
 
 # COLORS
-MAIN_COLOR='\033[0;1;34;94m'
-LIGHTBLUE='\033[36;40m'
-BLUE='\033[0;1;34;94m'
-RED='\033[0;31m'
-GREEN='\033[0;0;32;92m'
-YELLOW='\033[0;33m'
-WHITE='\033[1;37m'
-NOCOLOR='\033[0m'
+MAIN_COLOR="$(tput setaf 26)"
+TUXCOLOR="$(tput setaf 172)"
+LIGHTBLUE="$(tput setaf 39)"
+BLUE="$(tput setaf 4)"
+RED="$(tput setaf 160)"
+GREEN="$(tput setaf 40)"
+YELLOW="$(tput setaf 220)"
+WHITE="$(tput setaf 255)"
+NOCOLOR="$(tput sgr0)"
 
 # FLAGS
 is_dhcp=0 # Check DHCP install
@@ -17,11 +18,44 @@ is_http=0 # Check HTTP install
 source Utils/show_message.sh
 source Utils/spinner.sh
 
+# Function to display spinner while a command runs
+spinner() {
+    local msg="$1"
+    spin[0]="-"
+    spin[1]="\\"
+    spin[2]="|"
+    spin[3]="/"
+  
+    echo -n "${msg} ${spin[0]}"
+    while true; do
+        for i in "${spin[@]}"; do
+        echo -ne "\b\b\b[$i]"
+        sleep 0.1
+        done
+    done
+}
+
 check_services_install() {
-    is_dhcp=$(yum list installed | grep -q dhcp-server && echo 1 || echo 0)
-    is_http=$(yum list installed | grep -q httpd && echo 1 || echo 0)
-    show_message "!" "Checking Packages..." $YELLOW
-    spinner "Wait..."
+    # Start the spinner in the background
+    stty -echo
+    stty igncr
+    spinner "$(show_message "!" "Checking Packages...  " $YELLOW)" &
+    spinner_pid=$!
+
+    # Check for installed packages
+    yum list installed | grep -q dhcp-server && is_dhcp=1
+    yum list installed | grep -q httpd && is_http=1
+
+    # Stop the spinner
+    kill $spinner_pid 
+    sleep 1
+    clear
+
+    show_menu
+    echo -ne "\r$(show_message "!" "Done..." $GREEN)"
+    stty echo
+    stty -igncr
+    echo -ne "\r"
 }
 
 check_and_continue() {
@@ -51,16 +85,16 @@ display_not_installed_message() {
 }
 
 show_title() {
-    bash Utils/show_title.sh $LIGHTBLUE 
+    bash Utils/show_title.sh $TUXCOLOR
 }
 
 
 show_menu() {
     show_title
-    echo -e " \n ${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} Service Installation\t\t${MAIN_COLOR}[${LIGHTBLUE}5${MAIN_COLOR}]${NOCOLOR} Info"
-    echo -e " ${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} Service Configuration\t\t${MAIN_COLOR}[${LIGHTBLUE}6${MAIN_COLOR}]${NOCOLOR} Quit"
-    echo -e " ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Service Management"
-    echo -e " ${MAIN_COLOR}[${LIGHTBLUE}4${MAIN_COLOR}]${NOCOLOR} Service Monitoring"
+    echo -e " \n ${MAIN_COLOR}[${TUXCOLOR}1${MAIN_COLOR}]${NOCOLOR} Service Installation\t\t${MAIN_COLOR}[${TUXCOLOR}5${MAIN_COLOR}]${NOCOLOR} Info"
+    echo -e " ${MAIN_COLOR}[${TUXCOLOR}2${MAIN_COLOR}]${NOCOLOR} Service Configuration\t\t${MAIN_COLOR}[${TUXCOLOR}6${MAIN_COLOR}]${NOCOLOR} Quit"
+    echo -e " ${MAIN_COLOR}[${TUXCOLOR}3${MAIN_COLOR}]${NOCOLOR} Service Management"
+    echo -e " ${MAIN_COLOR}[${TUXCOLOR}4${MAIN_COLOR}]${NOCOLOR} Service Monitoring"
     echo ""
 }
 
@@ -77,9 +111,9 @@ show_info() {
     echo -e " ${MAIN_COLOR}@ Leonardo Aceves ${NOCOLOR}\thttps://github.com/L30AM"
     echo -e " ${MAIN_COLOR}@ Sergio Méndez ${NOCOLOR}\thttps://github.com/sergiomndz15"
     echo -e " ${MAIN_COLOR}@ Alexandra Gonzáles ${NOCOLOR}\thttps://github.com/AlexMangle"
-    echo -ne " ${MAIN_COLOR}Press [${LIGHTBLUE}ANY KEY${MAIN_COLOR}] to continue..."
+    echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+    echo -ne " ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
     read -r -n 1 -s
-    echo ""
     clear
 }
 
@@ -88,16 +122,16 @@ show_menu_install() {
     clear
     show_title
     echo ""
-    echo -e " ${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} Install DHCP Service"
-    echo -e " ${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} Install WEB Service"
-    echo -e " ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Go Back"
+    echo -e " ${MAIN_COLOR}[${TUXCOLOR}1${MAIN_COLOR}]${NOCOLOR} Install DHCP Service"
+    echo -e " ${MAIN_COLOR}[${TUXCOLOR}2${MAIN_COLOR}]${NOCOLOR} Install WEB Service"
+    echo -e " ${MAIN_COLOR}[${TUXCOLOR}3${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
 menu_install() {
     show_menu_install
     while true; do
-        echo -ne " ${MAIN_COLOR}Enter An Option ${LIGHTBLUE}\$${MAIN_COLOR}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter An Option ${TUXCOLOR}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
@@ -123,18 +157,18 @@ menu_install() {
 show_menu_config() {
     show_title
 
-    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} Configure DHCP Service"
+    echo -ne "\n ${MAIN_COLOR}[${TUXCOLOR}1${MAIN_COLOR}]${NOCOLOR} Configure DHCP Service"
     display_not_installed_message "DHCP" $is_dhcp
-    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} Configure WEB Service"
+    echo -ne "\n ${MAIN_COLOR}[${TUXCOLOR}2${MAIN_COLOR}]${NOCOLOR} Configure WEB Service"
     display_not_installed_message "WEB (HTTP)" $is_http
-    echo -e "\n\n ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Go Back"
+    echo -e "\n\n ${MAIN_COLOR}[${TUXCOLOR}3${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
 menu_config() {
     show_menu_config
     while true; do
-        echo -ne " ${MAIN_COLOR}Enter An Option ${LIGHTBLUE}\$${MAIN_COLOR}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter An Option ${TUXCOLOR}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
@@ -158,18 +192,18 @@ menu_config() {
 show_menu_manage() {
     show_title
 
-    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} Manage DHCP Service"
+    echo -ne "\n ${MAIN_COLOR}[${TUXCOLOR}1${MAIN_COLOR}]${NOCOLOR} Manage DHCP Service"
     display_not_installed_message "DHCP" $is_dhcp
-    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} Manage WEB Service"
+    echo -ne "\n ${MAIN_COLOR}[${TUXCOLOR}2${MAIN_COLOR}]${NOCOLOR} Manage WEB Service"
     display_not_installed_message "WEB (HTTP)" $is_http
-    echo -e "\n\n ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Go Back"
+    echo -e "\n\n ${MAIN_COLOR}[${TUXCOLOR}3${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
 menu_manage() {
     show_menu_manage
     while true; do
-        echo -ne " ${MAIN_COLOR}Enter An Option ${LIGHTBLUE}\$${MAIN_COLOR}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter An Option ${TUXCOLOR}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
@@ -193,18 +227,18 @@ menu_manage() {
 show_menu_status() {
     show_title
 
-    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} DHCP Service Status"
+    echo -ne "\n ${MAIN_COLOR}[${TUXCOLOR}1${MAIN_COLOR}]${NOCOLOR} DHCP Service Status"
     display_not_installed_message "DHCP" $is_dhcp
-    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} WEB Service Status"
+    echo -ne "\n ${MAIN_COLOR}[${TUXCOLOR}2${MAIN_COLOR}]${NOCOLOR} WEB Service Status"
     display_not_installed_message "WEB (HTTP)" $is_http
-    echo -e "\n\n ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Go Back"
+    echo -e "\n\n ${MAIN_COLOR}[${TUXCOLOR}3${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
 menu_status() {
     show_menu_status
     while true; do
-        echo -ne " ${MAIN_COLOR}Enter An Option ${LIGHTBLUE}\$${MAIN_COLOR}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter An Option ${TUXCOLOR}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
@@ -230,7 +264,7 @@ main_menu() {
     show_menu
     check_services_install 
     while true; do
-        echo -ne " ${MAIN_COLOR}Enter An Option ${LIGHTBLUE}\$${MAIN_COLOR}>: ${NOCOLOR}"
+        echo -ne " ${MAIN_COLOR}Enter An Option ${TUXCOLOR}\$${MAIN_COLOR}>: ${NOCOLOR}"
         read -r op
         if [ -z "$op" ]; then
             echo "" > /dev/null

@@ -1,14 +1,16 @@
 #!/bin/bash
 
 # COLORS: Define color codes for terminal output
-MAIN_COLOR='\033[0;1;34;94m'
-HTTPCOLOR='\033[1;35m'
-RED='\033[0;31m'
-GREEN='\033[0;0;32;92m'
-BLUE='\033[0;1;34;94m'
-YELLOW='\033[0;33m'
-WHITE='\033[1;37m'
-NOCOLOR='\033[0m'  # Reset color
+MAIN_COLOR="$(tput setaf 26)"
+TUXCOLOR="$(tput setaf 172)"
+HTTPCOLOR="$(tput setaf 162)"
+LIGHTBLUE="$(tput setaf 39)"
+BLUE="$(tput setaf 4)"
+RED="$(tput setaf 160)"
+GREEN="$(tput setaf 40)"
+YELLOW="$(tput setaf 220)"
+WHITE="$(tput setaf 255)"
+NOCOLOR="$(tput sgr0)"  # Reset color
 
 # UTILS: Source utility scripts for additional functionality
 source Utils/progress_bar.sh

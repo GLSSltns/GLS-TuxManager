@@ -1,14 +1,16 @@
 #!/bin/bash
 
 # COLORS
-MAIN_COLOR='\033[0;1;34;94m'
-DHCPCOLOR='\033[1;33m'
-RED='\033[0;31m'
-GREEN='\033[0;0;32;92m'
-BLUE='\033[0;1;34;94m'
-YELLOW='\033[0;33m'
-WHITE='\033[1;37m'
-NOCOLOR='\033[0m'
+MAIN_COLOR="$(tput setaf 26)"
+TUXCOLOR="$(tput setaf 172)"
+DHCPCOLOR="$(tput setaf 221)"
+LIGHTBLUE="$(tput setaf 39)"
+BLUE="$(tput setaf 4)"
+RED="$(tput setaf 160)"
+GREEN="$(tput setaf 40)"
+YELLOW="$(tput setaf 220)"
+WHITE="$(tput setaf 255)"
+NOCOLOR="$(tput sgr0)"
 
 source Utils/show_message.sh
 source Utils/progress_bar.sh
@@ -17,7 +19,7 @@ source Utils/show_title.sh
 is_started=0
 
 is_dhcp_started(){
-    is_started=$(systemctl status dhcpd | grep -Po "Active: \K[a-z\(\)_]*" | grep -q ac && echo 1 || echo 0)
+    is_started=$(systemctl is-active dhcpd | grep -Po "^active" | grep -q ac && echo 1 || echo 0)
 }
 validate_start(){
     clear
@@ -34,6 +36,7 @@ validate_start(){
             error=$(journalctl -xeu dhcpd.service | "/etc/dhcp/dhcpd.conf")
             echo -e "${RED}Failed to start DHCP"
             echo "$error"
+        fi
     fi
 }
 

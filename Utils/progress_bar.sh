@@ -7,6 +7,8 @@ progress_bar() {
     local interval=$((duration / steps))  # Time interval between steps
 
     local color=$2  # Color for the progress bar
+    stty -echo
+    stty igncr
     for ((i = 0; i <= steps; i++)); do
         echo -ne "${BLUE} ["  # Start 
         for ((j = 0; j < i; j++)); do echo -ne "${color}###"; done  # Filled portion
@@ -15,4 +17,6 @@ progress_bar() {
         sleep $interval  # Wait for the interval duration
     done
     echo -e "${NOCOLOR}"  # Reset color and move to a new line
+    stty echo
+    stty -igncr
 }
