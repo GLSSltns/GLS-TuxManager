@@ -94,7 +94,7 @@ validate_start(){
     clear
     show_title
     echo ""
-    spinner 3 "$(show_message "!" "Checking for DHCP status..." $YELLOW)"
+    spinner 3 "$(show_message "!" "Checking for DHCP status...   " $YELLOW)"
     show_message "!" "Done...\n" $GREEN
     sleep 3
     clear
@@ -133,44 +133,84 @@ validate_start(){
 }
 
 validate_restart(){
+    clear
+    show_title
+    echo ""
+    spinner 3 "$(show_message "!" "Checking for DHCP status...   " $YELLOW)"
+    show_message "!" "Done...\n" $GREEN
+    sleep 3
+    clear
     show_title
     is_dhcp_started
     if [ $is_started -eq 0 ]; then
-        show_message $RED "DHCP service is not running. Would you like to start it instead?"
-        if prompt_confirmation "Start DHCP service?"; then
-            validate_start
-        else
-            show_message $YELLOW "DHCP service restart aborted by user."
-        fi
+        echo ""
+        show_message "!" "DHCP service is not running. Would you like to start it instead?" $YELLOW
+        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+        read -r -n 1 -s
+        validate_start
     else
-        systemctl restart dhcpd > /dev/null 2>&1
-        if [ $? -eq 0 ]; then
-            show_message $GREEN "DHCP service restarted successfully."
+        if prompt_confirmation "Are you sure you want to restart the DHCP service?"; then
+            echo ""
+            show_message "!" "Restarting DHCP service..." $YELLOW
+            systemctl restart dhcpd > /dev/null 2>&1
+            progress_bar 5 $YELLOW
+            is_dhcp_started
+            sleep 2
+            if [ $is_started -eq 1 ]; then
+                show_message "-" "DHCP service restarted successfully." $GREEN
+            else
+                error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
+                show_message "X" "Failed to restart DHCP. Check details below." $RED
+                show_error_details "$error_log"
+            fi
+            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+            echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+            read -r -n 1 -s
         else
-            error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
-            show_message $RED "Failed to restart DHCP. Check details below."
-            show_error_details "$error_log"
+            show_message "!" "DHCP service restart aborted." $YELLOW
+            sleep 3
         fi
     fi
 }
 
 validate_stop(){
+    clear
+    show_title
+    echo ""
+    spinner 3 "$(show_message "!" "Checking for DHCP status...   " $YELLOW)"
+    show_message "!" "Done...\n" $GREEN
+    sleep 3
+    clear
     show_title
     is_dhcp_started
     if [ $is_started -eq 0 ]; then
-        show_message $RED "DHCP service is already stopped."
+        echo ""
+        show_message "!" "DHCP service is already stopped." $YELLOW
+        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+        read -r -n 1 -s
     else
         if prompt_confirmation "Are you sure you want to stop the DHCP service?"; then
+            echo ""
+            show_message "!" "Stopping DHCP service..." $YELLOW
             systemctl stop dhcpd > /dev/null 2>&1
-            if [ $? -eq 0 ]; then
-                show_message $GREEN "DHCP service stopped successfully."
+            progress_bar 5 $YELLOW
+            is_dhcp_started
+            sleep 2
+            if [ $is_started -eq 0 ]; then
+                show_message "-" "DHCP service stopped successfully." $GREEN
             else
                 error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
-                show_message $RED "Failed to stop DHCP. Check details below."
+                show_message "X" "Failed to stop DHCP. Check details below." $RED
                 show_error_details "$error_log"
             fi
+            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+            echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+            read -r -n 1 -s
         else
-            show_message $YELLOW "DHCP service stop aborted by user."
+            show_message "!" "DHCP service stop aborted." $YELLOW
+            sleep 3
         fi
     fi
 }
