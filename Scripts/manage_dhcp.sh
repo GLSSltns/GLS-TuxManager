@@ -13,10 +13,14 @@ WHITE="$(tput setaf 255)"
 NOCOLOR="$(tput sgr0)"
 
 source Utils/show_message.sh
-source Utils/progress_bar.sh
-source Utils/show_title.sh
+source Utils/progress_bar.sh 
 
 is_started=0
+
+show_title() {
+    bash Utils/show_title.sh $DHCPCOLOR
+}
+
 
 is_dhcp_started(){
     is_started=$(systemctl is-active dhcpd | grep -Po "^active" | grep -q ac && echo 1 || echo 0)
@@ -44,7 +48,6 @@ categorize_error() {
 
 validate_start(){
     clear
-    show_title $YELLOW
     is_dhcp_started
     if [ $is_started -eq 1 ]; then
         show_message $RED "DHCP is already running."
@@ -63,7 +66,6 @@ validate_start(){
 
 validate_restart(){
     clear
-    show_title $YELLOW
     systemctl restart dhcpd > /dev/null 2>&1
     is_dhcp_started
     if [ $is_started -eq 1 ]; then
@@ -77,7 +79,6 @@ validate_restart(){
 
 validate_stop(){
     clear
-    show_title $YELLOW
     systemctl stop dhcpd > /dev/null 2>&1
     is_dhcp_started
     if [ $is_started -eq 0 ]; then
