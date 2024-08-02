@@ -91,7 +91,11 @@ prompt_confirmation() {
 
 validate_start(){
     clear
-    show_title $YELLOW
+    show_title
+    echo ""
+    show_message "!" "Checking for DHCP status...\n" $YELLOW
+    echo ""
+    sleep 2
     is_dhcp_started
     if [ $is_started -eq 1 ]; then
         show_message "!" "DHCP is already running." $YELLOW
@@ -104,7 +108,7 @@ validate_start(){
             echo ""
             show_message "!" "Starting DHCP service..." $YELLOW
             systemctl start dhcpd > /dev/null 2>&1
-            progress_bar 
+            progress_bar 5 $YELLOW
             is_dhcp_started
             sleep 2
             if [ $is_started -eq 1 ]; then
@@ -184,22 +188,16 @@ menu_dhcp() {
         case $op in
             1)
                 # DHCP start
-                show_message "!" "Checking for DHCP status...\n" $YELLOW
-                sleep 2
                 validate_start
                 menu_dhcp_man
                 ;;
             2)
                 # DHCP restart
-                show_message "!" "Checking for DHCP status...\n" $YELLOW
-                sleep 2
                 validate_restart
                 menu_dhcp_man
                 ;;
             3)
                 # DHCP stop
-                show_message "!" "Checking for DHCP status...\n" $YELLOW
-                sleep 2
                 validate_stop
                 menu_dhcp_man
                 ;;
