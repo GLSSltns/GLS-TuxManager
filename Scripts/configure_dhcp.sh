@@ -164,7 +164,7 @@ configure_domain_name_servers() {
 
 configure_default_lease_time() {
     while [ true ]; do
-        echo -ne " Enter the default lease time (in seconds${NOCOLOR}): "
+        echo -ne " Enter the default lease time (${DHCPCOLOR}in seconds${NOCOLOR}): "
         read -r default_lease_time
         if [ -z "$default_lease_time" ]; then
             show_message "!" "Cancelled..." $YELLOW
@@ -181,7 +181,7 @@ configure_default_lease_time() {
 
 configure_max_lease_time() {
     while [ true ]; do
-        echo -ne " Enter the max lease time (in seconds${NOCOLOR}): "
+        echo -ne " Enter the max lease time (${DHCPCOLOR}in seconds${NOCOLOR}): "
         read -r max_lease_time
         if [ -z "$max_lease_time" ]; then
             show_message "!" "Cancelled..." $YELLOW

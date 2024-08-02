@@ -11,14 +11,14 @@ WHITE='\033[1;37m'
 NOCOLOR='\033[0m'
 
 # FLAGS
-ISDHCP=0 # Check DHCP install
-ISHTTP=0 # Check HTTP install
+is_dhcp=0 # Check DHCP install
+is_http=0 # Check HTTP install
 
 source Utils/show_message.sh
 
 check_services_install() {
-    ISDHCP=$(yum list installed | grep -q dhcp-server && echo 1 || echo 0)
-    ISHTTP=$(yum list installed | grep -q httpd && echo 1 || echo 0)
+    is_dhcp=$(yum list installed | grep -q dhcp-server && echo 1 || echo 0)
+    is_http=$(yum list installed | grep -q httpd && echo 1 || echo 0)
 }
 
 check_and_continue() {
@@ -121,10 +121,10 @@ show_menu_config() {
     show_title
 
     echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} Configure DHCP Service"
-    display_not_installed_message "DHCP" $ISDHCP
+    display_not_installed_message "DHCP" $is_dhcp
     echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} Configure WEB Service"
-    display_not_installed_message "WEB (HTTP)" $ISHTTP
-    echo -e "\n ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Go Back"
+    display_not_installed_message "WEB (HTTP)" $is_http
+    echo -e "\n\n ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
@@ -135,10 +135,10 @@ menu_config() {
         read -r op
         case $op in
             1)
-                check_and_continue "DHCP" $ISDHCP "Scripts/configure_dhcp.sh" "show_menu_config"
+                check_and_continue "DHCP" $is_dhcp "Scripts/configure_dhcp.sh" "show_menu_config"
                 ;;
             2)
-                check_and_continue "WEB" $ISHTTP "Scripts/configure_web.sh" "show_menu_config"
+                check_and_continue "WEB" $is_http "Scripts/configure_web.sh" "show_menu_config"
                 ;;
             3)
                 clear
@@ -156,10 +156,10 @@ show_menu_manage() {
     show_title
 
     echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} Manage DHCP Service"
-    display_not_installed_message "DHCP" $ISDHCP
+    display_not_installed_message "DHCP" $is_dhcp
     echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} Manage WEB Service"
-    display_not_installed_message "WEB (HTTP)" $ISHTTP
-    echo -e "\n ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Go Back"
+    display_not_installed_message "WEB (HTTP)" $is_http
+    echo -e "\n\n ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
@@ -170,10 +170,10 @@ menu_manage() {
         read -r op
         case $op in
             1)
-                check_and_continue "DHCP" $ISDHCP "Scripts/configure_dhcp.sh" "show_menu_manage"
+                check_and_continue "DHCP" $is_dhcp "Scripts/configure_dhcp.sh" "show_menu_manage"
                 ;;
             2)
-                check_and_continue "WEB" $ISHTTP "Scripts/configure_web.sh" "show_menu_manage"
+                check_and_continue "WEB" $is_http "Scripts/configure_web.sh" "show_menu_manage"
                 ;;
             3)
                 clear
@@ -191,10 +191,10 @@ show_menu_status() {
     show_title
 
     echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} DHCP Service Status"
-    display_not_installed_message "DHCP" $ISDHCP
+    display_not_installed_message "DHCP" $is_dhcp
     echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} WEB Service Status"
-    display_not_installed_message "WEB (HTTP)" $ISHTTP
-    echo -e "\n ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Go Back"
+    display_not_installed_message "WEB (HTTP)" $is_http
+    echo -e "\n\n ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
@@ -205,10 +205,10 @@ menu_status() {
         read -r op
         case $op in
             1)
-                check_and_continue "DHCP" $ISDHCP "Scripts/status_dhcp.sh" "show_menu_status"
+                check_and_continue "DHCP" $is_dhcp "Scripts/status_dhcp.sh" "show_menu_status"
                 ;;
             2)
-                check_and_continue "WEB" $ISHTTP "Scripts/status_web.sh" "show_menu_status"
+                check_and_continue "WEB" $is_http "Scripts/status_web.sh" "show_menu_status"
                 ;;
             3)
                 clear
