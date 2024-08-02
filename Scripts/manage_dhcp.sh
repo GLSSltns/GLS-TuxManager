@@ -79,8 +79,8 @@ prompt_confirmation() {
     prompt_message=$1
     while true; do
         echo ""
-        echo -ne "${WHITE} $prompt_message [${GREEN}y${WHITE}/${RED}n${NOCOLOR}]: " yn
-        read -r 
+        echo -ne "${WHITE} $prompt_message [${GREEN}Y${WHITE}/${RED}n${NOCOLOR}]: "
+        read -r yn
         case $yn in
             [Yy]*) return 0 ;;
             [Nn]*) return 1 ;;
@@ -95,11 +95,16 @@ validate_start(){
     is_dhcp_started
     if [ $is_started -eq 1 ]; then
         show_message "!" "DHCP is already running." $YELLOW
+        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+        read -r -n 1 -s
     else
         show_dhcp_config
         if prompt_confirmation "Are you sure you want to start the DHCP service with this configuration?"; then
+            echo ""
             show_message "!" "Starting DHCP service..." $YELLOW
             systemctl start dhcpd > /dev/null 2>&1
+            progress_bar 
             is_dhcp_started
             sleep 2
             if [ $is_started -eq 1 ]; then
@@ -109,15 +114,18 @@ validate_start(){
                 show_message "X" "Failed to start DHCP. Check details below." $RED
                 show_error_details "$error_log"
             fi
+            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+            echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+            read -r -n 1 -s
         else
             show_message "!" "DHCP service start aborted." $YELLOW
+            sleep 3
         fi
     fi
 }
 
 validate_restart(){
-    clear
-    show_title $YELLOW
+    show_title
     is_dhcp_started
     if [ $is_started -eq 0 ]; then
         show_message $RED "DHCP service is not running. Would you like to start it instead?"
@@ -139,8 +147,7 @@ validate_restart(){
 }
 
 validate_stop(){
-    clear
-    show_title $YELLOW
+    show_title
     is_dhcp_started
     if [ $is_started -eq 0 ]; then
         show_message $RED "DHCP service is already stopped."
