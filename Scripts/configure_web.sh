@@ -261,7 +261,7 @@ httpd_menu() {
     clear
     show_httpd_menu
     while [ true ]; do
-        echo -ne " ${MAIN_COLOR}Enter an option ${YELLOW}\$${MAIN_COLOR}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter an option ${HTTPCOLOR}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         if [ -z "$op" ]; then
             echo "" > /dev/null

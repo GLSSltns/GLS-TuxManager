@@ -62,7 +62,7 @@ EOL
 
 configure_subnet() {
     while [ true ]; do
-        echo -ne "Enter the subnet (e.g., 192.168.1.0): "
+        echo -ne " Enter the subnet (${DHCPCOLOR}e.g., 192.168.1.0${NOCOLOR}): "
         read -r subnet
         if [ -z "$subnet" ]; then
             show_message "!" "Cancelled..." $YELLOW
@@ -79,7 +79,7 @@ configure_subnet() {
 
 configure_netmask() {
     while [ true ]; do
-        echo -ne "Enter the netmask (e.g., 255.255.255.0): "
+        echo -ne " Enter the netmask (${DHCPCOLOR}e.g., 255.255.255.0${NOCOLOR}): "
         read -r netmask
         if [ -z "$netmask" ]; then
             show_message "!" "Cancelled..." $YELLOW
@@ -96,7 +96,7 @@ configure_netmask() {
 
 configure_range() {
     while [ true ]; do
-        echo -ne "Enter the range (e.g., 192.168.1.100 192.168.1.200): "
+        echo -ne " Enter the range (${DHCPCOLOR}e.g., 192.168.1.100 192.168.1.200${NOCOLOR}): "
         read -r range
         if [ -z "$range" ]; then
             show_message "!" "Cancelled..." $YELLOW
@@ -113,7 +113,7 @@ configure_range() {
 
 configure_routers() {
     while [ true ]; do
-        echo -ne "Enter the routers (e.g., 192.168.1.1): "
+        echo -ne " Enter the routers (${DHCPCOLOR}e.g., 192.168.1.1${NOCOLOR}): "
         read -r routers
         if [ -z "$routers" ]; then
             show_message "!" "Cancelled..." $YELLOW
@@ -130,7 +130,7 @@ configure_routers() {
 
 configure_domain_name() {
     while [ true ]; do
-        echo -ne "Enter the domain name (e.g., example.com): "
+        echo -ne " Enter the domain name (${DHCPCOLOR}e.g., example.com${NOCOLOR}): "
         read -r domain_name
         if [ -z "$domain_name" ]; then
             show_message "!" "Cancelled..." $YELLOW
@@ -147,7 +147,7 @@ configure_domain_name() {
 
 configure_domain_name_servers() {
     while [ true ]; do
-        echo -ne "Enter the domain name servers (e.g., 8.8.8.8, 8.8.4.4): "
+        echo -ne " Enter the domain name servers (${DHCPCOLOR}e.g., 8.8.8.8, 8.8.4.4${NOCOLOR}): "
         read -r domain_name_servers
         if [ -z "$domain_name_servers" ]; then
             show_message "!" "Cancelled..." $YELLOW
@@ -164,7 +164,7 @@ configure_domain_name_servers() {
 
 configure_default_lease_time() {
     while [ true ]; do
-        echo -ne "Enter the default lease time (in seconds): "
+        echo -ne " Enter the default lease time (in seconds${NOCOLOR}): "
         read -r default_lease_time
         if [ -z "$default_lease_time" ]; then
             show_message "!" "Cancelled..." $YELLOW
@@ -181,7 +181,7 @@ configure_default_lease_time() {
 
 configure_max_lease_time() {
     while [ true ]; do
-        echo -ne "Enter the max lease time (in seconds): "
+        echo -ne " Enter the max lease time (in seconds${NOCOLOR}): "
         read -r max_lease_time
         if [ -z "$max_lease_time" ]; then
             show_message "!" "Cancelled..." $YELLOW
@@ -232,7 +232,7 @@ dhcp_menu() {
     clear    
     show_dhcp_menu
     while [ true ]; do
-        echo -ne " ${MAIN_COLOR}Enter an option ${YELLOW}\$${MAIN_COLOR}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter an option ${DHCPCOLOR}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         if [ -z "$op" ]; then
             echo "" > /dev/null
@@ -278,7 +278,8 @@ dhcp_menu() {
                 10) 
                     if [ $dhcp_conf_changed -eq 1 ]; then
                         show_message "!!" "You have unsaved changes." $YELLOW
-                        echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
+                        echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}${MAIN_COLOR}
+ NOCOLOR}): "
                         read -r confirm
                         if [[ "$confirm" =~ ^[Yy]$ ]]; then
                             echo ""
@@ -305,7 +306,7 @@ dhcp_menu() {
 
 configure_interface() {
     while [ true ]; do
-        echo -ne "Enter the interface to listen on (e.g., enp0s9): "
+        echo -ne " Enter the interface to listen on (${DHCPCOLOR}e.g., enp0s9${NOCOLOR}): "
         read -r interface
         if [ -z "$interface" ]; then
             show_message "!" "Cancelled..." $YELLOW
@@ -322,7 +323,7 @@ configure_interface() {
 
 configure_ip_prefix() {
     while [ true ]; do
-        echo -ne "Enter the IP address and prefix (e.g., 192.168.1.1/24): "
+        echo -ne " Enter the IP address and prefix (${DHCPCOLOR}e.g., 192.168.1.1/24${NOCOLOR}): "
         read -r ip_prefix
         if [ -z "$ip_prefix" ]; then
             show_message "!" "Cancelled..." $YELLOW
@@ -339,7 +340,7 @@ configure_ip_prefix() {
 
 configure_gateway() {
     while [ true ]; do
-        echo -ne "Enter the gateway (e.g., 192.168.1.1): "
+        echo -ne " Enter the gateway (${DHCPCOLOR}e.g., 192.168.1.1${NOCOLOR}): "
         read -r gateway
         if [ -z "$gateway" ]; then
             show_message "!" "Cancelled..." $YELLOW
@@ -356,7 +357,7 @@ configure_gateway() {
 
 configure_dns() {
     while [ true ]; do
-        echo -ne "Enter the DNS server (e.g., 8.8.8.8): "
+        echo -ne " Enter the DNS server (${DHCPCOLOR}e.g., 8.8.8.8${NOCOLOR}): "
         read -r dns
         if [ -z "$dns" ]; then
             show_message "!" "Cancelled..." $YELLOW
@@ -493,7 +494,7 @@ interface_menu() {
     show_interface_menu
     while [ true ]; do
         interface_state
-        echo -ne " ${MAIN_COLOR}Enter an option ${YELLOW}\$${MAIN_COLOR}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter an option ${DHCPCOLOR}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         if [ -z "$op" ]; then
             echo "" > /dev/null
@@ -531,7 +532,8 @@ interface_menu() {
                 8)
                     if [ $interface_conf_changed -eq 1 ]; then
                         show_message "!!" "You have unsaved changes." $YELLOW
-                        echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
+                        echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}${MAIN_COLOR}
+ NOCOLOR}): "
                         read -r confirm
                         if [[ "$confirm" =~ ^[Yy]$ ]]; then
                             echo ""
@@ -565,7 +567,7 @@ main_menu() {
         echo ""
         echo -e " ${MAIN_COLOR}[${DHCPCOLOR}3${MAIN_COLOR}]${NOCOLOR} Exit DHCP configuration"
         echo ""
-        echo -ne " ${MAIN_COLOR}Enter an option ${YELLOW}\$${MAIN_COLOR}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter an option ${DHCPCOLOR}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         if [ -z "$op" ]; then
             echo "" > /dev/null

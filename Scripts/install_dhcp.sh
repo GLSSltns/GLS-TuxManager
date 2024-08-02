@@ -115,7 +115,7 @@ menu()
     show_title
     show_menu
     while true; do
-        echo -ne " ${MAIN_COLOR}Enter An Option ${YELLOW}\$${MAIN_COLOR}>:${NOCOLOR} "
+        echo -ne " ${MAIN_COLOR}Enter An Option ${DHCPCOLOR}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
