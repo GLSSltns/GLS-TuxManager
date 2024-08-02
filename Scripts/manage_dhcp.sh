@@ -26,7 +26,7 @@ validate_start(){
             systemctl enable dhcpd
         else
             echo "Error al iniciar el servicio DHCP."
-            journalctl -xeu dhcpd.service | grep dhcpd > /dev/null/ 2>&1
+            journalctl -xeu dhcpd.service | grep dhcpd > /dev/null 2>&1
         fi
     fi
 }
