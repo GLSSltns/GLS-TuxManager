@@ -27,6 +27,8 @@ show_title() {
 
 create_directory() {
     while [ true ]; do
+        clear 
+        show_title
         echo -ne "\n Enter the name of the directory to create: "
         read -r dir_name
         if [ -z "$dir_name" ]; then
@@ -37,6 +39,7 @@ create_directory() {
             if validate_input_regex "$dir_name" '^[a-zA-Z0-9_-]+$'; then
                 mkdir -p "$HTTPD_ROOT/$dir_name"
                 show_message "+" "Directory '$dir_name' created successfully." $GREEN
+                echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
                 echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
                 read -r -n 1 -s
                 config_changed=1
@@ -276,8 +279,6 @@ httpd_menu() {
         else
             case $op in
                 1) 
-                    clear
-                    show_title
                     list_files
                     show_httpd_menu
                     ;;
