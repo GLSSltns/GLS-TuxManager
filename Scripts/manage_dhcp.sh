@@ -13,7 +13,7 @@ WHITE="$(tput setaf 255)"
 NOCOLOR="$(tput sgr0)"
 
 source Utils/show_message.sh
-source Utils/progress_bar.sh 
+source Utils/progress_bar.sh
 
 is_started=0
 
@@ -46,11 +46,42 @@ categorize_error() {
     fi
 }
 
+read_config() {
+    config_file=$1
+    subnet=$(grep -Po 'subnet \K[\d.]+' "$config_file")
+    netmask=$(grep -Po 'netmask \K[\d.]+' "$config_file")
+    range=$(grep -Po 'range \K[\d. ]+' "$config_file")
+    routers=$(grep -Po 'option routers \K[\d.]+' "$config_file")
+    domain_name=$(grep -Po 'option domain-name "\K[^"]+' "$config_file")
+    domain_name_servers=$(grep -Po 'option domain-name-servers \K[\d., ]+' "$config_file")
+    default_lease_time=$(grep -Po 'default-lease-time \K\d+' "$config_file")
+    max_lease_time=$(grep -Po 'max-lease-time \K\d+' "$config_file")
+}
+
+read_interface_config() {
+    interface_config_file=$1
+    interface=$(grep -Po 'DHCPDARGS=\K[^;]*' "$interface_config_file")
+    ip_prefix=$(nmcli con show "$interface" | grep ipv4.addresses | awk '{print $2}')
+    gateway=$(nmcli con show "$interface" | grep ipv4.gateway | awk '{print $2}')
+    dns=$(nmcli con show "$interface" | grep ipv4.dns: | awk '{print $2}')
+}
+
 show_dhcp_config() {
+    read_config /etc/dhcp/dhcpd.conf
+    read_interface_config /etc/sysconfig/dhcpd
     echo -e "${YELLOW}Current DHCP Configuration:${NOCOLOR}"
-    grep -E "^(subnet|interface|option)" /etc/dhcp/dhcpd.conf | while read -r line; do
-        echo -e "${WHITE}$line${NOCOLOR}"
-    done
+    echo -e "${WHITE}Interface: $interface"
+    echo -e "IP Prefix: $ip_prefix"
+    echo -e "Gateway: $gateway"
+    echo -e "DNS: $dns"
+    echo -e "Subnet: $subnet"
+    echo -e "Netmask: $netmask"
+    echo -e "Range: $range"
+    echo -e "Routers: $routers"
+    echo -e "Domain Name: $domain_name"
+    echo -e "Domain Name Servers: $domain_name_servers"
+    echo -e "Default Lease Time: $default_lease_time"
+    echo -e "Max Lease Time: $max_lease_time${NOCOLOR}"
 }
 
 prompt_confirmation() {
