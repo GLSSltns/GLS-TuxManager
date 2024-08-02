@@ -170,10 +170,10 @@ menu_manage() {
         read -r op
         case $op in
             1)
-                check_and_continue "DHCP" $is_dhcp "Scripts/configure_dhcp.sh" "show_menu_manage"
+                check_and_continue "DHCP" $is_dhcp "Scripts/manage_dhcp.sh" "show_menu_manage"
                 ;;
             2)
-                check_and_continue "WEB" $is_http "Scripts/configure_web.sh" "show_menu_manage"
+                check_and_continue "WEB" $is_http "Scripts/manage_web.sh" "show_menu_manage"
                 ;;
             3)
                 clear
