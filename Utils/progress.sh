@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NOCOLOR='\033[0m'
+no_color='\033[0m'
 
 # Function to display a progress bar
 progress_bar() {
@@ -14,11 +14,11 @@ progress_bar() {
     for ((i = 0; i <= steps; i++)); do
         echo -ne "${main_color} ["  # Start 
         for ((j = 0; j < i; j++)); do echo -ne "${color}###"; done  # Filled portion
-        for ((j = i; j < steps; j++)); do echo -ne "${NOCOLOR}..."; done  # Unfilled portion
+        for ((j = i; j < steps; j++)); do echo -ne "${no_color}..."; done  # Unfilled portion
         echo -ne "${main_color}] ${color}$((i * 10))${main_color}%\r"  # Display percentage
         sleep $interval  # Wait for the interval duration
     done
-    echo -e "${NOCOLOR}"  # Reset color and move to a new line
+    echo -e "${no_color}"  # Reset color and move to a new line
 }
 
 #!/bin/bash
