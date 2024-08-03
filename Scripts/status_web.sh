@@ -70,15 +70,16 @@ show_logs() {
     # Loop through each log line and extract relevant details
     for line in "${log_lines[@]}"; do
         address=$(echo "$line" | awk '{print $1}')  # Extract the IP address
-        date=$(echo "$line" | awk -F'[' '{print $2}' | awk -F']' '{print $1}')  # Extract the date and time
-        method=$(echo "$line" | awk -F'"' '{print $2}' | awk '{print $1}')  # Extract the HTTP method
-        url=$(echo "$line" | awk -F'"' '{print $2}' | awk '{print $2}')  # Extract the URL
+        echo $address
+        # date=$(echo "$line" | awk -F'[' '{print $2}' | awk -F']' '{print $1}')  # Extract the date and time
+        # method=$(echo "$line" | awk -F'"' '{print $2}' | awk '{print $1}')  # Extract the HTTP method
+        # url=$(echo "$line" | awk -F'"' '{print $2}' | awk '{print $2}')  # Extract the URL
         
-        # Print the extracted details in a formatted table
-        printf "${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-20s${MAIN_COLOR} │ ${WHITE}%-7s${MAIN_COLOR} │ ${WHITE}%-20s${MAIN_COLOR} │${NOCOLOR}\n" "$address" "$date" "$method" "$url"
-        echo -e "${MAIN_COLOR}  ------------------------------------------------------------${NOCOLOR}"
+        # # Print the extracted details in a formatted table
+        # printf "${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-20s${MAIN_COLOR} │ ${WHITE}%-7s${MAIN_COLOR} │ ${WHITE}%-20s${MAIN_COLOR} │${NOCOLOR}\n" "$address" "$date" "$method" "$url"
+        # echo -e "${MAIN_COLOR}  ------------------------------------------------------------${NOCOLOR}"
     done
-    
+
     echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
     echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
     read -r -n 1 -s 
