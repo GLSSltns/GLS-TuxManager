@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export TERM=xterm-256color
+
 source Utils/get_colors.sh
 source Utils/show_message.sh
 source Utils/spinner.sh

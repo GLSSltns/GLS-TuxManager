@@ -5,7 +5,6 @@
 export TERM=xterm-256color
 color_count=$(tput colors)
 
-
 if [ $color_count -eq 8 ]; then
     export MAIN_COLOR='\033[0;1;34;94m'
     export TUXCOLOR="$(tput setaf 3)"
