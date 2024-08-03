@@ -39,8 +39,9 @@ show_error_details() {
     fi
     pid="$(echo "$pid_part" | grep -oP 'dhcpd\[\K[0-9]+(?=\])')"
 
-    echo ""
     clear
+    show_title
+    echo ""
     show_message "X" "Failed to start DHCP. Check details below." $RED
 
     echo ""
