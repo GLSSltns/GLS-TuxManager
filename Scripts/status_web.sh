@@ -64,9 +64,9 @@ show_logs() {
     # Extract the last 20 lines from the access log
     log_lines=$(tail -n 20 /var/log/httpd/access_log)
 
-    echo -e "${MAIN_COLOR}  ----------------------------------------------------------------${NOCOLOR}"
+    # echo -e "${MAIN_COLOR}  ----------------------------------------------------------------${NOCOLOR}"
     printf "${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-20s${MAIN_COLOR} │ ${WHITE}%-7s${MAIN_COLOR} │ ${WHITE}%-30s${MAIN_COLOR} │${NOCOLOR}\n" "ADDRESS" "DATE" "METHOD" "URL"
-    echo -e "${MAIN_COLOR}  ----------------------------------------------------------------${NOCOLOR}"
+    # echo -e "${MAIN_COLOR}  ----------------------------------------------------------------${NOCOLOR}"
 
     # Loop through each log line and extract relevant details using regex
     while IFS= read -r line; do
@@ -77,9 +77,10 @@ show_logs() {
 
         # Print the extracted details in a formatted table
         printf "${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-20s${MAIN_COLOR} │ ${WHITE}%-7s${MAIN_COLOR} │ ${WHITE}%-30s${MAIN_COLOR} │${NOCOLOR}\n" "$address" "$date" "$method" "$url"
-        echo -e "${MAIN_COLOR}  ----------------------------------------------------------------${NOCOLOR}"
+        # echo -e "${MAIN_COLOR}  ----------------------------------------------------------------${NOCOLOR}"
     done <<< "$log_lines"
 
+    echo ""
     echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
     echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
     read -r -n 1 -s
