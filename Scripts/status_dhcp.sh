@@ -60,7 +60,7 @@ show_logs() {
     show_title
     echo ""
     spinner 3 "$(show_message "!" "Showing DHCP leases log...   " $YELLOW)"
-
+    echo 
     # Extract and sort unique hostnames, IP addresses, and MAC addresses from the DHCP leases file
     HOSTNAMES=$(grep -Po "client-hostname \K[\d:a-zA-Z^\"]*" /var/lib/dhcpd/dhcpd.leases | sed 's/"//g' | sort | uniq)
     ADDRESSES=$(grep -Po "lease \K[\d.]*" /var/lib/dhcpd/dhcpd.leases | sort | uniq)
@@ -76,7 +76,7 @@ show_logs() {
         HOSTNAME=$(echo "$HOSTNAMES" | sed -n "${i}p")
         ADDRESS=$(echo "$ADDRESSES" | sed -n "${i}p")
         MAC=$(echo "$MACS" | sed -n "${i}p")
-        printf "${MAIN_COLOR}  │ ${WHITE}%-10s${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-17s${MAIN_COLOR} │${NOCOLOR}\n" "$HOSTNAME" "$ADDRESS" "$MAC"
+        printf "${MAIN_COLOR} │ ${WHITE}%-10s${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-17s${MAIN_COLOR} │${NOCOLOR}\n" "$HOSTNAME" "$ADDRESS" "$MAC"
     done
     echo -e "${MAIN_COLOR}  --------------------------------------------------${NOCOLOR}"
     echo ""
