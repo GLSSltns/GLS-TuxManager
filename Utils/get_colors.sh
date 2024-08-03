@@ -2,8 +2,8 @@
 
 # Check for 256 color support
 
-color_count=$(tput colors)
 export TERM=xterm-256color
+color_count=$(tput colors)
 
 
 if [ $color_count -eq 8 ]; then
