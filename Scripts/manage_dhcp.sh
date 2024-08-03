@@ -42,7 +42,7 @@ show_error_details() {
     clear
     show_title
     echo ""
-    show_message "X" "Failed to start DHCP. Check details below." $RED
+    show_message "X" "Failed to manage DHCP. Check details below." $RED
 
     echo ""
     echo -e " ${MAIN_COLOR}Date: ${NOCOLOR}$day $mont, $time"
@@ -146,10 +146,9 @@ validate_start(){
             if [ $is_started -eq 1 ]; then
                 show_message "-" "DHCP service started successfully." $GREEN
             else
-                error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
                 show_message "X" "Failed to start DHCP." $RED
                 sleep 1
-                show_error_details "$error_log"
+                show_error_details 
             fi
             echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
             echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
@@ -189,9 +188,9 @@ validate_restart(){
             if [ $is_started -eq 1 ]; then
                 show_message "-" "DHCP service restarted successfully." $GREEN
             else
-                error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
-                show_message "X" "Failed to restart DHCP. Check details below." $RED
-                show_error_details "$error_log"
+                show_message "X" "Failed to resstart DHCP." $RED
+                sleep 1
+                show_error_details 
             fi
             echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
             echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
@@ -230,9 +229,9 @@ validate_stop(){
             if [ $is_started -eq 0 ]; then
                 show_message "-" "DHCP service stopped successfully." $GREEN
             else
-                error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
-                show_message "X" "Failed to stop DHCP. Check details below." $RED
-                show_error_details "$error_log"
+                show_message "X" "Failed to stop DHCP." $RED
+                sleep 1
+                show_error_details 
             fi
             echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
             echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
@@ -280,7 +279,7 @@ menu_dhcp() {
                 ;;
             *)
                 # Invalid option
-                show_message $RED "Invalid option. Please enter a number between 1 and 4."
+                show_message "X" "Invalid option." $RED 
                 ;;
         esac
     done

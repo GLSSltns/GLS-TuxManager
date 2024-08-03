@@ -59,30 +59,30 @@ show_logs() {
     show_title
     echo ""
     spinner 3 "$(show_message "!" "Showing HTTP access logs...   " $YELLOW)"
-    echo 
+    echo
 
-    # Read the last 20 lines from the access log
-    log_lines=( $(grep -o '.*' /var/log/httpd/access_log | tail -n 20) )
-    echo -e "${MAIN_COLOR}  ------------------------------------------------------------${NOCOLOR}"
-    printf "${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-20s${MAIN_COLOR} │ ${WHITE}%-7s${MAIN_COLOR} │ ${WHITE}%-20s${MAIN_COLOR} │${NOCOLOR}\n" "ADDRESS" "DATE" "METHOD" "URL"
-    echo -e "${MAIN_COLOR}  ------------------------------------------------------------${NOCOLOR}"
-    
-    # Loop through each log line and extract relevant details
-    for line in "${log_lines[@]}"; do
-        address=$(echo "$line" | awk '{print $1}')  # Extract the IP address
-        echo $address
-        # date=$(echo "$line" | awk -F'[' '{print $2}' | awk -F']' '{print $1}')  # Extract the date and time
-        # method=$(echo "$line" | awk -F'"' '{print $2}' | awk '{print $1}')  # Extract the HTTP method
-        # url=$(echo "$line" | awk -F'"' '{print $2}' | awk '{print $2}')  # Extract the URL
-        
-        # # Print the extracted details in a formatted table
-        # printf "${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-20s${MAIN_COLOR} │ ${WHITE}%-7s${MAIN_COLOR} │ ${WHITE}%-20s${MAIN_COLOR} │${NOCOLOR}\n" "$address" "$date" "$method" "$url"
-        # echo -e "${MAIN_COLOR}  ------------------------------------------------------------${NOCOLOR}"
-    done
+    # Extract the last 20 lines from the access log
+    log_lines=$(tail -n 20 /var/log/httpd/access_log)
+
+    echo -e "${MAIN_COLOR}  ----------------------------------------------------------------${NOCOLOR}"
+    printf "${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-20s${MAIN_COLOR} │ ${WHITE}%-7s${MAIN_COLOR} │ ${WHITE}%-30s${MAIN_COLOR} │${NOCOLOR}\n" "ADDRESS" "DATE" "METHOD" "URL"
+    echo -e "${MAIN_COLOR}  ----------------------------------------------------------------${NOCOLOR}"
+
+    # Loop through each log line and extract relevant details using regex
+    while IFS= read -r line; do
+        address=$(echo "$line" | cut -d' ' -f1)  # Extract the IP address
+        date=$(echo "$line" | cut -d' ' -f4 | sed 's/\[//g')  # Extract the date and time
+        method=$(echo "$line" | cut -d' ' -f6 | sed 's/"//g')  # Extract the HTTP method
+        url=$(echo "$line" | cut -d' ' -f11)  # Extract the URL
+
+        # Print the extracted details in a formatted table
+        printf "${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-20s${MAIN_COLOR} │ ${WHITE}%-7s${MAIN_COLOR} │ ${WHITE}%-30s${MAIN_COLOR} │${NOCOLOR}\n" "$address" "$date" "$method" "$url"
+        echo -e "${MAIN_COLOR}  ----------------------------------------------------------------${NOCOLOR}"
+    done <<< "$log_lines"
 
     echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
     echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-    read -r -n 1 -s 
+    read -r -n 1 -s
 }
 
 # Function to navigate through options
