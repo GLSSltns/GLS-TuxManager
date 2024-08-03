@@ -1,17 +1,5 @@
 #!/bin/bash
 
-# COLORS: Define color codes for terminal output
-MAIN_COLOR="$(tput setaf 26)"
-TUXCOLOR="$(tput setaf 172)"
-HTTPCOLOR="$(tput setaf 162)"
-LIGHTBLUE="$(tput setaf 39)"
-BLUE="$(tput setaf 4)"
-RED="$(tput setaf 160)"
-GREEN="$(tput setaf 40)"
-YELLOW="$(tput setaf 220)"
-WHITE="$(tput setaf 255)"
-NOCOLOR="$(tput sgr0)"
-
 # UTILS: Source utility scripts for additional functionality
 source Utils/progress_bar.sh
 source Utils/show_message.sh

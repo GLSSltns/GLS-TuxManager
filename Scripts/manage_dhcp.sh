@@ -1,20 +1,9 @@
 #!/bin/bash
 
-# COLORS
-MAIN_COLOR="$(tput setaf 26)"
-TUXCOLOR="$(tput setaf 172)"
-DHCPCOLOR="$(tput setaf 221)"
-LIGHTBLUE="$(tput setaf 39)"
-BLUE="$(tput setaf 4)"
-RED="$(tput setaf 160)"
-GREEN="$(tput setaf 40)"
-YELLOW="$(tput setaf 220)"
-WHITE="$(tput setaf 255)"
-NOCOLOR="$(tput sgr0)"
-
 source Utils/show_message.sh
 source Utils/progress_bar.sh
 source Utils/spinner.sh
+source Utils/prompt_confirmation.sh
 
 is_started=0
 
@@ -102,20 +91,6 @@ show_dhcp_config() {
     echo -e " ${MAIN_COLOR}Domain Name Servers: ${NOCOLOR}$domain_name_servers"
     echo -e " ${MAIN_COLOR}Default Lease Time: ${NOCOLOR}$default_lease_time"
     echo -e " ${MAIN_COLOR}Max Lease Time: ${NOCOLOR}$max_lease_time${NOCOLOR}"
-}
-
-prompt_confirmation() {
-    prompt_message=$1
-    while true; do
-        echo ""
-        echo -ne "${WHITE} $prompt_message [${GREEN}Y${WHITE}/${RED}n${NOCOLOR}]: "
-        read -r yn
-        case $yn in
-            [Yy]*) return 0 ;;
-            [Nn]*) return 1 ;;
-            *) show_message "X" "Prease answer yes (Y) or no (n)." $RED ;;
-        esac
-    done
 }
 
 validate_start(){

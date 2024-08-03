@@ -1,20 +1,10 @@
 #!/bin/bash
 
-# COLORS
-MAIN_COLOR="$(tput setaf 26)"
-TUXCOLOR="$(tput setaf 172)"
-LIGHTBLUE="$(tput setaf 39)"
-BLUE="$(tput setaf 4)"
-RED="$(tput setaf 160)"
-GREEN="$(tput setaf 40)"
-YELLOW="$(tput setaf 220)"
-WHITE="$(tput setaf 255)"
-NOCOLOR="$(tput sgr0)"
-
 # FLAGS
 is_dhcp=0 # Check DHCP install
 is_http=0 # Check HTTP install
 
+source Utils/get_colors.sh
 source Utils/show_message.sh
 source Utils/spinner.sh
 source Utils/byebye_message.sh
