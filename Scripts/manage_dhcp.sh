@@ -51,7 +51,7 @@ show_error_details() {
     while IFS= read -r line; do
         out_line=$(echo "$line" | grep -oP '\]\s*\K.*')
         if [[ "$out_line" =~ [[:alnum:]] ]]; then
-            echo -e " ${NOCOLOR}"
+            echo -e " ${NOCOLOR}$out_line"
         fi
     done <<< "$error_log"
 }
