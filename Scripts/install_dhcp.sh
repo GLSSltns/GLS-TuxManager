@@ -26,17 +26,18 @@ show_title() {
 
 # Function to install the DHCP package
 install_pkg() {
-    check_connection
-    if [ $is_connection -eq 0 ]; then
-        show_message "X" "No internet connection. Cannot install DHCP Service.\n" $RED  $MAIN_COLOR
-        return
-    fi
-
     if [ $is_dhcp_installed -eq 1 ]; then
         show_message "!" "DHCP Service Is Already Installed.\n" $YELLOW $MAIN_COLOR
     else
         show_title  # Display title before installing
         echo ""
+
+        check_connection
+        if [ $is_connection -eq 0 ]; then
+            show_message "X" "No internet connection. Cannot install DHCP Service.\n" $RED  $MAIN_COLOR
+            return
+        fi
+
         show_message "!" 'Downloading DHCP Package (dhcp-server)...' $YELLOW $MAIN_COLOR
         sleep 1
         progress_bar 10 $YELLOW $MAIN_COLOR &  # Show progress bar
@@ -85,18 +86,19 @@ remove_pkg() {
 
 # Function to update the DHCP package
 update_pkg() {
-    check_connection
-    if [ $is_connection -eq 0 ]; then
-        show_message "X" "No internet connection. Cannot update DHCP Service.\n" $RED $MAIN_COLOR
-        return
-    fi
-
     if [ $is_dhcp_installed -eq 1 ]; then
         # Check if an update is available for the DHCP server package
         local is_update_needed=$(yum check-update dhcp-server | grep -q 'dhcp-server' && echo 1 || echo 0)
         if [ $is_update_needed -eq 1 ]; then
             show_title
             echo ""
+            
+            check_connection
+            if [ $is_connection -eq 0 ]; then
+                show_message "X" "No internet connection. Cannot update DHCP Service.\n" $RED $MAIN_COLOR
+                return
+            fi
+
             show_message "!" "Updating DHCP Service Package (dhcp-server)..." $YELLOW $MAIN_COLOR
             progress_bar 10 $YELLOW $MAIN_COLOR &  # Show progress bar
             yum update -y dhcp-server > /dev/null 2>&1  # Update package silently
