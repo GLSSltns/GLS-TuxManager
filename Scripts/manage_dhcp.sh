@@ -46,7 +46,7 @@ show_error_details() {
     echo -e "${YELLOW}-------------------${NOCOLOR}"
     while IFS= read -r line; do
         # echo -e " ${WHITE}$line${NOCOLOR}"
-        echo -e " ${NOCOLOR}$(echo "$log_line" | grep -oP '\]\s*\K.*')"
+        echo -e " ${NOCOLOR}$(echo "line" | grep -oP '\]\s*\K.*')"
     done <<< "$error_log"
     echo -e "${YELLOW}-------------------${NOCOLOR}"
 }
