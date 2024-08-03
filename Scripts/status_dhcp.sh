@@ -15,6 +15,7 @@ NOCOLOR="$(tput sgr0)"
 # UTILS: Source utility scripts for additional functionality
 source Utils/progress_bar.sh
 source Utils/show_message.sh
+source Utils/spinner.sh
 
 
 show_title() {
@@ -25,8 +26,8 @@ show_title() {
 # Function to check the status of the DHCP service
 check_status() {
     show_title
-    show_message "-" "Checking DHCP service status..." $GREEN
-    sleep 2
+    echo ""
+    spinner 3 "$(show_message "!" "Checking DHCP service status...   " $YELLOW)"
     echo ""
 
     # Get the status of the DHCP service
@@ -47,8 +48,8 @@ check_status() {
     echo -e " ${MAIN_COLOR}PID: ${NOCOLOR}$PID"
     echo -e " ${MAIN_COLOR}Memory: ${NOCOLOR}$MEMORY"
     echo -e " ${MAIN_COLOR}CPU: ${NOCOLOR}$CPU"
-
-    echo -e " ${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+    echo ""
+    echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
     # Wait for user input to return to the main menu
     echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
     read -r -n 1 -s 
