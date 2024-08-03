@@ -28,38 +28,28 @@ is_dhcp_started(){
 }
 
 show_error_details() {
-    system_log=$(journalctl -xeu dhcpd.service)
+    error_log=$(journalctl -xeu dhcpd.service | tac)
+    error_start=$(echo "$error_log" | grep -n "Wrote 0 leases to leases file\." | head -n 1 | cut -d: -f1)
+    log_line=$(echo "$error_log" | grep "Wrote 0 leases to leases file\." | head -n 1)
 
-    error_message="Wrote 0 leases to leases file."
-    line_number=1
-    for line in $system_log; do
-        if [ $(echo "$line" | grep -c "$error_message") -gt 0 ]; then
-            error_line=$line_number
-            break
-        fi
-        ((line_number++))
-    done
+    IFS=' ' read -r month day time _ pid_part _ <<< "$log_line"
 
-    if [ "$error_line" -ne "1" ]; then
-        echo "There is an error!"
-        line_number=0
-        for line in $system_log; do
-            ((line_number++))
-            if [ "$line_number" -ge "$error_line" ]; then
-                echo "$line"
-            fi
-        done
+    if [ -n "$error_start" ]; then
+        error_log=$(echo "$error_log" | head -n +$((error_start-1)) | tac)
     fi
+    pid="$(echo "$pid_part" | grep -oP 'dhcpd\[\K[0-9]+(?=\])')"
 
-    # echo -e "${RED}Error Details:${NOCOLOR}"
-    # echo -e "${YELLOW}-------------------${NOCOLOR}"
-    # while IFS= read -r line; do
-    #     echo -e "${WHITE}$line${NOCOLOR}"
-    # done <<< "$error_log"
-    # echo -e "${YELLOW}-------------------${NOCOLOR}"
+    echo -e " ${RED} Error Details:${NOCOLOR}"
+    echo -e " ${MAIN_COLOR}Date: ${NOCOLOR}${day} ${mont}, ${time}"
+    echo -e " ${MAIN_COLOR}PID: ${NOCOLOR}${pid}"
+
+    echo -e "${YELLOW}-------------------${NOCOLOR}"
+    while IFS= read -r line; do
+        # echo -e " ${WHITE}$line${NOCOLOR}"
+        echo -e " ${NOCOLOR}$(echo "$log_line" | grep -oP '\]\s*\K.*')"
+    done <<< "$error_log"
+    echo -e "${YELLOW}-------------------${NOCOLOR}"
 }
-
-
 
 read_config() {
     config_file=$1
