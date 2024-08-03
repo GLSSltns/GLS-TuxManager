@@ -112,7 +112,7 @@ show_info() {
     echo -e " ${MAIN_COLOR}@ Sergio Méndez ${NOCOLOR}\thttps://github.com/sergiomndz15"
     echo -e " ${MAIN_COLOR}@ Alexandra Gonzáles ${NOCOLOR}\thttps://github.com/AlexMangle"
     echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-    echo -ne " ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+    echo -ne " ${MAIN_COLOR}Press [${TUXCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
     read -r -n 1 -s
     clear
 }

@@ -79,7 +79,6 @@ show_logs() {
         printf "${MAIN_COLOR} │ ${WHITE}%-10s${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-17s${MAIN_COLOR} │${NOCOLOR}\n" "$HOSTNAME" "$ADDRESS" "$MAC"
         echo -e "${MAIN_COLOR}  --------------------------------------------------${NOCOLOR}"
     done
-    echo ""
 
     echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
     echo -ne "\n ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
