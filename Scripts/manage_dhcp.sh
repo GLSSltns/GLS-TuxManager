@@ -39,16 +39,20 @@ show_error_details() {
     fi
     pid="$(echo "$pid_part" | grep -oP 'dhcpd\[\K[0-9]+(?=\])')"
 
+    echo ""
+    clear
+    show_message "X" "Failed to start DHCP. Check details below." $RED
+
+    echo ""
     echo -e " ${MAIN_COLOR}Date: ${NOCOLOR}$day $mont, $time"
     echo -e " ${MAIN_COLOR}PID: ${NOCOLOR}${pid}"
+    echo -e " ${MAIN_COLOR}Details: ${NOCOLOR}\n"
 
-    echo -e "${YELLOW}-------------------${NOCOLOR}"
     while IFS= read -r line; do
       if [[ -n "$line" ]]; then
         echo -e " ${NOCOLOR}$(echo "$line" | grep -oP '\]\s*\K.*')"
       fi
     done <<< "$error_log"
-    echo -e "${YELLOW}-------------------${NOCOLOR}"
 }
 
 read_config() {
@@ -136,7 +140,8 @@ validate_start(){
                 show_message "-" "DHCP service started successfully." $GREEN
             else
                 error_log=$(journalctl -xeu dhcpd.service | tail -n 10)
-                show_message "X" "Failed to start DHCP. Check details below." $RED
+                show_message "X" "Failed to start DHCP." $RED
+                sleep 1
                 show_error_details "$error_log"
             fi
             echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
