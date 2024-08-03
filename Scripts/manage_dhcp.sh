@@ -49,8 +49,9 @@ show_error_details() {
     echo -e " ${MAIN_COLOR}Details: ${NOCOLOR}\n"
 
     while IFS= read -r line; do
-        if [[ "$line" =~ [[:alnum:]] ]]; then
-            echo -e " ${NOCOLOR}$(echo "$line" | grep -oP '\]\s*\K.*')"
+        out_line=$(echo "$line" | grep -oP '\]\s*\K.*')
+        if [[ "$out_line" =~ [[:alnum:]] ]]; then
+            echo -e " ${NOCOLOR}"
         fi
     done <<< "$error_log"
 }
