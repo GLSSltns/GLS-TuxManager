@@ -106,7 +106,7 @@ display_not_installed_message() {
 }
 
 show_title() {
-    bash Utils/show_title.sh "$(tput setaf 3)"
+    bash Utils/show_title.sh "${TUXCOLOR}"
 }
 
 
