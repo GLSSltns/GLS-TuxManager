@@ -65,7 +65,7 @@ show_logs() {
     log_lines=$(tail -n 20 /var/log/httpd/access_log)
 
     # echo -e "${MAIN_COLOR}  ----------------------------------------------------------------${NOCOLOR}"
-    printf "${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-20s${MAIN_COLOR} │ ${WHITE}%-7s${MAIN_COLOR} │ ${WHITE}%-30s${MAIN_COLOR} │${NOCOLOR}\n" "ADDRESS" "DATE" "METHOD" "URL"
+    printf "${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-20s${MAIN_COLOR} │ ${WHITE}%-7s${MAIN_COLOR} │ ${WHITE}%-30s${MAIN_COLOR}${NOCOLOR}\n" "ADDRESS" "DATE" "METHOD" "URL"
     # echo -e "${MAIN_COLOR}  ----------------------------------------------------------------${NOCOLOR}"
     echo ""
 
