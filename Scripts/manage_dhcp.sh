@@ -1,15 +1,14 @@
 #!/bin/bash
 
-source Utils/show_message.sh
-source Utils/progress_bar.sh
-source Utils/spinner.sh
-source Utils/prompt_confirmation.sh
+source Utils/styling.sh
+source Utils/progress.sh
+source Utils/validate.sh
 
 is_started=0
 
 show_title() {
     clear
-    bash Utils/show_title.sh $DHCPCOLOR
+    show_banner $DHCPCOLOR $MAIN_COLOR "DHCP Service Management"
 }
 
 is_dhcp_started(){
@@ -31,7 +30,7 @@ show_error_details() {
     clear
     show_title
     echo ""
-    show_message "X" "Failed to manage DHCP. Check details below." $RED
+    show_message "X" "Failed to manage DHCP. Check details below." $RED $MAIN_COLOR
 
     echo ""
     echo -e " ${MAIN_COLOR}Date: ${NOCOLOR}$day $mont, $time"
@@ -46,9 +45,9 @@ show_error_details() {
     done <<< "$error_log"
 
     echo "" 
-    show_message "!" "Recommendation: Check if the interface is currently up." $BLUE
-    show_message "!" "Recommendation: Check if the interface configuration." $BLUE
-    show_message "!" "Recommendation: Check the DHCP configuration (subnet, routers, default_lease_time, etc.)." $BLUE
+    show_message "!" "Recommendation: Check if the interface is currently up." $BLUE $MAIN_COLOR
+    show_message "!" "Recommendation: Check if the interface configuration." $BLUE $MAIN_COLOR
+    show_message "!" "Recommendation: Check the DHCP configuration (subnet, routers, default_lease_time, etc.)." $BLUE $MAIN_COLOR
 }
 
 read_config() {
@@ -97,15 +96,15 @@ validate_start(){
     clear
     show_title
     echo ""
-    spinner 3 "$(show_message "!" "Checking for DHCP status...   " $YELLOW)"
-    show_message "!" "Done...\n" $GREEN
+    spinner 3 "$(show_message "!" "Checking for DHCP status...   " $YELLOW $MAIN_COLOR)"
+    show_message "!" "Done...\n" $GREEN $MAIN_COLOR
     sleep 3
     clear
     show_title
     is_dhcp_started
     if [ $is_started -eq 1 ]; then
         echo ""
-        show_message "!" "DHCP is already running." $YELLOW
+        show_message "!" "DHCP is already running." $YELLOW $MAIN_COLOR
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
         echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
         read -r -n 1 -s
@@ -113,15 +112,15 @@ validate_start(){
         show_dhcp_config
         if prompt_confirmation "Are you sure you want to start the DHCP service with this configuration?"; then
             echo ""
-            show_message "!" "Starting DHCP service..." $YELLOW
+            show_message "!" "Starting DHCP service..." $YELLOW $MAIN_COLOR
             systemctl start dhcpd > /dev/null 2>&1
-            progress_bar 5 $YELLOW
+            progress_bar 5 $YELLOW $MAIN_COLOR
             is_dhcp_started
             sleep 2
             if [ $is_started -eq 1 ]; then
-                show_message "-" "DHCP service started successfully." $GREEN
+                show_message "-" "DHCP service started successfully." $GREEN $MAIN_COLOR
             else
-                show_message "X" "Failed to start DHCP." $RED
+                show_message "X" "Failed to start DHCP." $RED $MAIN_COLOR
                 sleep 1
                 show_error_details 
             fi
@@ -129,7 +128,7 @@ validate_start(){
             echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
             read -r -n 1 -s
         else
-            show_message "!" "DHCP service start aborted." $YELLOW
+            show_message "!" "DHCP service start aborted." $YELLOW $MAIN_COLOR
             sleep 3
         fi
     fi
@@ -139,7 +138,7 @@ validate_restart(){
     clear
     show_title
     echo ""
-    spinner 3 "$(show_message "!" "Checking for DHCP status...   " $YELLOW)"
+    spinner 3 "$(show_message "!" "Checking for DHCP status...   " $YELLOW $MAIN_COLOR)"
     show_message "!" "Done...\n" $GREEN
     sleep 3
     clear
@@ -147,7 +146,7 @@ validate_restart(){
     is_dhcp_started
     if [ $is_started -eq 0 ]; then
         echo ""
-        show_message "!" "DHCP service is not running. Would you like to start it instead?" $YELLOW
+        show_message "!" "DHCP service is not running. Would you like to start it instead?" $YELLOW $MAIN_COLOR
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
         echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
         read -r -n 1 -s
@@ -155,15 +154,15 @@ validate_restart(){
     else
         if prompt_confirmation "Are you sure you want to restart the DHCP service?"; then
             echo ""
-            show_message "!" "Restarting DHCP service..." $YELLOW
+            show_message "!" "Restarting DHCP service..." $YELLOW $MAIN_COLOR
             systemctl restart dhcpd > /dev/null 2>&1
-            progress_bar 5 $YELLOW
+            progress_bar 5 $YELLOW $MAIN_COLOR
             is_dhcp_started
             sleep 2
             if [ $is_started -eq 1 ]; then
-                show_message "-" "DHCP service restarted successfully." $GREEN
+                show_message "-" "DHCP service restarted successfully." $GREEN $MAIN_COLOR
             else
-                show_message "X" "Failed to resstart DHCP." $RED
+                show_message "X" "Failed to resstart DHCP." $RED $MAIN_COLOR
                 sleep 1
                 show_error_details 
             fi
@@ -171,7 +170,7 @@ validate_restart(){
             echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
             read -r -n 1 -s
         else
-            show_message "!" "DHCP service restart aborted." $YELLOW
+            show_message "!" "DHCP service restart aborted." $YELLOW $MAIN_COLOR
             sleep 3
         fi
     fi
@@ -181,30 +180,30 @@ validate_stop(){
     clear
     show_title
     echo ""
-    spinner 3 "$(show_message "!" "Checking for DHCP status...   " $YELLOW)"
-    show_message "!" "Done...\n" $GREEN
+    spinner 3 "$(show_message "!" "Checking for DHCP status...   " $YELLOW $MAIN_COLOR)"
+    show_message "!" "Done...\n" $GREEN $MAIN_COLOR
     sleep 3
     clear
     show_title
     is_dhcp_started
     if [ $is_started -eq 0 ]; then
         echo ""
-        show_message "!" "DHCP service is already stopped." $YELLOW
+        show_message "!" "DHCP service is already stopped." $YELLOW $MAIN_COLOR
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
         echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
         read -r -n 1 -s
     else
         if prompt_confirmation "Are you sure you want to stop the DHCP service?"; then
             echo ""
-            show_message "!" "Stopping DHCP service..." $YELLOW
+            show_message "!" "Stopping DHCP service..." $YELLOW $MAIN_COLOR
             systemctl stop dhcpd > /dev/null 2>&1
-            progress_bar 5 $YELLOW
+            progress_bar 5 $YELLOW $MAIN_COLOR
             is_dhcp_started
             sleep 2
             if [ $is_started -eq 0 ]; then
-                show_message "-" "DHCP service stopped successfully." $GREEN
+                show_message "-" "DHCP service stopped successfully." $GREEN $MAIN_COLOR
             else
-                show_message "X" "Failed to stop DHCP." $RED
+                show_message "X" "Failed to stop DHCP." $RED $MAIN_COLOR
                 sleep 1
                 show_error_details 
             fi
@@ -212,7 +211,7 @@ validate_stop(){
             echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
             read -r -n 1 -s
         else
-            show_message "!" "DHCP service stop aborted." $YELLOW
+            show_message "!" "DHCP service stop aborted." $YELLOW $MAIN_COLOR
             sleep 3
         fi
     fi
@@ -220,17 +219,17 @@ validate_stop(){
 
 menu_dhcp_man() {
     show_title $DHCPCOLOR
-    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}1${MAIN_COLOR}]${NOCOLOR} Start DHCP service"
-    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}2${MAIN_COLOR}]${NOCOLOR} Restart DHCP service"
-    echo -ne "\n ${MAIN_COLOR}[${LIGHTBLUE}3${MAIN_COLOR}]${NOCOLOR} Stop DHCP service"
-    echo -e "\n ${MAIN_COLOR}[${LIGHTBLUE}4${MAIN_COLOR}]${NOCOLOR} Go Back"
+    echo -ne "\n ${MAIN_COLOR}[${DHCPCOLOR}1${MAIN_COLOR}]${NOCOLOR} Start DHCP service"
+    echo -ne "\n ${MAIN_COLOR}[${DHCPCOLOR}2${MAIN_COLOR}]${NOCOLOR} Restart DHCP service"
+    echo -ne "\n ${MAIN_COLOR}[${DHCPCOLOR}3${MAIN_COLOR}]${NOCOLOR} Stop DHCP service"
+    echo -e "\n ${MAIN_COLOR}[${DHCPCOLOR}4${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
 menu_dhcp() {
     menu_dhcp_man
     while true; do
-        echo -ne "${MAIN_COLOR} Enter An Option${LIGHTBLUE}\$${MAIN_COLOR}>:${NOCOLOR} "
+        echo -ne "${MAIN_COLOR} Enter An Option${DHCPCOLOR}\$${MAIN_COLOR}>:${NOCOLOR} "
         read -r op
         case $op in
             1)
@@ -254,7 +253,7 @@ menu_dhcp() {
                 ;;
             *)
                 # Invalid option
-                show_message "X" "Invalid option." $RED 
+                show_message "X" "Invalid option." $RED $MAIN_COLOR
                 ;;
         esac
     done

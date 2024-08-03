@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # UTILS: Source utility scripts for additional functionality
-source Utils/progress_bar.sh
-source Utils/show_message.sh
-source Utils/validate_input_regex.sh
+source Utils/styling.sh
+source Utils/progress.sh
+source Utils/validate.sh
 
-DEFAULT_DHCP_CONF="/etc/dhcp/dhcpd.conf"
-DEFAULT_INTERFACE_CONF="/etc/sysconfig/dhcpd"
+readonly DEFAULT_DHCP_CONF="/etc/dhcp/dhcpd.conf"
+readonly DEFAULT_INTERFACE_CONF="/etc/sysconfig/dhcpd"
 
 #FLAGS
 dhcp_conf_changed=0
@@ -15,7 +15,7 @@ is_interface_active=0
 
 show_title() {
     clear
-    bash Utils/show_title.sh $DHCPCOLOR
+    show_banner $DHCPCOLOR $MAIN_COLOR "DHCP Service Configuration"
 }
 
 interface_state(){
@@ -55,14 +55,14 @@ configure_subnet() {
         echo -ne " Enter the subnet (${DHCPCOLOR}e.g., 192.168.1.0${NOCOLOR}): "
         read -r subnet
         if [ -z "$subnet" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 2.5
             break
         elif validate_input_regex "$subnet" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_conf_changed=1
             break
         else
-            show_message "X" "Invalid subnet format." $RED
+            show_message "X" "Invalid subnet format." $RED $MAIN_COLOR
         fi
     done
 }
@@ -72,14 +72,14 @@ configure_netmask() {
         echo -ne " Enter the netmask (${DHCPCOLOR}e.g., 255.255.255.0${NOCOLOR}): "
         read -r netmask
         if [ -z "$netmask" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 2.5
             break
         elif validate_input_regex "$netmask" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_conf_changed=1
             break
         else
-            show_message "X" "Invalid netmask format." $RED
+            show_message "X" "Invalid netmask format." $RED $MAIN_COLOR
         fi
     done
 }
@@ -89,14 +89,14 @@ configure_range() {
         echo -ne " Enter the range (${DHCPCOLOR}e.g., 192.168.1.100 192.168.1.200${NOCOLOR}): "
         read -r range
         if [ -z "$range" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 2.5
             break
         elif validate_input_regex "$range" '^[0-9]{1,3}(\.[0-9]{1,3}){3} [0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_conf_changed=1
             break
         else
-            show_message "X" "Invalid range format." $RED
+            show_message "X" "Invalid range format." $RED $MAIN_COLOR
         fi
     done
 }
@@ -106,14 +106,14 @@ configure_routers() {
         echo -ne " Enter the routers (${DHCPCOLOR}e.g., 192.168.1.1${NOCOLOR}): "
         read -r routers
         if [ -z "$routers" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 2.5
             break
         elif validate_input_regex "$routers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             dhcp_conf_changed=1
             break
         else
-            show_message "X" "Invalid routers format." $RED
+            show_message "X" "Invalid routers format." $RED $MAIN_COLOR
         fi
     done
 }
@@ -123,14 +123,14 @@ configure_domain_name() {
         echo -ne " Enter the domain name (${DHCPCOLOR}e.g., example.com${NOCOLOR}): "
         read -r domain_name
         if [ -z "$domain_name" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 2.5
             break
         elif validate_input_regex "$domain_name" '^[a-zA-Z0-9.-]+$'; then
             dhcp_conf_changed=1
             break
         else
-            show_message "X" "Invalid domain name format." $RED
+            show_message "X" "Invalid domain name format." $RED $MAIN_COLOR
         fi
     done
 }
@@ -140,14 +140,14 @@ configure_domain_name_servers() {
         echo -ne " Enter the domain name servers (${DHCPCOLOR}e.g., 8.8.8.8, 8.8.4.4${NOCOLOR}): "
         read -r domain_name_servers
         if [ -z "$domain_name_servers" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 2.5
             break
         elif validate_input_regex "$domain_name_servers" '^[0-9]{1,3}(\.[0-9]{1,3}){3}(, [0-9]{1,3}(\.[0-9]{1,3}){3})*$'; then
             dhcp_conf_changed=1
             break
         else
-            show_message "X" "Invalid domain name servers format." $RED
+            show_message "X" "Invalid domain name servers format." $RED $MAIN_COLOR
         fi
     done
 }
@@ -157,14 +157,14 @@ configure_default_lease_time() {
         echo -ne " Enter the default lease time (${DHCPCOLOR}in seconds${NOCOLOR}): "
         read -r default_lease_time
         if [ -z "$default_lease_time" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 2.5
             break
         elif validate_input_regex "$default_lease_time" '^[0-9]+$'; then
             dhcp_conf_changed=1
             break
         else
-            show_message "X" "Invalid default lease time format." $RED
+            show_message "X" "Invalid default lease time format." $RED $MAIN_COLOR
         fi
     done
 }
@@ -174,14 +174,14 @@ configure_max_lease_time() {
         echo -ne " Enter the max lease time (${DHCPCOLOR}in seconds${NOCOLOR}): "
         read -r max_lease_time
         if [ -z "$max_lease_time" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 2.5
             break
         elif validate_input_regex "$max_lease_time" '^[0-9]+$'; then
             dhcp_conf_changed=1
             break
         else
-            show_message "X" "Invalid max lease time format." $RED
+            show_message "X" "Invalid max lease time format." $RED $MAIN_COLOR
         fi
     done
 }
@@ -189,13 +189,13 @@ configure_max_lease_time() {
 save_configuration() {
     show_title
     echo ""
-    show_message "!" "Saving DHCP configuration..." $YELLOW
-    progress_bar 5 $YELLOW &
+    show_message "!" "Saving DHCP configuration..." $YELLOW $MAIN_COLOR
+    progress_bar 5 $YELLOW $MAIN_COLOR &
     write_config "$DEFAULT_DHCP_CONF"
     read_config "$DEFAULT_DHCP_CONF"
     sleep 1
     wait
-    show_message "-" "DHCP configuration saved successfully." $GREEN
+    show_message "-" "DHCP configuration saved successfully." $GREEN $MAIN_COLOR
     dhcp_conf_changed=0
     echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
     echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
@@ -268,12 +268,10 @@ dhcp_menu() {
                     ;;
                 10) 
                     if [ $dhcp_conf_changed -eq 1 ]; then
-                        show_message "!!" "You have unsaved changes." $YELLOW
-                        echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
-                        read -r confirm
-                        if [[ "$confirm" =~ ^[Yy]$ ]]; then
+                        show_message "!!" "You have unsaved changes." $YELLOW $MAIN_COLOR
+                        if prompt_confirmation "Are you sure you want to QUIT?" ; then
                             echo ""
-                            show_message "!" "Quitting without saving." $YELLOW
+                            show_message "!" "Quitting without saving." $YELLOW $MAIN_COLOR
                             dhcp_conf_changed=0
                             read_config "$DEFAULT_DHCP_CONF"
                             echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
@@ -287,7 +285,7 @@ dhcp_menu() {
                         break
                     fi
                     ;;
-                *) show_message "X" "Invalid option." $RED ;;
+                *) show_message "X" "Invalid option." $RED $MAIN_COLOR ;;
             esac
         fi
     done
@@ -299,14 +297,14 @@ configure_interface() {
         echo -ne " Enter the interface to listen on (${DHCPCOLOR}e.g., enp0s9${NOCOLOR}): "
         read -r interface
         if [ -z "$interface" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 2.5
             break
         elif validate_input_regex "$interface" '^[a-zA-Z0-9]+$'; then
             interface_conf_changed=1
             break
         else
-            show_message "X" "Invalid interface format." $RED
+            show_message "X" "Invalid interface format." $RED $MAIN_COLOR
         fi
     done
 }
@@ -316,14 +314,14 @@ configure_ip_prefix() {
         echo -ne " Enter the IP address and prefix (${DHCPCOLOR}e.g., 192.168.1.1/24${NOCOLOR}): "
         read -r ip_prefix
         if [ -z "$ip_prefix" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 2.5
             break
         elif validate_input_regex "$ip_prefix" '^[0-9]{1,3}(\.[0-9]{1,3}){3}/[0-9]+$'; then
             interface_conf_changed=1
             break
         else
-            show_message "X" "Invalid IP address and prefix format." $RED
+            show_message "X" "Invalid IP address and prefix format." $RED $MAIN_COLOR
         fi
     done
 }
@@ -333,14 +331,14 @@ configure_gateway() {
         echo -ne " Enter the gateway (${DHCPCOLOR}e.g., 192.168.1.1${NOCOLOR}): "
         read -r gateway
         if [ -z "$gateway" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 2.5
             break
         elif validate_input_regex "$gateway" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             interface_conf_changed=1
             break
         else
-            show_message "X" "Invalid gateway format." $RED
+            show_message "X" "Invalid gateway format." $RED $MAIN_COLOR
         fi
     done
 }
@@ -350,14 +348,14 @@ configure_dns() {
         echo -ne " Enter the DNS server (${DHCPCOLOR}e.g., 8.8.8.8${NOCOLOR}): "
         read -r dns
         if [ -z "$dns" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 2.5
             break
         elif validate_input_regex "$dns" '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
             interface_conf_changed=1
             break
         else
-            show_message "X" "Invalid DNS server format." $RED
+            show_message "X" "Invalid DNS server format." $RED $MAIN_COLOR
         fi
     done
 }
@@ -368,28 +366,28 @@ toggle_interface() {
     if [ $is_interface_active -eq 1 ]; then
         show_title
         echo ""
-        show_message "!" "Shutting down interface $interface..." $YELLOW
-        progress_bar 7 $YELLOW &
+        show_message "!" "Shutting down interface $interface..." $YELLOW $MAIN_COLOR
+        progress_bar 7 $YELLOW $MAIN_COLOR &
         nmcli con down "$interface" > /dev/null 2>&1
         wait
-        show_message "!" "Interface $interface is now down." $GREEN
+        show_message "!" "Interface $interface is now down." $GREEN $MAIN_COLOR
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
         echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
         read -r -n 1 -s
     elif [ $is_interface_active -eq 0 ]; then
         show_title
         echo ""
-        show_message "!" "Starting up interface $interface..." $YELLOW
-        progress_bar 7 $YELLOW &
+        show_message "!" "Starting up interface $interface..." $YELLOW $MAIN_COLOR
+        progress_bar 7 $YELLOW $MAIN_COLOR &
         nmcli con up "$interface" > /dev/null 2>&1
         wait
-        show_message "!" "Interface $interface is now up." $GREEN
+        show_message "!" "Interface $interface is now up." $GREEN $MAIN_COLOR
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}" 
         echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
         read -r -n 1 -s
     else
         echo ""
-        show_message "X" "Could not determine the state of $interface." $RED
+        show_message "X" "Could not determine the state of $interface." $RED $MAIN_COLOR
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}" 
         echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
         read -r -n 1 -s
@@ -402,33 +400,33 @@ restart_interface() {
     if [ $is_interface_active -eq 1 ]; then
         show_title
         echo ""
-        show_message "!" "Restarting interface $interface..." $YELLOW
-        progress_bar 10 $YELLOW &
+        show_message "!" "Restarting interface $interface..." $YELLOW $MAIN_COLOR
+        progress_bar 10 $YELLOW $MAIN_COLOR &
         nmcli con down "$interface" > /dev/null 2>&1
         sleep 2
         nmcli con up "$interface" > /dev/null 2>&1
         wait
-        show_message "!" "Interface $interface has been restarted." $GREEN
+        show_message "!" "Interface $interface has been restarted." $GREEN $MAIN_COLOR
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}" 
         echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
         read -r -n 1 -s
     elif [ $is_interface_active -eq 0 ]; then
         show_title
         echo ""
-        show_message "!" "The Interface is currently down." $YELLOW
+        show_message "!" "The Interface is currently down." $YELLOW $MAIN_COLOR
         sleep 2
         echo ""
-        show_message "!" "Starting up interface $interface..." $YELLOW
-        progress_bar 7 $YELLOW &
+        show_message "!" "Starting up interface $interface..." $YELLOW $MAIN_COLOR
+        progress_bar 7 $YELLOW $MAIN_COLOR &
         nmcli con up "$interface" > /dev/null 2>&1
         wait
-        show_message "!" "Interface $interface is now up." $GREEN
+        show_message "!" "Interface $interface is now up." $GREEN $MAIN_COLOR
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
         echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
         read -r -n 1 -s
     else
         echo ""
-        show_message "X" "Could not determine the state of $interface." $RED
+        show_message "X" "Could not determine the state of $interface." $RED $MAIN_COLOR
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}" 
         echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
         read -r -n 1 -s
@@ -457,13 +455,13 @@ save_interface_configuration() {
     clear
     show_title
     echo ""
-    show_message "!" "Saving interface configuration..." $YELLOW
-    progress_bar 5 $YELLOW &
+    show_message "!" "Saving interface configuration..." $YELLOW $MAIN_COLOR
+    progress_bar 5 $YELLOW $MAIN_COLOR &
     write_interface_config "$DEFAULT_INTERFACE_CONF"
     read_interface_config "$DEFAULT_INTERFACE_CONF"
     sleep 1
     wait
-    show_message "-" "Interface configuration saved successfully." $GREEN
+    show_message "-" "Interface configuration saved successfully." $GREEN $MAIN_COLOR
     interface_conf_changed=0
     echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
     echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
@@ -531,12 +529,10 @@ interface_menu() {
                     ;;
                 8)
                     if [ $interface_conf_changed -eq 1 ]; then
-                        show_message "!!" "You have unsaved changes." $YELLOW
-                        echo -ne " Are you sure you want to QUIT? (${GREEN}Y${NOCOLOR}/${RED}n${NOCOLOR}): "
-                        read -r confirm
-                        if [[ "$confirm" =~ ^[Yy]$ ]]; then
+                        show_message "!!" "You have unsaved changes." $YELLOW $MAIN_COLOR
+                        if prompt_confirmation "Are you sure you want to QUIT?" ; then
                             echo ""
-                            show_message "!" "Quitting without saving." $YELLOW
+                            show_message "!" "Quitting without saving." $YELLOW $MAIN_COLOR
                             interface_conf_changed=0
                             read_config "$DEFAULT_INTERFACE_CONF"
                             echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
@@ -550,7 +546,7 @@ interface_menu() {
                         break
                     fi
                     ;;
-                *) show_message "X" "Invalid option." $RED ;;
+                *) show_message "X" "Invalid option." $RED $MAIN_COLOR ;;
             esac
         fi 
     done
@@ -575,7 +571,7 @@ main_menu() {
                 1) dhcp_menu ;;
                 2) interface_menu ;;
                 3) break ;;
-                *) show_message "X" "Invalid option." $RED ;;
+                *) show_message "X" "Invalid option." $RED $MAIN_COLOR
             esac
         fi    
     done

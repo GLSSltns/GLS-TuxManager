@@ -1,7 +1,6 @@
 #!/bin/bash
 
-source Utils/get_colors.sh
-source Utils/show_message.sh
+source Utils/styling.sh
 source Utils/spinner.sh
 source Utils/byebye_message.sh
 
@@ -31,7 +30,7 @@ check_services_install() {
     # Start the spinner in the background
     stty -echo
     stty igncr
-    spinner "$(show_message "!" "Checking Packages...  " $YELLOW)" &
+    spinner "$(show_message "!" "Checking Packages...  " $YELLOW $MAIN_COLOR)" &
     spinner_pid=$!
 
     # Check for installed packages
@@ -44,7 +43,7 @@ check_services_install() {
     clear
 
     show_menu
-    echo -ne "\r$(show_message "!" "Done..." $GREEN)"
+    echo -ne "\r$(show_message "!" "Done..." $GREEN $MAIN_COLOR)"
     stty echo
     stty -igncr
     echo -ne "\r"
@@ -58,8 +57,8 @@ check_and_continue() {
 
     if [ $is_installed -eq 0 ]; then
         echo ""
-        show_message "X" "The $service_name Service Package Is Not Installed" $RED 
-        show_message "!" "Install The Package Before Continuing" $RED
+        show_message "X" "The $service_name Service Package Is Not Installed" $RED $MAIN_COLOR
+        show_message "!" "Install The Package Before Continuing" $RED $MAIN_COLOR
         echo ""
     else
         bash $script_path
@@ -77,7 +76,7 @@ display_not_installed_message() {
 }
 
 show_title() {
-    bash Utils/show_title.sh "${TUXCOLOR}"
+    show_banner "${TUXCOLOR}" "${MAIN_COLOR}"
 }
 
 
@@ -139,7 +138,7 @@ menu_install() {
                 break
                 ;;
             *)
-                show_message "X" "Invalid Option" $RED
+                show_message "X" "Invalid Option!" $RED $MAIN_COLOR
                 ;;
         esac
     done
@@ -174,7 +173,7 @@ menu_config() {
                 break
                 ;;
             *)
-                show_message "X" "Invalid Option" $RED
+                show_message "X" "Invalid Option!" $RED $MAIN_COLOR
                 ;;
         esac
     done
@@ -209,7 +208,7 @@ menu_manage() {
                 break
                 ;;
             *)
-                show_message "X" "Invalid Option" $RED
+                show_message "X" "Invalid Option!" $RED $MAIN_COLOR
                 ;;
         esac
     done
@@ -244,7 +243,7 @@ menu_status() {
                 break
                 ;;
             *)
-                show_message "X" "Invalid Option" $RED
+                show_message "X" "Invalid Option!" $RED $MAIN_COLOR
                 ;;
         esac
     done
@@ -253,7 +252,7 @@ menu_status() {
 # MENU: MAIN
 main_menu() {
 	clear
-    show_menu
+    show_banner "${TUXCOLOR}" "${MAIN_COLOR}" "WELCOME!!!"
     check_services_install 
     while true; do
         echo -ne " ${MAIN_COLOR}Enter An Option ${TUXCOLOR}\$${MAIN_COLOR}>: ${NOCOLOR}"
@@ -292,7 +291,7 @@ main_menu() {
                     break
                     ;;
                 *)
-                    show_message "X" "Invalid Option" $RED
+                    show_message "X" "Invalid Option!" $RED $MAIN_COLOR
                     ;;
             esac
         fi

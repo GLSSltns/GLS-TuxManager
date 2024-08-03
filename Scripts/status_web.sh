@@ -1,20 +1,19 @@
 #!/bin/bash
 
 # UTILS: Source utility scripts for additional functionality
-source Utils/progress_bar.sh
-source Utils/show_message.sh
-source Utils/spinner.sh
+source Utils/styling.sh
+source Utils/progress.sh
 
 show_title() {
     clear
-    bash Utils/show_title.sh $HTTPCOLOR
+    show_banner $HTTPCOLOR $MAIN_COLOR "WEB Service Status"
 }
 
 # Function to check the status of the HTTP service
 check_status() {
     show_title
     echo ""
-    spinner 3 "$(show_message "!" "Checking HTTP service status...   " $YELLOW)"
+    spinner 3 "$(show_message "!" "Checking HTTP service status...   " $YELLOW $MAIN_COLOR)"
     echo ""
 
     # Get the status of the HTTP service
@@ -46,7 +45,7 @@ check_status() {
 show_logs() {
     show_title
     echo ""
-    spinner 3 "$(show_message "!" "Showing HTTP access logs...   " $YELLOW)"
+    spinner 3 "$(show_message "!" "Showing HTTP access logs...   " $YELLOW $MAIN_COLOR)"
     echo
 
     # Extract the last 20 lines from the access log
@@ -92,7 +91,7 @@ main_menu() {
             1) check_status ;; # Display HTTP service status
             2) show_logs ;; # Show HTTP logs
             3) break ;; # Exit the menu loop
-            *) show_message "X" "Invalid option." $RED ;; # Handle invalid input
+            *) show_message "X" "Invalid option." $RED $MAIN_COLOR;; # Handle invalid input
         esac
     done
 }

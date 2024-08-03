@@ -1,17 +1,17 @@
 #!/bin/bash
 
 # UTILS: Source utility scripts for additional functionality
-source Utils/progress_bar.sh
-source Utils/show_message.sh
-source Utils/validate_input_regex.sh
+source Utils/styling.sh
+source Utils/progress.sh
+source Utils/validate.sh
 
-HTTPD_ROOT="/var/www/html"
+readonly HTTPD_ROOT="/var/www/html"
 
 # FLAGS
 config_changed=0
 
 show_title() {
-    bash Utils/show_title.sh $HTTPCOLOR
+    show_banner $HTTPCOLOR $MAIN_COLOR "WEB Service Configuration"
 }
 
 create_directory() {
@@ -21,16 +21,16 @@ create_directory() {
         echo -ne "\n Enter the name of the directory to create: "
         read -r dir_name
         if [ -z "$dir_name" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 3
             break
         else
             if validate_input_regex "$dir_name" '^[a-zA-Z0-9_-]+$'; then
                 if [ -d "$HTTPD_ROOT/$dir_name" ]; then
-                    show_message "X" "Directory '$dir_name' already exists." $RED
+                    show_message "X" "Directory '$dir_name' already exists." $RED $MAIN_COLOR
                 else
                     mkdir -p "$HTTPD_ROOT/$dir_name"
-                    show_message "+" "Directory '$dir_name' created successfully." $GREEN
+                    show_message "+" "Directory '$dir_name' created successfully." $GREEN $MAIN_COLOR
                     echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
                     echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
                     read -r -n 1 -s
@@ -39,7 +39,7 @@ create_directory() {
                     break
                 fi
             else
-                show_message "X" "Invalid directory name." $RED
+                show_message "X" "Invalid directory name." $RED $MAIN_COLOR
             fi
         fi
     done
@@ -56,15 +56,15 @@ add_file() {
             echo -ne "\n Enter the name of the file to create (${HTTPCOLOR}e.g., index.html, style.css${NOCOLOR}): "
             read -r file_name
             if [ -z "$file_name" ]; then
-                show_message "!" "Cancelled..." $YELLOW
+                show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
                 sleep 3
                 break
             elif validate_input_regex "$file_name" '^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$'; then
                 if [ -f "$target_dir/$file_name" ]; then
-                    show_message "X" "File '$file_name' already exists in '$target_dir'." $RED
+                    show_message "X" "File '$file_name' already exists in '$target_dir'." $RED $MAIN_COLOR
                 else
                     touch "$target_dir/$file_name"
-                    show_message "+" "File '$file_name' created successfully in '$target_dir'." $GREEN
+                    show_message "+" "File '$file_name' created successfully in '$target_dir'." $GREEN $MAIN_COLOR
                     echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
                     echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
                     read -r -n 1 -s
@@ -73,10 +73,10 @@ add_file() {
                     break
                 fi
             else
-                show_message "X" "Invalid file name." $RED
+                show_message "X" "Invalid file name." $RED $MAIN_COLOR
             fi
         else
-            show_message "X" "Directory '$dir_name' does not exist." $RED
+            show_message "X" "Directory '$dir_name' does not exist." $RED $MAIN_COLOR
         fi
     done
 }
@@ -88,14 +88,14 @@ edit_file() {
         echo -ne "\n Enter the name of the file to edit (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r file_name
         if [ -z "$file_name" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 3
             break
         fi
         local target_file="$HTTPD_ROOT/$file_name"
         if [[ -f "$target_file" ]]; then
             nano "$target_file"
-            show_message "+" "File '$file_name' edited successfully." $GREEN
+            show_message "+" "File '$file_name' edited successfully." $GREEN $MAIN_COLOR
             echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
             echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
             read -r -n 1 -s
@@ -103,7 +103,7 @@ edit_file() {
             clear
             break
         else
-            show_message "X" "File '$file_name' does not exist." $RED
+            show_message "X" "File '$file_name' does not exist." $RED $MAIN_COLOR
         fi
     done
 }
@@ -115,7 +115,7 @@ view_file_content() {
         echo -ne "\n Enter the name of the file to view (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r file_name
         if [ -z "$file_name" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 3
             break
         fi
@@ -128,7 +128,7 @@ view_file_content() {
             read -r -n 1 -s
             break
         else
-            show_message "X" "File '$file_name' does not exist." $RED
+            show_message "X" "File '$file_name' does not exist." $RED $MAIN_COLOR
         fi
     done
 }
@@ -140,17 +140,15 @@ remove_file() {
         echo -ne "\n Enter the name of the file to remove (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r file_name
         if [ -z "$file_name" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 2
             break
         fi
         local target_file="$HTTPD_ROOT/$file_name"
         if [[ -f "$target_file" ]]; then
-            echo -ne "Are you sure you want to delete '$file_name'? (y/n${NOCOLOR}): "
-            read -r confirm
-            if [[ "$confirm" =~ ^[Yy]$ ]]; then
-                rm "$target_file"
-                show_message "-" "File '$file_name' deleted successfully." $GREEN
+            if prompt_confirmation "Are you sure you want to delete '$file_name'?" ; then
+                rm -rf "$target_file"
+                show_message "-" "File '$file_name' deleted successfully." $GREEN $MAIN_COLOR
                 echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
                 echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
                 read -r -n 1 -s
@@ -158,11 +156,11 @@ remove_file() {
                 clear
                 break
             else
-                show_message "X" "File deletion cancelled." $RED
+                show_message "X" "File deletion cancelled." $RED $MAIN_COLOR
                 break
             fi
         else
-            show_message "X" "File '$file_name' does not exist." $RED
+            show_message "X" "File '$file_name' does not exist." $RED $MAIN_COLOR
         fi
     done
 }
@@ -174,17 +172,15 @@ remove_directory() {
         echo -ne "\n Enter the name of the directory to remove (${HTTPCOLOR}relative to $HTTPD_ROOT${NOCOLOR}): "
         read -r dir_name
         if [ -z "$dir_name" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 2
             break
         fi
         local target_dir="$HTTPD_ROOT/$dir_name"
         if [[ -d "$target_dir" ]]; then
-            echo -ne "Are you sure you want to delete directory '$dir_name' and all its contents? (y/n${NOCOLOR}): "
-            read -r confirm
-            if [[ "$confirm" =~ ^[Yy]$ ]]; then
-                rm -r "$target_dir"
-                show_message "-" "Directory '$dir_name' deleted successfully." $GREEN
+            if prompt_confirmation "Are you sure you want to delete directory '$dir_name' and all its contents?" ; then
+                rm -rf "$target_dir"
+                show_message "-" "Directory '$dir_name' deleted successfully." $GREEN $MAIN_COLOR
                 echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
                 echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
                 read -r -n 1 -s
@@ -192,11 +188,11 @@ remove_directory() {
                 clear
                 break
             else
-                show_message "X" "Directory deletion cancelled." $RED
+                show_message "X" "Directory deletion cancelled." $RED $MAIN_COLOR
                 break
             fi
         else
-            show_message "X" "Directory '$dir_name' does not exist." $RED
+            show_message "X" "Directory '$dir_name' does not exist." $RED $MAIN_COLOR
         fi
     done
 }
@@ -208,7 +204,7 @@ upload_file() {
         echo -ne "\n Enter the path of the file to upload (${HTTPCOLOR}e.g., /path/to/local/file.html${NOCOLOR}): "
         read -r local_file_path
         if [ -z "$local_file_path" ]; then
-            show_message "!" "Cancelled..." $YELLOW
+            show_message "!" "Cancelled..." $YELLOW $MAIN_COLOR
             sleep 3
             break
         elif [[ -f "$local_file_path" ]]; then
@@ -218,10 +214,10 @@ upload_file() {
             if [[ -z "$dir_name" || -d "$target_dir" ]]; then
                 local target_file_path="$target_dir/$(basename "$local_file_path")"
                 if [[ -f "$target_file_path" ]]; then
-                    show_message "X" "File '$(basename "$local_file_path")' already exists in '$target_dir'." $RED
+                    show_message "X" "File '$(basename "$local_file_path")' already exists in '$target_dir'." $RED $MAIN_COLOR
                 else
                     cp "$local_file_path" "$target_dir"
-                    show_message "+" "File '$(basename "$local_file_path")' uploaded successfully to '$target_dir'." $GREEN
+                    show_message "+" "File '$(basename "$local_file_path")' uploaded successfully to '$target_dir'." $GREEN $MAIN_COLOR
                     echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
                     echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
                     read -r -n 1 -s
@@ -230,10 +226,10 @@ upload_file() {
                     break
                 fi
             else
-                show_message "X" "Directory '$dir_name' does not exist." $RED
+                show_message "X" "Directory '$dir_name' does not exist." $RED $MAIN_COLOR
             fi
         else
-            show_message "X" "File '$local_file_path' does not exist." $RED
+            show_message "X" "File '$local_file_path' does not exist." $RED $MAIN_COLOR
         fi
     done
 }
@@ -322,7 +318,7 @@ httpd_menu() {
                     show_httpd_menu
                     ;;
                 9) break ;;
-                *) show_message "X" "Invalid option." $RED
+                *) show_message "X" "Invalid option." $RED $MAIN_COLOR
                 sleep 3 ; echo "" ;;
             esac
         fi

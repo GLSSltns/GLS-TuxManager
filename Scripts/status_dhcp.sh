@@ -1,21 +1,19 @@
 #!/bin/bash
 
 # UTILS: Source utility scripts for additional functionality
-source Utils/progress_bar.sh
-source Utils/show_message.sh
-source Utils/spinner.sh
-
+source Utils/styling.sh
+source Utils/progress.sh
 
 show_title() {
     clear
-    bash Utils/show_title.sh $DHCPCOLOR
+    show_banner $DHCPCOLOR $MAIN_COLOR "DHCP Service Status"
 }
 
 # Function to check the status of the DHCP service
 check_status() {
     show_title
     echo ""
-    spinner 3 "$(show_message "!" "Checking DHCP service status...   " $YELLOW)"
+    spinner 3 "$(show_message "!" "Checking DHCP service status...   " $YELLOW $MAIN_COLOR)"
     echo ""
 
     # Get the status of the DHCP service
@@ -47,7 +45,7 @@ check_status() {
 show_logs() {
     show_title
     echo ""
-    spinner 3 "$(show_message "!" "Showing DHCP leases log...   " $YELLOW)"
+    spinner 3 "$(show_message "!" "Showing DHCP leases log...   " $YELLOW $MAIN_COLOR)"
     echo 
     # Extract and sort unique hostnames, IP addresses, and MAC addresses from the DHCP leases file
     HOSTNAMES=$(grep -Po "client-hostname \K[\d:a-zA-Z^\"]*" /var/lib/dhcpd/dhcpd.leases | sed 's/"//g' | sort | uniq)
@@ -90,7 +88,7 @@ main_menu() {
             1) check_status ;; #Display dhcp service status
             2) show_logs ;; #Show DHCP logs
             3) break ;; # Exit the menu loop
-            *) show_message "X" "Invalid option." $RED ;; # Handle invalid input
+            *) show_message "X" "Invalid option." $RED $MAIN_COLOR;; # Handle invalid input
         esac
     done
 }
