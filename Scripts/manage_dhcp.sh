@@ -55,6 +55,11 @@ show_error_details() {
             echo -e " ${NOCOLOR}$out_line"
         fi
     done <<< "$error_log"
+
+    echo "" 
+    show_message "!" "Recommendation: Check if the interface is currently up." $BLUE
+    show_message "!" "Recommendation: Check if the interface configuration." $BLUE
+    show_message "!" "Recommendation: Check the DHCP configuration (subnet, routers, default_lease_time, etc.)." $BLUE
 }
 
 read_config() {
