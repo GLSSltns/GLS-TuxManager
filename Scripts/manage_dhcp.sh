@@ -32,21 +32,21 @@ show_error_details() {
     error_start=$(echo "$error_log" | grep -n "Wrote 0 leases to leases file\." | head -n 1 | cut -d: -f1)
     log_line=$(echo "$error_log" | grep "Wrote 0 leases to leases file\." | head -n 1)
 
-    IFS=' ' read -r month day time _ pid_part _ <<< "$log_line"
+    IFS=' ' read -r mont day time _ pid_part _ <<< "$log_line"
 
     if [ -n "$error_start" ]; then
         error_log=$(echo "$error_log" | head -n +$((error_start-1)) | tac)
     fi
     pid="$(echo "$pid_part" | grep -oP 'dhcpd\[\K[0-9]+(?=\])')"
 
-    echo -e " ${RED} Error Details:${NOCOLOR}"
-    echo -e " ${MAIN_COLOR}Date: ${NOCOLOR}${day} ${mont}, ${time}"
+    echo -e " ${MAIN_COLOR}Date: ${NOCOLOR}$day $mont, $time"
     echo -e " ${MAIN_COLOR}PID: ${NOCOLOR}${pid}"
 
     echo -e "${YELLOW}-------------------${NOCOLOR}"
     while IFS= read -r line; do
-        # echo -e " ${WHITE}$line${NOCOLOR}"
-        echo -e " ${NOCOLOR}$(echo "line" | grep -oP '\]\s*\K.*')"
+      if [[ -n "$line" ]]; then
+        echo -e " ${NOCOLOR}$(echo "$line" | grep -oP '\]\s*\K.*')"
+      fi
     done <<< "$error_log"
     echo -e "${YELLOW}-------------------${NOCOLOR}"
 }
