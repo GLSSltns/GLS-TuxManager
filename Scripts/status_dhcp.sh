@@ -77,8 +77,8 @@ show_logs() {
         ADDRESS=$(echo "$ADDRESSES" | sed -n "${i}p")
         MAC=$(echo "$MACS" | sed -n "${i}p")
         printf "${MAIN_COLOR} │ ${WHITE}%-10s${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-17s${MAIN_COLOR} │${NOCOLOR}\n" "$HOSTNAME" "$ADDRESS" "$MAC"
+        echo -e "${MAIN_COLOR}  --------------------------------------------------${NOCOLOR}"
     done
-    echo -e "${MAIN_COLOR}  --------------------------------------------------${NOCOLOR}"
     echo ""
 
     echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
