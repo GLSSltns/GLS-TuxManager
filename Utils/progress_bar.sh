@@ -9,10 +9,10 @@ progress_bar() {
     local color=$2  # Color for the progress bar
 
     for ((i = 0; i <= steps; i++)); do
-        echo -ne "${BLUE} ["  # Start 
+        echo -ne "${MAIN_COLOR} ["  # Start 
         for ((j = 0; j < i; j++)); do echo -ne "${color}###"; done  # Filled portion
         for ((j = i; j < steps; j++)); do echo -ne "${NOCOLOR}..."; done  # Unfilled portion
-        echo -ne "${BLUE}] ${color}$((i * 10))${BLUE}%\r"  # Display percentage
+        echo -ne "${MAIN_COLOR}] ${color}$((i * 10))${MAIN_COLOR}%\r"  # Display percentage
         sleep $interval  # Wait for the interval duration
     done
     echo -e "${NOCOLOR}"  # Reset color and move to a new line

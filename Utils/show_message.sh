@@ -7,5 +7,5 @@ show_message() {
     local color=$3  # The color for the indicator and message
 
     # Display the message with formatting and color
-    echo -e " ${BLUE}[${color}${c}${BLUE}]${color} ${message}${NOCOLOR}"
+    echo -e " ${MAIN_COLOR}[${color}${c}${MAIN_COLOR}]${color} ${message}${NOCOLOR}"
 }
