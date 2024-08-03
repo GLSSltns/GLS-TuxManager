@@ -1,9 +1,6 @@
 #!/bin/bash
 
 # COLORS
-BLUE='\033[0;1;34;94m'
-NOCOLOR='\033[0m'
-COLOR=${1:-$NOCOLOR}
 
 show_title() {
     echo -e -n "${BLUE}"

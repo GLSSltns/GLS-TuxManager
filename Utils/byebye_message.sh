@@ -1,8 +1,5 @@
 #!/bin/bash
 
-TUXCOLOR="$(tput setaf 172)"
-RED="$(tput setaf 160)"
-
 stty -echoctl # hide ^C
 trap 'byebye_execution' SIGINT
 
