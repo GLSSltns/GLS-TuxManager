@@ -41,9 +41,9 @@ check_status() {
 
     # Display the extracted information
     if [[ "$STATUS" == "active" ]]; then
-        echo -e "${MAIN_COLOR}Status: ${GREEN}$STATUS"
+        echo -e "${MAIN_COLOR} Status: ${GREEN}$STATUS"
     else
-        echo -e "${MAIN_COLOR}Status: ${RED}$STATUS"
+        echo -e "${MAIN_COLOR} Status: ${RED}$STATUS"
     fi
     echo -e " ${MAIN_COLOR}PID: ${NOCOLOR}$PID"
     echo -e " ${MAIN_COLOR}Memory: ${NOCOLOR}$MEMORY"
@@ -58,7 +58,8 @@ check_status() {
 # Function to show DHCP leases log
 show_logs() {
     show_title
-    echo -e "${MAIN_COLOR}Showing DHCP leases log...${NOCOLOR}"
+    echo ""
+    spinner 3 "$(show_message "!" "Showing DHCP leases log...   " $YELLOW)"
 
     # Extract and sort unique hostnames, IP addresses, and MAC addresses from the DHCP leases file
     HOSTNAMES=$(grep -Po "client-hostname \K[\d:a-zA-Z^\"]*" /var/lib/dhcpd/dhcpd.leases | sed 's/"//g' | sort | uniq)
@@ -66,9 +67,9 @@ show_logs() {
     MACS=$(grep -Po "ethernet \K[\d:a-fA-F]*" /var/lib/dhcpd/dhcpd.leases | sort | uniq)
 
     # Display the log in a formatted table
-    echo -e "${MAIN_COLOR}--------------------------------------------------${NOCOLOR}"
+    echo -e "${MAIN_COLOR} --------------------------------------------------${NOCOLOR}"
     printf "${MAIN_COLOR}│ ${WHITE}%-10s${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-17s${MAIN_COLOR} │${NOCOLOR}\n" "HOSTNAME" "ADDRESS" "MAC"
-    echo -e "${MAIN_COLOR}--------------------------------------------------${NOCOLOR}"
+    echo -e "${MAIN_COLOR} --------------------------------------------------${NOCOLOR}"
     
     # Loop through each entry and display it in the table
     for i in $(seq 1 $(echo "$HOSTNAMES" | wc -l)); do
@@ -77,7 +78,9 @@ show_logs() {
         MAC=$(echo "$MACS" | sed -n "${i}p")
         printf "${MAIN_COLOR}│ ${WHITE}%-10s${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-17s${MAIN_COLOR} │${NOCOLOR}\n" "$HOSTNAME" "$ADDRESS" "$MAC"
     done
-
+    echo -e "${MAIN_COLOR} --------------------------------------------------${NOCOLOR}"
+    echo ""
+    
     echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
     echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
     read -r -n 1 -s 
