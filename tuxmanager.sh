@@ -14,6 +14,7 @@ if [ $color_count -eq 8 ]; then
     export YELLOW='\033[1;33m'
     export WHITE="$(tput setaf 7)"
     export NOCOLOR="$(tput sgr0)"
+    
 else
     export MAIN_COLOR="$(tput setaf 26)"
     export TUXCOLOR="$(tput setaf 172)"
