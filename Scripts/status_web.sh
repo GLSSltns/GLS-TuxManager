@@ -62,7 +62,7 @@ show_logs() {
     echo
 
     # Extract the last 20 lines from the access log
-    log_lines=$(tail -n 20 /var/log/httpd/access_log)
+    log_lines=$(tail -n 20 /var/log/httpd/access_log | tac)
 
     # echo -e "${MAIN_COLOR}  ----------------------------------------------------------------${NOCOLOR}"
     printf "${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-20s${MAIN_COLOR} │ ${WHITE}%-7s${MAIN_COLOR} │ ${WHITE}%-30s${MAIN_COLOR}${NOCOLOR}\n" "ADDRESS" "DATE" "METHOD" "URL"
