@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export TERM=linux
+export TERM=xterm-256color
 color_count=$(tput colors)
 
 if [ $color_count -eq 8 ]; then
