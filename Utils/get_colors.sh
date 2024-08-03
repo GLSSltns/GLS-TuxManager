@@ -3,6 +3,8 @@
 # Check for 256 color support
 
 color_count=$(tput colors)
+export TERM=xterm-256color
+
 
 if [ $color_count -eq 8 ]; then
     export MAIN_COLOR='\033[0;1;34;94m'
