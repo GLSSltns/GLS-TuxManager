@@ -82,7 +82,7 @@ show_logs() {
     echo ""
 
     echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-    echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+    echo -ne "\n ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
     read -r -n 1 -s 
 }
 
@@ -94,6 +94,7 @@ main_menu() {
         #Display menu options
         echo -e " ${MAIN_COLOR}[${DHCPCOLOR}1${MAIN_COLOR}]${NOCOLOR} Check DHCP Service Status"
         echo -e " ${MAIN_COLOR}[${DHCPCOLOR}2${MAIN_COLOR}]${NOCOLOR} Show DHCP Leases Logs"
+        echo ""
         echo -e " ${MAIN_COLOR}[${DHCPCOLOR}3${MAIN_COLOR}]${NOCOLOR} Exit DHCP Monitoring"
         echo ""
         echo -ne " ${MAIN_COLOR}Enter an option ${DHCPCOLOR}\$${MAIN_COLOR}>:${NOCOLOR} "
