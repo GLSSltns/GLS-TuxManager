@@ -17,6 +17,7 @@ is_http=0 # Check HTTP install
 
 source Utils/show_message.sh
 source Utils/spinner.sh
+source Utils/byebye_message.sh
 
 # Function to display spinner while a command runs
 spinner() {
