@@ -67,20 +67,20 @@ show_logs() {
     MACS=$(grep -Po "ethernet \K[\d:a-fA-F]*" /var/lib/dhcpd/dhcpd.leases | sort | uniq)
 
     # Display the log in a formatted table
-    echo -e "${MAIN_COLOR} --------------------------------------------------${NOCOLOR}"
-    printf "${MAIN_COLOR}│ ${WHITE}%-10s${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-17s${MAIN_COLOR} │${NOCOLOR}\n" "HOSTNAME" "ADDRESS" "MAC"
-    echo -e "${MAIN_COLOR} --------------------------------------------------${NOCOLOR}"
+    echo -e "${MAIN_COLOR}  --------------------------------------------------${NOCOLOR}"
+    printf "${MAIN_COLOR} │ ${WHITE}%-10s${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-17s${MAIN_COLOR} │${NOCOLOR}\n" "HOSTNAME" "ADDRESS" "MAC"
+    echo -e "${MAIN_COLOR}  --------------------------------------------------${NOCOLOR}"
     
     # Loop through each entry and display it in the table
     for i in $(seq 1 $(echo "$HOSTNAMES" | wc -l)); do
         HOSTNAME=$(echo "$HOSTNAMES" | sed -n "${i}p")
         ADDRESS=$(echo "$ADDRESSES" | sed -n "${i}p")
         MAC=$(echo "$MACS" | sed -n "${i}p")
-        printf "${MAIN_COLOR}│ ${WHITE}%-10s${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-17s${MAIN_COLOR} │${NOCOLOR}\n" "$HOSTNAME" "$ADDRESS" "$MAC"
+        printf "${MAIN_COLOR}  │ ${WHITE}%-10s${MAIN_COLOR} │ ${WHITE}%-15s${MAIN_COLOR} │ ${WHITE}%-17s${MAIN_COLOR} │${NOCOLOR}\n" "$HOSTNAME" "$ADDRESS" "$MAC"
     done
-    echo -e "${MAIN_COLOR} --------------------------------------------------${NOCOLOR}"
+    echo -e "${MAIN_COLOR}  --------------------------------------------------${NOCOLOR}"
     echo ""
-    
+
     echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
     echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
     read -r -n 1 -s 
