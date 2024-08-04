@@ -31,12 +31,11 @@ readonly GITHUB_URL="https://github.com/GLSSltns/TuxManager"
 readonly VERSION="1.0"
 readonly NOCOLOR='\033[0m'
 
-show_banner() {
+set_title() {
     local color="$1"      # Secondary color for the Tux ASCII art
     local main_color="$2" # Main color for the banner text
     local extra_msg="$3"  # Extra message to display
 
-    # Display the banner with ASCII art and the provided colors
     echo -e -n "${main_color}"
     echo -e '________                ______  ___                                '               
     echo -e '___  __/____  ______  _____   |/  /______ ________ ______ ________ ______ ________'
@@ -45,10 +44,26 @@ show_banner() {
     echo -e -n '/_/     \__,_/  /_/|_|  /_/  /_/   \__,_/  /_/ /_/ \__,_/  _\__, /  \___/ /_/      ' ; echo -e "${color}V_/_${main_color}"
     echo -e '                                                           /____/ '
     echo -e "${color}${extra_msg}${NOCOLOR}"
+}
+
+set_info() {
+    local color="$1"      # Secondary color for the Tux ASCII art
+    local main_color="$2" # Main color for the banner text
+
     echo -e "${main_color}----------------------------------------------------------------------------------${NOCOLOR}"
     echo -e -n "${main_color}GitHub: ${color}${GITHUB_URL}${NOCOLOR}"
     echo -e "\t\t\t      ${main_color}Version: ${color}${VERSION}${NOCOLOR}"
     echo -e "${main_color}----------------------------------------------------------------------------------${NOCOLOR}"
+}
+show_banner() {
+    local color="$1"      # Secondary color for the Tux ASCII art
+    local main_color="$2" # Main color for the banner text
+    local extra_msg="$3"  # Extra message to display
+
+    # Display the banner with ASCII art and the provided colors
+    set_title $color $main_color $extra_msg
+    set_info $color $main_color
+    
 }
 
 # Function to display a formatted message with a specific indicator and color

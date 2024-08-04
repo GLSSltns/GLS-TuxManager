@@ -1,7 +1,8 @@
 #!/bin/bash
 
 source Utils/styling.sh
-source Utils/byebye_message.sh
+source Utils/progress.sh
+source Utils/byebye_track.sh
 
 # FLAGS
 is_dhcp=0 # Check DHCP install
@@ -9,7 +10,7 @@ is_http=0 # Check HTTP install
 
 
 # Function to display spinner while a command runs
-spinner() {
+spinner_install() {
     local msg="$1"
     spin[0]="-"
     spin[1]="\\"
@@ -29,7 +30,7 @@ check_services_install() {
     # Start the spinner in the background
     stty -echo
     stty igncr
-    spinner "$(show_message "!" "Checking Packages...  " $YELLOW $MAIN_COLOR)" &
+    spinner_install "$(show_message "!" "Checking Packages...  " $YELLOW $MAIN_COLOR)" &
     spinner_pid=$!
 
     # Check for installed packages
@@ -78,34 +79,6 @@ show_title() {
     show_banner "${TUXCOLOR}" "${MAIN_COLOR}"
 }
 
-
-show_menu() {
-    show_title
-    echo -e " \n ${MAIN_COLOR}[${TUXCOLOR}1${MAIN_COLOR}]${NOCOLOR} Service Installation\t\t${MAIN_COLOR}[${TUXCOLOR}5${MAIN_COLOR}]${NOCOLOR} Info"
-    echo -e " ${MAIN_COLOR}[${TUXCOLOR}2${MAIN_COLOR}]${NOCOLOR} Service Configuration\t\t${MAIN_COLOR}[${TUXCOLOR}6${MAIN_COLOR}]${NOCOLOR} Quit"
-    echo -e " ${MAIN_COLOR}[${TUXCOLOR}3${MAIN_COLOR}]${NOCOLOR} Service Management"
-    echo -e " ${MAIN_COLOR}[${TUXCOLOR}4${MAIN_COLOR}]${NOCOLOR} Service Monitoring"
-    echo ""
-}
-
-show_info() {
-    show_title
-    echo -e "${YELLOW}"
-    echo -e '  / ` /  /_`__ /_` _  /   _/_ . _  _   _'
-    echo -ne ' /_; /_,._/   ._/ /_// /_//  / /_// /_\ ' 
-    echo -e "${MAIN_COLOR} <\\"
-    echo -e "${MAIN_COLOR} <_______________________________________[]${YELLOW}#######${MAIN_COLOR}]"
-    echo -e '                                         </'
-    echo -e " ${MAIN_COLOR}AUTHORS:"	
-    echo -e " ${MAIN_COLOR}@ Gael Landa ${NOCOLOR}\t\thttps://github.com/GsusLnd"
-    echo -e " ${MAIN_COLOR}@ Leonardo Aceves ${NOCOLOR}\thttps://github.com/L30AM"
-    echo -e " ${MAIN_COLOR}@ Sergio Méndez ${NOCOLOR}\thttps://github.com/sergiomndz15"
-    echo -e " ${MAIN_COLOR}@ Alexandra Gonzáles ${NOCOLOR}\thttps://github.com/AlexMangle"
-    echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-    echo -ne " ${MAIN_COLOR}Press [${TUXCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-    read -r -n 1 -s
-    clear
-}
 
 # MENU: INSTALL
 show_menu_install() {
@@ -248,6 +221,51 @@ menu_status() {
     done
 }
 
+show_menu() {
+    show_title
+    echo -e " \n ${MAIN_COLOR}[${TUXCOLOR}1${MAIN_COLOR}]${NOCOLOR} Service Installation\t\t${MAIN_COLOR}[${TUXCOLOR}5${MAIN_COLOR}]${NOCOLOR} Info"
+    echo -e " ${MAIN_COLOR}[${TUXCOLOR}2${MAIN_COLOR}]${NOCOLOR} Service Configuration\t\t${MAIN_COLOR}[${TUXCOLOR}6${MAIN_COLOR}]${NOCOLOR} Quit"
+    echo -e " ${MAIN_COLOR}[${TUXCOLOR}3${MAIN_COLOR}]${NOCOLOR} Service Management"
+    echo -e " ${MAIN_COLOR}[${TUXCOLOR}4${MAIN_COLOR}]${NOCOLOR} Service Monitoring"
+    echo ""
+}
+
+show_info() {
+    show_title
+    echo -e "${YELLOW}"
+    echo -e '  / ` /  /_`__ /_` _  /   _/_ . _  _   _'
+    echo -ne ' /_; /_,._/   ._/ /_// /_//  / /_// /_\ ' 
+    echo -e "${MAIN_COLOR} <\\"
+    echo -e "${MAIN_COLOR} <_______________________________________[]${YELLOW}#######${MAIN_COLOR}]"
+    echo -e '                                         </'
+    echo -e " ${MAIN_COLOR}AUTHORS:"    
+    echo -e " ${MAIN_COLOR}@ Gael Landa ${NOCOLOR}\t\thttps://github.com/GsusLnd"
+    echo -e " ${MAIN_COLOR}@ Leonardo Aceves ${NOCOLOR}\thttps://github.com/L30AM"
+    echo -e " ${MAIN_COLOR}@ Sergio Méndez ${NOCOLOR}\thttps://github.com/sergiomndz15"
+    echo -e " ${MAIN_COLOR}@ Alexandra Gonzáles ${NOCOLOR}\thttps://github.com/AlexMangle"
+    echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
+    echo -ne " ${MAIN_COLOR}Press [${TUXCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
+    read -r -n 1 -s
+    clear
+}
+
+show_bye_message() {
+    clear
+    # set_info $TUXCOLOR $MAIN_COLOR
+    show_title
+    echo -e "\t\t    ${MAIN_COLOR}                                        ${NOCOLOR}"
+    echo -e "\t\t    ${MAIN_COLOR}     Thank you for using our service!    ${NOCOLOR}"
+    echo -e "\t\t    ${MAIN_COLOR}      We hope to see you again soon!     ${NOCOLOR}"
+    echo -e "\t\t    ${MAIN_COLOR}                                        ${NOCOLOR}"
+    echo -e "\t\t    ${MAIN_COLOR}             ${TUXCOLOR}(o<${MAIN_COLOR}                       ${NOCOLOR}"
+    echo -e "\t\t    ${MAIN_COLOR}             ${TUXCOLOR}//\\  Goodbye!${MAIN_COLOR}             ${NOCOLOR}"
+    echo -e "\t\t    ${MAIN_COLOR}             ${TUXCOLOR}V_/_${MAIN_COLOR}                      ${NOCOLOR}"
+    # echo -e "\t\t    ${MAIN_COLOR}                                        ${NOCOLOR}"
+    spinner 3 "\t\t\t\t        "
+    sleep 3
+    clear
+}
+
 # MENU: MAIN
 main_menu() {
 	clear
@@ -286,7 +304,8 @@ main_menu() {
                     show_info
                     show_menu
                     ;;
-                6)
+                6) 
+                    show_bye_message
                     break
                     ;;
                 *)
