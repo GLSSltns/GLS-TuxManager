@@ -34,8 +34,8 @@ check_services_install() {
     spinner_pid=$!
 
     # Check for installed packages
-    yum list installed | grep -q dhcp-server && is_dhcp=1
-    yum list installed | grep -q httpd && is_http=1
+    is_dhcp=$(yum list installed | grep -q dhcp-server && echo 1 || echo 0)
+    is_http=$(yum list installed | grep -q http && echo 1 || echo 0)
 
     # Stop the spinner
     kill $spinner_pid 
