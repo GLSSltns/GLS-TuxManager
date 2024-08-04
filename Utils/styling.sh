@@ -27,7 +27,7 @@ export WHITE='\033[38;5;158m'
 export NOCOLOR='\033[0m'
 
 # Function to display a banner with customizable colors and an extra message
-readonly GITHUB_URL="https://github.com/GsusLnd/TuxManager"
+readonly GITHUB_URL="https://github.com/GLSSltns/TuxManager"
 readonly VERSION="1.0"
 readonly NOCOLOR='\033[0m'
 
@@ -59,6 +59,7 @@ show_message() {
     local main_color="$4"   # The color for the indicator and message
 
     # Display the message with formatting and color
+    echo -ne "${main_color}"
     echo -e " ${main_color}[${color}${c}${main_color}]${color} ${message}${NOCOLOR}"
 }
 
