@@ -87,7 +87,7 @@ show_menu_install() {
     echo ""
     echo -e " ${MAIN_COLOR}[${TUXCOLOR}1${MAIN_COLOR}]${NOCOLOR} Install DHCP Service"
     echo -e " ${MAIN_COLOR}[${TUXCOLOR}2${MAIN_COLOR}]${NOCOLOR} Install WEB Service"
-    echo -e " ${MAIN_COLOR}[${TUXCOLOR}3${MAIN_COLOR}]${NOCOLOR} Go Back"
+    echo -e "\n ${MAIN_COLOR}[${TUXCOLOR}3${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
