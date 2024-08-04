@@ -133,7 +133,7 @@ manage_dhcp() {
     fi
 
     show_dhcp_config
-    if [[ "$action" == "start" && prompt_confirmation "Are you sure you want to start the DHCP service with this configuration?" ]]; then
+    if [[ "$action" == "start" && ´prompt_confirmation "Are you sure you want to start the DHCP service with this configuration?"´ ]]; then
         systemctl start dhcpd > /dev/null 2>&1
     else
         show_message "!" "DHCP service $action aborted." $YELLOW $MAIN_COLOR
