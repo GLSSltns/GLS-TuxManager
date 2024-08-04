@@ -8,39 +8,83 @@
 <a href="https://github.com/AlexMangle"><img title="Author" src="https://img.shields.io/badge/Author-AlexMangle-red.svg?style=for-the-badge&logo=github"></a>
 </p>
 
-## Principal
+## Table of Contents
 
-> **tuxmanager.sh**  
-> Main script that acts as the entry point for all TuxManager functions. This script provides an interface to interact with all other scripts easily.
+- [Project Structure](#project-structure)
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Utilities](#utilities)
+
+## Project Structure
+
+```
+TuxManager/
+│
+├── README.md
+├── tuxmanager.sh              # Main script to run TuxManager
+├── Scripts/
+│   ├── configure_dhcp.sh      # Script to configure DHCP
+│   ├── configure_web.sh       # Script to configure HTTP (Web) service
+│   ├── install_dhcp.sh        # Script to install DHCP service
+│   ├── install_web.sh         # Script to install HTTP (Web) service
+│   ├── manage_dhcp.sh         # Script to manage DHCP service (start, stop, restart)
+│   ├── manage_web.sh          # Script to manage HTTP (Web) service (start, stop, restart)
+│   ├── status_dhcp.sh         # Script to check the status of DHCP service
+│   ├── status_web.sh          # Script to check the status of HTTP (Web) service
+│
+└── Utils/
+    ├── byebye_track.sh        # Utility script to clean up tracking data or logs
+    ├── progress.sh            # Utility script to show progress bars or spinners
+    ├── styling.sh             # Utility script for text styling in terminal
+    ├── validate.sh            # Utility script to validate configurations or inputs
+```
+
+## Features
+
+- **Automated Installation:** It automates the installation process, ensuring that all necessary dependencies and configurations are properly implemented.
+- **Service Management:** Allows actions such as starting, stopping, and restarting the web server configuration.
+- **Configuration:** Easily configure DHCP and HTTP services.
+- **Status Monitoring:** It reports on whether the server is active, uptime, and possible errors or warnings in the service.
+- **Utilities:** Additional utility scripts to enhance the functionality and appearance of TuxManager.
+
+## Requirements
+
+- **Bash Shell:** Ensure your system supports Bash scripting.
+- **Permissions:** Root or sudo privileges to install and manage services.
+- **Dependencies:** Necessary packages (e.g., `dhcpd`, `httpd`) should be available. Alternatively, for a better experience, install them using the TuxManager installation tools.
 
 ## Installation
 
-> **Scripts/install_dhcp.sh**  
-> This script installs the DHCP service on a CentOS system. It automates the installation process, ensuring that all necessary dependencies and configurations are properly implemented.
+Clone the repository to your local machine:
 
-> **Scripts/install_web.sh**  
-> Similar to the previous script, this one installs a web server (HTTP) on CentOS. It handles downloading, installing, and configuring the web server with default settings.
+```bash
+git clone https://github.com/GLSSltns/TuxManager.git
+cd TuxManager-main
+```
 
-## Configuration
+Ensure the scripts have executable permissions:
 
-> **Scripts/configure_dhcp.sh**  
-> This script is used to configure the DHCP service after installation. It allows customization of DHCP options such as IP range, default gateway, DNS servers, and more.
+```bash
+chmod +x Scripts/*.sh Utils/*.sh tuxmanager.sh
+```
 
-> **Scripts/configure_web.sh**  
-> Used to configure the installed web server. It allows adjustment of parameters such as document root, access permissions, enabled modules, and more.
+## Usage
 
-## Management
+TuxManager's main script can be executed to interact with all available features:
+Main script that acts as the entry point for all TuxManager functions. This script provides an interface to interact with all other scripts easily.
+> NOT RECOMMENDABLE TO RUN THE SCRIPTS INDIVIDUATELY!
 
-> **Scripts/manage_dhcp.sh**  
-> Provides functions to manage the DHCP service, including options to start, stop, restart, and reload the service configuration.
+```bash
+./tuxmanager.sh
+```
 
-> **Scripts/manage_web.sh**  
-> Similar to the previous one, this script manages the web service, allowing actions such as starting, stopping, restarting, and reloading the web server configuration.
 
-## Monitoring
+## Utilities
 
-> **Scripts/status_dhcp.sh**  
-> This script checks the status of the DHCP service, providing information on whether the service is active, uptime, and any relevant errors or warnings.
+- **byebye_track.sh:** Clean up logs or tracking data.
+- **progress.sh:** Display progress bars or spinners during operations.
+- **styling.sh:** Add text styling to your terminal outputs.
+- **validate.sh:** Validate your configurations and inputs for correctness.
 
-> **Scripts/status_web.sh**  
-> Script that checks the status of the web service. It reports on whether the server is active, uptime, and possible errors or warnings in the service.
