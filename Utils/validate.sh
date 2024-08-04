@@ -29,7 +29,7 @@ prompt_confirmation() {
     while true; do
         echo ""  # Print an empty line for spacing
         # Prompt the user with the message, colorizing 'Y' and 'n' accordingly
-        echo -ne "${main_color} $prompt_message [${yes_color}Y${main_color}/${no_color}n${no_color}]: "
+        echo -ne "${main_color} $prompt_message [${yes_color}Y${main_color}/${red}n${main_color}]:${no_color} "
         read -r yn  # Read the user's input
         case $yn in
             [Yy]*) return 0 ;;  # Return 0 (success) if the user inputs 'Y' or 'y'

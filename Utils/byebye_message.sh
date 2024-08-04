@@ -1,4 +1,4 @@
-#!/bin/bash
+    #!/bin/bash
 
 stty -echoctl # hide ^C
 trap 'byebye_execution' SIGINT

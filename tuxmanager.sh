@@ -1,7 +1,6 @@
 #!/bin/bash
 
 source Utils/styling.sh
-source Utils/spinner.sh
 source Utils/byebye_message.sh
 
 # FLAGS
