@@ -132,8 +132,10 @@ manage_dhcp() {
         if prompt_confirmation "Start DHCP?"; then
             manage_dhcp "start" "DHCP service started successfully." "Failed to start DHCP." "start"
         else
-            show_message "!" "DHCP service start aborted." $YELLOW $MAIN_COLOR
+            show_message "!" "DHCP service restart aborted." $YELLOW $MAIN_COLOR
             sleep 3
+            wait_for_continue $MAIN_COLOR $DHCPCOLOR
+            menu_dhcp_man
         fi
         return
     fi
