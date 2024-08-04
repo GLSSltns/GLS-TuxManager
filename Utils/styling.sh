@@ -63,6 +63,16 @@ show_message() {
     echo -e " ${main_color}[${color}${c}${main_color}]${color} ${message}${NOCOLOR}"
 }
 
+# Function to display a input to wait for some key to be pressed
+wait_for_continue() {
+  local main_color="$1"
+  local dhcpcolor="$2"
+
+  echo -e "\n${main_color}----------------------------------------------------------------------------------${NOCOLOR}"
+  echo -ne " ${main_color}Press [${dhcpcolor}ANY KEY${main_color}] to continue..."
+  read -r -n 1 -s
+}
+
 # Test function to demonstrate the banner display
 test_banner() {
     show_banner "Welcome!!!" $MAIN_COLOR $TUXCOLOR

@@ -25,14 +25,6 @@ show_title() {
     show_banner $HTTPCOLOR $MAIN_COLOR "WEB Service Installation"
 }
 
-# Function to wait for user input to continue
-wait_for_continue() {
-    echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-    echo -ne " ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-    read -r -n 1 -s
-    show_title
-}
-
 # Function to manage package installation, update, or removal
 manage_pkg() {
     local action=$1
@@ -53,8 +45,9 @@ manage_pkg() {
     progress_bar 10 $YELLOW $MAIN_COLOR &
     eval "$command" > /dev/null 2>&1
     wait
-    show_message "-" "$message Completed Successfully." $GREEN $MAIN_COLOR
+    show_message "-" "Completed Successfully." $GREEN $MAIN_COLOR
     wait_for_continue
+    show_title
     show_menu
 }
 
@@ -78,6 +71,7 @@ remove_pkg() {
         else
             show_message "!" "Removal canceled." $YELLOW $MAIN_COLOR
             wait_for_continue
+            show_title
         fi
     else
         show_message "X" "HTTP Service Is Not Installed, Cannot Remove.\n" $RED $MAIN_COLOR
