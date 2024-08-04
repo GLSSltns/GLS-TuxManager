@@ -110,17 +110,17 @@ manage_dhcp() {
     show_title
     is_dhcp_started
 
-    if [ "$action" == "start" ] && [ $is_started -eq 1 ]; then
+    if [[ "$action" == "start" ]] && [[ $is_started -eq 1 ]]; then
         echo ""
         show_message "!" "DHCP is already running." $YELLOW $MAIN_COLOR
         wait_for_continue $MAIN_COLOR DHCPCOLOR
         return
-    elif [ "$action" == "stop" ] && [ $is_started -eq 0 ]; then
+    elif [[ "$action" == "stop" ]] && [[ $is_started -eq 0 ]]; then
         echo ""
         show_message "!" "DHCP service is already stopped." $YELLOW $MAIN_COLOR
         wait_for_continue $MAIN_COLOR DHCPCOLOR
         return
-    elif [ "$action" == "restart" ] && [ $is_started -eq 0 ]; then
+    elif [[ "$action" == "restart" ]] && [[ $is_started -eq 0 ]]; then
         echo ""
         show_message "!" "DHCP service is not running. Would you like to start it instead?" $YELLOW $MAIN_COLOR
         if prompt_confirmation "Start DHCP?"; then
@@ -133,7 +133,7 @@ manage_dhcp() {
     fi
 
     show_dhcp_config
-    if [ "$action" == "start" ] && prompt_confirmation "Are you sure you want to start the DHCP service with this configuration?"; then
+    if [[ "$action" == "start" ]] && prompt_confirmation "Are you sure you want to start the DHCP service with this configuration?"; then
         systemctl start dhcpd > /dev/null 2>&1
     else
         show_message "!" "DHCP service $action aborted." $YELLOW $MAIN_COLOR
@@ -148,7 +148,7 @@ manage_dhcp() {
     progress_bar 5 $YELLOW $MAIN_COLOR
     is_dhcp_started
     sleep 2
-    if [ $is_started -eq 1 ]; then
+    if [[ $is_started -eq 1 ]]; then
         show_message "-" "$success_message" $GREEN $MAIN_COLOR
     else
         show_message "X" "$failure_message" $RED $MAIN_COLOR
