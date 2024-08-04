@@ -564,11 +564,9 @@ main_menu() {
     done
 }
 
-main() {
-    read_config "$DEFAULT_DHCP_CONF"
-    read_interface_config "$DEFAULT_INTERFACE_CONF"
-    main_menu
-}
+read_config "$DEFAULT_DHCP_CONF"
+read_interface_config "$DEFAULT_INTERFACE_CONF"
+main_menu
 
-main
+
 

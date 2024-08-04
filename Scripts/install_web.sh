@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "$SCRIPT_ALLOWED" != "true" ]; then
+    echo -e " \033[38;5;69m[\033[38;5;88mX\033[38;5;69m]\033[38;5;88m This script must be sourced from the main script 'tuxmanager.sh' .\033[0m"
+    exit 1
+fi
+
 # UTILS: Source utility scripts for additional functionality
 source Utils/styling.sh 
 source Utils/progress.sh
