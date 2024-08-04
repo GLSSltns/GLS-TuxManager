@@ -1,5 +1,7 @@
 #!/bin/bash
 
+
+
 # UTILS: Source utility scripts for additional functionality
 source Utils/styling.sh
 source Utils/progress.sh
@@ -559,6 +561,13 @@ main_menu() {
     done
 }
 
-read_config "$DEFAULT_DHCP_CONF"
-read_interface_config "$DEFAULT_INTERFACE_CONF"
-main_menu
+main() {
+    if [ "$SCRIPT_ALLOWED" != "true" ]; then
+        show_message "X" "This script must be sourced from the main script 'tuxmanager.sh' ." '\033[38;5;88m' '\033[0m' 
+        exit 1
+    fi
+    read_config "$DEFAULT_DHCP_CONF"
+    read_interface_config "$DEFAULT_INTERFACE_CONF"
+    main_menu
+}
+

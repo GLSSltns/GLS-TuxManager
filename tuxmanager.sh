@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "$SCRIPT_ALLOWED" != "true" ]; then
+    echo "Error: This script must be sourced from the main script."
+    exit 1
+fi
+
 source Utils/styling.sh
 source Utils/progress.sh
 source Utils/byebye_track.sh
