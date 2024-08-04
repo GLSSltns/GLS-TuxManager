@@ -113,12 +113,14 @@ manage_dhcp() {
     if [[ "$action" =~ "^start" && $is_started -eq 1 ]]; then
         echo ""
         show_message "!" "DHCP is already running." $YELLOW $MAIN_COLOR
-        wait_for_continue $MAIN_COLOR DHCPCOLOR
+        wait_for_continue $MAIN_COLOR $DHCPCOLOR
+        menu_dhcp_man
         return
     elif [[ "$action" =~ "^stop" && $is_started -eq 0 ]]; then
         echo ""
         show_message "!" "DHCP service is already stopped." $YELLOW $MAIN_COLOR
-        wait_for_continue $MAIN_COLOR DHCPCOLOR
+        wait_for_continue $MAIN_COLOR $DHCPCOLOR
+        menu_dhcp_man
         return
     elif [[ "$action" =~ "^restart" && $is_started -eq 0 ]]; then
         echo ""
@@ -140,6 +142,7 @@ manage_dhcp() {
             show_message "!" "DHCP service $action aborted." $YELLOW $MAIN_COLOR
             sleep 3
             wait_for_continue $MAIN_COLOR $DHCPCOLOR
+            menu_dhcp_man
             return
         fi
     fi
@@ -158,6 +161,7 @@ manage_dhcp() {
         show_error_details
     fi
     wait_for_continue $MAIN_COLOR $DHCPCOLOR
+    menu_dhcp_man
 }
 
 # Function to display the DHCP management menu
