@@ -157,7 +157,11 @@ manage_dhcp() {
     progress_bar 5 $YELLOW $MAIN_COLOR
     is_dhcp_started
     sleep 2
-    if [[ $is_started -eq 1 ]]; then
+    if [[ "$action" == "start" && $is_started -eq 1 ]]; then
+        show_message "-" "$success_message" $GREEN $MAIN_COLOR
+    elif [[ "$action" == "stop" && $is_started -eq 0 ]]; then
+        show_message "-" "$success_message" $GREEN $MAIN_COLOR
+    elif [[ "$action" == "stop" ]]; then
         show_message "-" "$success_message" $GREEN $MAIN_COLOR
     else
         show_message "X" "$failure_message" $RED $MAIN_COLOR
