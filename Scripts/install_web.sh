@@ -72,6 +72,7 @@ remove_pkg() {
             show_message "!" "Removal canceled." $YELLOW $MAIN_COLOR
             wait_for_continue $MAIN_COLOR $HTTPCOLOR   
             show_title
+            show_menu
         fi
     else
         show_message "X" "HTTP Service Is Not Installed, Cannot Remove.\n" $RED $MAIN_COLOR
