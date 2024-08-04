@@ -22,7 +22,7 @@ is_dhcp_started() {
 
 check_dhcp_status() {
     echo ""
-    spinner 3 "$(show_message "!" "Checking for DHCP status...   " $YELLOW $MAIN_COLOR)"
+    spinner 3 "$(show_message "!" "Checking DHCP status...   " $YELLOW $MAIN_COLOR)"
     show_message "!" "Done...\n" $GREEN
     sleep 3
     clear
@@ -126,7 +126,7 @@ validate_start() {
     if [ $is_started -eq 1 ]; then
         echo ""
         show_message "!" "DHCP is already running." $YELLOW $MAIN_COLOR
-        wait_for_continue $MAIN_COLOR DHCPCOLOR
+        wait_for_continue $MAIN_COLOR $DHCPCOLOR
     else
         show_dhcp_config
         if prompt_confirmation "Are you sure you want to start the DHCP service with this configuration?"; then
@@ -138,6 +138,7 @@ validate_start() {
             sleep 2
             if [ $is_started -eq 1 ]; then
                 show_message "-" "DHCP service started successfully." $GREEN $MAIN_COLOR
+                systemctl enable dhcpd > /dev/null 2>&1
             else
                 show_message "X" "Failed to start DHCP." $RED $MAIN_COLOR
                 sleep 1
@@ -196,7 +197,7 @@ validate_stop() {
     if [ $is_started -eq 0 ]; then
         echo ""
         show_message "!" "DHCP service is already stopped." $YELLOW $MAIN_COLOR
-        wait_for_continue $MAIN_COLOR DHCPCOLOR
+        wait_for_continue $MAIN_COLOR $DHCPCOLOR
     else
         if prompt_confirmation "Are you sure you want to stop the DHCP service?"; then
             echo ""
@@ -207,6 +208,7 @@ validate_stop() {
             sleep 2
             if [ $is_started -eq 0 ]; then
                 show_message "-" "DHCP service stopped successfully." $GREEN $MAIN_COLOR
+                systemctl disable dhcpd > /dev/null 2>&1
             else
                 show_message "X" "Failed to stop DHCP." $RED $MAIN_COLOR
                 sleep 1

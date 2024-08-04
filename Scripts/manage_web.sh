@@ -91,6 +91,7 @@ validate_start(){
             sleep 2
             if [ $is_started -eq 1 ]; then
                 show_message "-" "HTTP service started successfully." $GREEN $MAIN_COLOR
+                systemctl enable dhcpd > /dev/null 2>&1
             else
                 show_message "X" "Failed to start HTTP." $RED $MAIN_COLOR
                 sleep 1
@@ -160,6 +161,7 @@ validate_stop(){
             sleep 2
             if [ $is_started -eq 0 ]; then
                 show_message "-" "HTTP service stopped successfully." $GREEN $MAIN_COLOR
+                systemctl disable httpd > /dev/null 2>&1
             else
                 show_message "X" "Failed to stop HTTP." $RED $MAIN_COLOR
                 sleep 1
