@@ -197,9 +197,7 @@ save_configuration() {
     wait
     show_message "-" "DHCP configuration saved successfully." $GREEN $MAIN_COLOR
     dhcp_conf_changed=0
-    echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-    echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-    read -r -n 1 -s
+    wait_for_continue $MAIN_COLOR $DHCPCOLOR
 }
 
 show_dhcp_menu() {
@@ -274,8 +272,7 @@ dhcp_menu() {
                             show_message "!" "Quitting without saving." $YELLOW $MAIN_COLOR
                             dhcp_conf_changed=0
                             read_config "$DEFAULT_DHCP_CONF"
-                            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-                            sleep 3
+                            wait_for_continue $MAIN_COLOR $DHCPCOLOR
                             break
                         else
                             echo ""
@@ -371,9 +368,7 @@ toggle_interface() {
         nmcli con down "$interface" > /dev/null 2>&1
         wait
         show_message "!" "Interface $interface is now down." $GREEN $MAIN_COLOR
-        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-        read -r -n 1 -s
+        wait_for_continue $MAIN_COLOR $DHCPCOLOR
     elif [ $is_interface_active -eq 0 ]; then
         show_title
         echo ""
@@ -382,15 +377,11 @@ toggle_interface() {
         nmcli con up "$interface" > /dev/null 2>&1
         wait
         show_message "!" "Interface $interface is now up." $GREEN $MAIN_COLOR
-        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}" 
-        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-        read -r -n 1 -s
+        wait_for_continue $MAIN_COLOR $DHCPCOLOR
     else
         echo ""
         show_message "X" "Could not determine the state of $interface." $RED $MAIN_COLOR
-        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}" 
-        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-        read -r -n 1 -s
+        wait_for_continue $MAIN_COLOR $DHCPCOLOR
     fi
 }
 
@@ -407,9 +398,7 @@ restart_interface() {
         nmcli con up "$interface" > /dev/null 2>&1
         wait
         show_message "!" "Interface $interface has been restarted." $GREEN $MAIN_COLOR
-        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}" 
-        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-        read -r -n 1 -s
+        wait_for_continue $MAIN_COLOR $DHCPCOLOR
     elif [ $is_interface_active -eq 0 ]; then
         show_title
         echo ""
@@ -421,15 +410,11 @@ restart_interface() {
         nmcli con up "$interface" > /dev/null 2>&1
         wait
         show_message "!" "Interface $interface is now up." $GREEN $MAIN_COLOR
-        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-        read -r -n 1 -s
+        wait_for_continue $MAIN_COLOR $DHCPCOLOR
     else
         echo ""
         show_message "X" "Could not determine the state of $interface." $RED $MAIN_COLOR
-        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}" 
-        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-        read -r -n 1 -s
+        wait_for_continue $MAIN_COLOR $DHCPCOLOR
     fi
 }
 
@@ -463,9 +448,7 @@ save_interface_configuration() {
     wait
     show_message "-" "Interface configuration saved successfully." $GREEN $MAIN_COLOR
     interface_conf_changed=0
-    echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-    echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-    read -r -n 1 -s
+    wait_for_continue $MAIN_COLOR $DHCPCOLOR
 }
 
 show_interface_menu() {
@@ -535,8 +518,7 @@ interface_menu() {
                             show_message "!" "Quitting without saving." $YELLOW $MAIN_COLOR
                             interface_conf_changed=0
                             read_config "$DEFAULT_INTERFACE_CONF"
-                            echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-                            sleep 3
+                            wait_for_continue $MAIN_COLOR DHCPCOLOR
                             break
                         else
                             show_interface_menu

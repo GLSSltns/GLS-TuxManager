@@ -35,10 +35,7 @@ check_status() {
     echo -e " ${MAIN_COLOR}Memory: ${NOCOLOR}$MEMORY"
     echo -e " ${MAIN_COLOR}CPU: ${NOCOLOR}$CPU"
     echo ""
-    echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-    # Wait for user input to return to the main menu
-    echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-    read -r -n 1 -s 
+    wait_for_continue $MAIN_COLOR $DHCPCOLOR
 }
     
 # Function to show DHCP leases log
@@ -66,9 +63,7 @@ show_logs() {
         echo -e "${MAIN_COLOR}  --------------------------------------------------${NOCOLOR}"
     done
 
-    echo -e "${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-    echo -ne "\n ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-    read -r -n 1 -s 
+    wait_for_continue $MAIN_COLOR $DHCPCOLOR
 }
 
 #Function to navigate through options

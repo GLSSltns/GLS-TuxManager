@@ -105,9 +105,7 @@ validate_start(){
     if [ $is_started -eq 1 ]; then
         echo ""
         show_message "!" "DHCP is already running." $YELLOW $MAIN_COLOR
-        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-        read -r -n 1 -s
+        wait_for_continue $MAIN_COLOR DHCPCOLOR
     else
         show_dhcp_config
         if prompt_confirmation "Are you sure you want to start the DHCP service with this configuration?"; then
@@ -124,9 +122,7 @@ validate_start(){
                 sleep 1
                 show_error_details 
             fi
-            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-            echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-            read -r -n 1 -s
+            wait_for_continue $MAIN_COLOR $DHCPCOLOR
         else
             show_message "!" "DHCP service start aborted." $YELLOW $MAIN_COLOR
             sleep 3
@@ -168,9 +164,7 @@ validate_restart(){
                 sleep 1
                 show_error_details 
             fi
-            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-            echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-            read -r -n 1 -s
+            wait_for_continue $MAIN_COLOR $DHCPCOLOR
         else
             show_message "!" "DHCP service restart aborted." $YELLOW $MAIN_COLOR
             sleep 3
@@ -191,9 +185,7 @@ validate_stop(){
     if [ $is_started -eq 0 ]; then
         echo ""
         show_message "!" "DHCP service is already stopped." $YELLOW $MAIN_COLOR
-        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-        read -r -n 1 -s
+        wait_for_continue $MAIN_COLOR DHCPCOLOR
     else
         if prompt_confirmation "Are you sure you want to stop the DHCP service?"; then
             echo ""
@@ -209,9 +201,7 @@ validate_stop(){
                 sleep 1
                 show_error_details 
             fi
-            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-            echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-            read -r -n 1 -s
+            wait_for_continue $MAIN_COLOR $DHCPCOLOR
         else
             show_message "!" "DHCP service stop aborted." $YELLOW $MAIN_COLOR
             sleep 3

@@ -31,9 +31,7 @@ create_directory() {
                 else
                     mkdir -p "$HTTPD_ROOT/$dir_name"
                     show_message "+" "Directory '$dir_name' created successfully." $GREEN $MAIN_COLOR
-                    echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-                    echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-                    read -r -n 1 -s
+                    wait_for_continue $MAIN_COLOR $HTTPCOLOR
                     config_changed=1
                     clear
                     break
@@ -65,9 +63,7 @@ add_file() {
                 else
                     touch "$target_dir/$file_name"
                     show_message "+" "File '$file_name' created successfully in '$target_dir'." $GREEN $MAIN_COLOR
-                    echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-                    echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-                    read -r -n 1 -s
+                    wait_for_continue $MAIN_COLOR $HTTPCOLOR
                     config_changed=1
                     clear
                     break
@@ -96,9 +92,7 @@ edit_file() {
         if [[ -f "$target_file" ]]; then
             nano "$target_file"
             show_message "+" "File '$file_name' edited successfully." $GREEN $MAIN_COLOR
-            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-            echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-            read -r -n 1 -s
+            wait_for_continue $MAIN_COLOR $HTTPCOLOR
             config_changed=1
             clear
             break
@@ -123,9 +117,7 @@ view_file_content() {
         if [[ -f "$target_file" ]]; then
             echo -e "\n${YELLOW}Content of '$file_name':${NOCOLOR}"
             cat "$target_file"
-            echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-            echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-            read -r -n 1 -s
+            wait_for_continue $MAIN_COLOR $HTTPCOLOR
             break
         else
             show_message "X" "File '$file_name' does not exist." $RED $MAIN_COLOR
@@ -149,9 +141,7 @@ remove_file() {
             if prompt_confirmation "Are you sure you want to delete '$file_name'?" ; then
                 rm -rf "$target_file"
                 show_message "-" "File '$file_name' deleted successfully." $GREEN $MAIN_COLOR
-                echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-                echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-                read -r -n 1 -s
+                wait_for_continue $MAIN_COLOR $HTTPCOLOR
                 config_changed=1
                 clear
                 break
@@ -181,9 +171,7 @@ remove_directory() {
             if prompt_confirmation "Are you sure you want to delete directory '$dir_name' and all its contents?" ; then
                 rm -rf "$target_dir"
                 show_message "-" "Directory '$dir_name' deleted successfully." $GREEN $MAIN_COLOR
-                echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-                echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-                read -r -n 1 -s
+                wait_for_continue $MAIN_COLOR $HTTPCOLOR
                 config_changed=1
                 clear
                 break
@@ -218,9 +206,7 @@ upload_file() {
                 else
                     cp "$local_file_path" "$target_dir"
                     show_message "+" "File '$(basename "$local_file_path")' uploaded successfully to '$target_dir'." $GREEN $MAIN_COLOR
-                    echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-                    echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-                    read -r -n 1 -s
+                    wait_for_continue $MAIN_COLOR $HTTPCOLOR
                     config_changed=1
                     clear
                     break
@@ -239,9 +225,7 @@ list_files() {
     show_title
     echo -e "\n ${YELLOW}Listing files in $HTTPD_ROOT:${NOCOLOR}"
     display_tree_structure "$HTTPD_ROOT" " "
-    echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-    echo -ne "\n ${MAIN_COLOR}Press [${HTTPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-    read -r -n 1 -s
+    wait_for_continue $MAIN_COLOR $HTTPCOLOR
 }
 
 display_tree_structure() {
