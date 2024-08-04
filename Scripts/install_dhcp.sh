@@ -46,7 +46,7 @@ manage_pkg() {
     eval "$command" > /dev/null 2>&1
     wait
     show_message "-" "$message Completed Successfully." $GREEN $MAIN_COLOR
-    wait_for_continue
+    wait_for_continue $MAIN_COLOR $DHCPCOLOR
     show_title
     show_menu
 }
@@ -70,7 +70,7 @@ remove_pkg() {
             manage_pkg "remove" "Removing DHCP Service Package..." "yum remove -y dhcp-server"
         else
             show_message "!" "Removal canceled." $YELLOW $MAIN_COLOR
-            wait_for_continue
+            wait_for_continue $MAIN_COLOR $DHCPCOLOR
             show_title
         fi
     else

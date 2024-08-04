@@ -66,10 +66,10 @@ show_message() {
 # Function to display a input to wait for some key to be pressed
 wait_for_continue() {
   local main_color="$1"
-  local dhcpcolor="$2"
+  local color="$2"
 
   echo -e "\n${main_color}----------------------------------------------------------------------------------${NOCOLOR}"
-  echo -ne " ${main_color}Press [${dhcpcolor}ANY KEY${main_color}] to continue..."
+  echo -ne " ${main_color}Press [${color}ANY KEY${main_color}] to continue..."
   read -r -n 1 -s
 }
 

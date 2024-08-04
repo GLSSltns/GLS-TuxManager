@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # UTILS: Source utility scripts for additional functionality
-source Utils/styling.sh
+source Utils/styling.sh 
 source Utils/progress.sh
 source Utils/validate.sh
 
@@ -46,7 +46,7 @@ manage_pkg() {
     eval "$command" > /dev/null 2>&1
     wait
     show_message "-" "Completed Successfully." $GREEN $MAIN_COLOR
-    wait_for_continue
+    wait_for_continue $MAIN_COLOR $HTTPCOLOR    
     show_title
     show_menu
 }
@@ -70,7 +70,7 @@ remove_pkg() {
             manage_pkg "remove" "Removing HTTP Service Package..." "yum remove -y httpd"
         else
             show_message "!" "Removal canceled." $YELLOW $MAIN_COLOR
-            wait_for_continue
+            wait_for_continue $MAIN_COLOR $HTTPCOLOR   
             show_title
         fi
     else
