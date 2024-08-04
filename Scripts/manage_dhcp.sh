@@ -16,7 +16,11 @@ show_title() {
 
 # Function to check if the DHCP service is active
 is_dhcp_started() {
-    is_started=$(systemctl is-active dhcpd | grep -Po "^active" && echo 1 || echo 0)
+    if systemctl is-active dhcpd | grep -q "^active"; then
+        is_started=1
+    else
+        is_started=0
+    fi
 }
 
 # Function to show detailed error logs
