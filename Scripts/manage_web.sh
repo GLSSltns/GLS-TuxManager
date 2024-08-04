@@ -104,7 +104,6 @@ validate_restart(){
     if [ $is_started -eq 0 ]; then
         echo ""
         show_message "!" "HTTP service is not running. Would you like to start it instead?" $YELLOW $MAIN_COLOR
-        echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
         if prompt_confirmation "Start HTTP?"; then
         	validate_start
         else
