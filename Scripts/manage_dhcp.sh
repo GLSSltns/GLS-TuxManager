@@ -148,9 +148,12 @@ validate_restart(){
         echo ""
         show_message "!" "DHCP service is not running. Would you like to start it instead?" $YELLOW $MAIN_COLOR
         echo -e "\n${MAIN_COLOR}----------------------------------------------------------------------------------${NOCOLOR}"
-        echo -ne " ${MAIN_COLOR}Press [${DHCPCOLOR}ANY KEY${MAIN_COLOR}] to continue..."
-        read -r -n 1 -s
-        validate_start
+        if prompt_confirmation "Start DHCP?"; then
+            validate_start
+        else
+            show_message "!" "DHCP service start aborted." $YELLOW $MAIN_COLOR
+            sleep 3
+        fi
     else
         if prompt_confirmation "Are you sure you want to restart the DHCP service?"; then
             echo ""
