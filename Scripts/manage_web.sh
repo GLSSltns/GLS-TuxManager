@@ -1,27 +1,47 @@
 #!/bin/bash
 
+# Source utility scripts for additional functionality
 source Utils/styling.sh
 source Utils/progress.sh
 source Utils/validate.sh
 
+# Initialize the HTTP service status flag
 is_started=0
 
+# Function to show the title banner
 show_title() {
     clear
     show_banner $HTTPCOLOR $MAIN_COLOR "HTTP Service Management"
 }
 
+# Function to check if the HTTP service is active
 is_http_started(){
     is_started=$(systemctl is-active httpd | grep -Po "^active" | grep -q ac && echo 1 || echo 0)
 }
 
+check_http_status() {
+    echo ""
+    spinner 3 "$(show_message "!" "Checking HTTP status...   " $YELLOW $MAIN_COLOR)"
+    show_message "!" "Done...\n" $GREEN
+    sleep 3
+    clear
+    show_title
+    is_http_started
+}
+
+# Function to display detailed error logs if HTTP service fails
 show_error_details() {
+    # Fetch the HTTP error log
     error_log=$(journalctl -xeu httpd.service | tac)
+    # Find the start of the relevant error details
     error_start=$(echo "$error_log" | grep -n "Starting The Apache HTTP Server" | head -n 1 | cut -d: -f1)
+    # Get the log line containing the error
     log_line=$(echo "$error_log" | grep "Starting The Apache HTTP Server" | head -n 1)
 
+    # Extract details from the error log line
     IFS=' ' read -r mont day time _ pid_part _ <<< "$log_line"
 
+    # Trim the log to relevant error details
     if [ -n "$error_start" ]; then
         error_log=$(echo "$error_log" | head -n +$((error_start-1)) | tac)
     fi
@@ -37,6 +57,7 @@ show_error_details() {
     echo -e " ${MAIN_COLOR}PID: ${NOCOLOR}${pid}"
     echo -e " ${MAIN_COLOR}Details: ${NOCOLOR}\n"
 
+    # Display the trimmed error log
     while IFS= read -r line; do
         out_line=$(echo "$line" | grep -oP '\]\s*\K.*')
         if [[ "$out_line" =~ [[:alnum:]] ]]; then
@@ -45,21 +66,17 @@ show_error_details() {
     done <<< "$error_log"
 
     echo "" 
+    # Provide recommendations to the user
     show_message "!" "Recommendation: Check the Apache configuration files." $BLUE $MAIN_COLOR
     show_message "!" "Recommendation: Check the server logs for more details." $BLUE $MAIN_COLOR
     show_message "!" "Recommendation: Ensure all necessary modules are enabled." $BLUE $MAIN_COLOR
 }
 
+# Function to validate and start the HTTP service
 validate_start(){
     clear
     show_title
-    echo ""
-    spinner 3 "$(show_message "!" "Checking for HTTP status...   " $YELLOW $MAIN_COLOR)"
-    show_message "!" "Done...\n" $GREEN $MAIN_COLOR
-    sleep 3
-    clear
-    show_title
-    is_http_started
+    check_http_status
     if [ $is_started -eq 1 ]; then
         echo ""
         show_message "!" "HTTP is already running." $YELLOW $MAIN_COLOR
@@ -87,23 +104,18 @@ validate_start(){
     fi
 }
 
+# Function to validate and restart the HTTP service
 validate_restart(){
     clear
     show_title
-    echo ""
-    spinner 3 "$(show_message "!" "Checking for HTTP status...   " $YELLOW $MAIN_COLOR)"
-    show_message "!" "Done...\n" $GREEN $MAIN_COLOR
-    sleep 3
-    clear
-    show_title
-    is_http_started
+    check_http_status
     if [ $is_started -eq 0 ]; then
         echo ""
         show_message "!" "HTTP service is not running. Would you like to start it instead?" $YELLOW $MAIN_COLOR
         if prompt_confirmation "Start HTTP?"; then
-        	validate_start
+            validate_start
         else
-        	show_message "!" "HTTP service start aborted." $YELLOW $MAIN_COLOR
+            show_message "!" "HTTP service start aborted." $YELLOW $MAIN_COLOR
             sleep 3
         fi
     else
@@ -129,16 +141,11 @@ validate_restart(){
     fi
 }
 
+# Function to validate and stop the HTTP service
 validate_stop(){
     clear
     show_title
-    echo ""
-    spinner 3 "$(show_message "!" "Checking for HTTP status...   " $YELLOW $MAIN_COLOR)"
-    show_message "!" "Done...\n" $GREEN $MAIN_COLOR
-    sleep 3
-    clear
-    show_title
-    is_http_started
+    check_http_status
     if [ $is_started -eq 0 ]; then
         echo ""
         show_message "!" "HTTP service is already stopped." $YELLOW $MAIN_COLOR
@@ -166,6 +173,7 @@ validate_stop(){
     fi
 }
 
+# Function to display the HTTP management menu
 menu_http_man() {
     show_title $HTTPCOLOR
     echo -ne "\n ${MAIN_COLOR}[${HTTPCOLOR}1${MAIN_COLOR}]${NOCOLOR} Start HTTP service"
@@ -175,6 +183,7 @@ menu_http_man() {
     echo ""
 }
 
+# Function to handle the HTTP menu interaction
 menu_http() {
     menu_http_man
     while true; do
@@ -208,8 +217,10 @@ menu_http() {
     done
 }
 
+# Main function to start the script
 main() {
     menu_http
 }
 
+# Execute the main function
 main
