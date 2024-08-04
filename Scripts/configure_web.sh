@@ -5,15 +5,18 @@ source Utils/styling.sh
 source Utils/progress.sh
 source Utils/validate.sh
 
+# Set the root directory for the HTTPD service
 readonly HTTPD_ROOT="/var/www/html"
 
-# FLAGS
+# FLAGS: Flag to track if configuration has changed
 config_changed=0
 
+# Function to show the title banner
 show_title() {
     show_banner $HTTPCOLOR $MAIN_COLOR "WEB Service Configuration"
 }
 
+# Function to create a new directory
 create_directory() {
     clear
     show_title
@@ -43,6 +46,7 @@ create_directory() {
     done
 }
 
+# Function to add a new file
 add_file() {
     clear
     show_title
@@ -77,6 +81,7 @@ add_file() {
     done
 }
 
+# Function to edit an existing file
 edit_file() {
     clear
     show_title
@@ -102,6 +107,7 @@ edit_file() {
     done
 }
 
+# Function to view the content of an existing file
 view_file_content() {
     clear
     show_title
@@ -125,6 +131,7 @@ view_file_content() {
     done
 }
 
+# Function to remove an existing file
 remove_file() {
     clear
     show_title
@@ -155,6 +162,7 @@ remove_file() {
     done
 }
 
+# Function to remove an existing directory
 remove_directory() {
     clear
     show_title
@@ -185,6 +193,7 @@ remove_directory() {
     done
 }
 
+# Function to upload a file
 upload_file() {
     clear
     show_title
@@ -220,6 +229,7 @@ upload_file() {
     done
 }
 
+# Function to list all files and directories
 list_files() {
     clear
     show_title
@@ -228,6 +238,7 @@ list_files() {
     wait_for_continue $MAIN_COLOR $HTTPCOLOR
 }
 
+# Function to display the tree structure of files and directories
 display_tree_structure() {
     local dir_path=$1 
     local indent="$2"
@@ -242,6 +253,7 @@ display_tree_structure() {
     done
 }
 
+# Function to show the main HTTPD configuration menu
 show_httpd_menu() {
     clear
     show_title
@@ -259,6 +271,7 @@ show_httpd_menu() {
     echo ""
 }
 
+# Function to handle the main menu loop
 httpd_menu() {
     clear
     show_httpd_menu
@@ -310,4 +323,5 @@ httpd_menu() {
     clear
 }
 
+# Start the HTTPD configuration menu
 httpd_menu

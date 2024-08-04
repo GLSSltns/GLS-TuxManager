@@ -251,7 +251,6 @@ show_info() {
 
 show_bye_message() {
     clear
-    # set_info $TUXCOLOR $MAIN_COLOR
     show_title
     echo -e "\t\t    ${MAIN_COLOR}                                        ${NOCOLOR}"
     echo -e "\t\t    ${MAIN_COLOR}     Thank you for using our service!    ${NOCOLOR}"
@@ -260,7 +259,7 @@ show_bye_message() {
     echo -e "\t\t    ${MAIN_COLOR}             ${TUXCOLOR}(o<${MAIN_COLOR}                       ${NOCOLOR}"
     echo -e "\t\t    ${MAIN_COLOR}             ${TUXCOLOR}//\\  Goodbye!${MAIN_COLOR}             ${NOCOLOR}"
     echo -e "\t\t    ${MAIN_COLOR}             ${TUXCOLOR}V_/_${MAIN_COLOR}                      ${NOCOLOR}"
-    # echo -e "\t\t    ${MAIN_COLOR}                                        ${NOCOLOR}"
+    echo -e "\t\t    ${MAIN_COLOR}                                        ${NOCOLOR}"
     spinner 3 "\t\t\t\t        "
     sleep 3
     clear
