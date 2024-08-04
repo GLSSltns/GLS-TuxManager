@@ -31,7 +31,7 @@ readonly GITHUB_URL="https://github.com/GLSSltns/TuxManager"
 readonly VERSION="1.0"
 readonly NOCOLOR='\033[0m'
 
-set_title() {
+show_banner() {
     local color="$1"      # Secondary color for the Tux ASCII art
     local main_color="$2" # Main color for the banner text
     local extra_msg="$3"  # Extra message to display
@@ -44,21 +44,6 @@ set_title() {
     echo -e -n '/_/     \__,_/  /_/|_|  /_/  /_/   \__,_/  /_/ /_/ \__,_/  _\__, /  \___/ /_/      ' ; echo -e "${color}V_/_${main_color}"
     echo -e '                                                           /____/ '
     echo -e "${color}${extra_msg}${NOCOLOR}"
-}
-
-set_info() {
-    local color="$1"      # Secondary color for the Tux ASCII art
-    local main_color="$2" # Main color for the banner text
-
-    echo -e "${main_color}----------------------------------------------------------------------------------${NOCOLOR}"
-    echo -e -n "${main_color}GitHub: ${color}${GITHUB_URL}${NOCOLOR}"
-    echo -e "\t\t\t      ${main_color}Version: ${color}${VERSION}${NOCOLOR}"
-    echo -e "${main_color}----------------------------------------------------------------------------------${NOCOLOR}"
-}
-show_banner() {
-    local color="$1"      # Secondary color for the Tux ASCII art
-    local main_color="$2" # Main color for the banner text
-    local extra_msg="$3"  # Extra message to display
 
     # Display the banner with ASCII art and the provided colors
     set_title $color $main_color $extra_msg
@@ -73,9 +58,10 @@ show_message() {
     local color="$3"   # The color for the indicator and message
     local main_color="$4"   # The color for the indicator and message
 
-    # Display the message with formatting and color
-    echo -ne "${main_color}"
-    echo -e " ${main_color}[${color}${c}${main_color}]${color} ${message}${NOCOLOR}"
+    echo -e "${main_color}----------------------------------------------------------------------------------${NOCOLOR}"
+    echo -e -n "${main_color}GitHub: ${color}${GITHUB_URL}${NOCOLOR}"
+    echo -e "\t\t\t      ${main_color}Version: ${color}${VERSION}${NOCOLOR}"
+    echo -e "${main_color}----------------------------------------------------------------------------------${NOCOLOR}"
 }
 
 # Function to display a input to wait for some key to be pressed
