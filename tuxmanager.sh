@@ -1,9 +1,6 @@
 #!/bin/bash
 
-if [ "$SCRIPT_ALLOWED" != "true" ]; then
-    echo "Error: This script must be sourced from the main script."
-    exit 1
-fi
+export SCRIPT_ALLOWED=true
 
 source Utils/styling.sh
 source Utils/progress.sh
@@ -323,7 +320,7 @@ main_menu() {
 main() 
 {
     if [ $UID != 0 ]; then
-        show_message "X" "TuxManager must be run as ROOT.\n" $RED
+        show_message "X" "TuxManager must be run as ROOT." $RED
         exit 1
     fi
 
