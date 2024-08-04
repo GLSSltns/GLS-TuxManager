@@ -45,7 +45,7 @@ manage_pkg() {
     progress_bar 10 $YELLOW $MAIN_COLOR &
     eval "$command" > /dev/null 2>&1
     wait
-    show_message "-" "$message Completed Successfully." $GREEN $MAIN_COLOR
+    show_message "-" "Completed Successfully." $GREEN $MAIN_COLOR
     wait_for_continue $MAIN_COLOR $DHCPCOLOR
     show_title
     show_menu
