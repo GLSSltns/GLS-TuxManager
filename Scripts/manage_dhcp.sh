@@ -133,25 +133,29 @@ manage_dhcp() {
     fi
 
     show_dhcp_config
-    if prompt_confirmation "Are you sure you want to $prompt_message the DHCP service with this configuration?"; then
-        echo ""
-        show_message "!" "${action^}ing DHCP service..." $YELLOW $MAIN_COLOR
-        systemctl $action dhcpd > /dev/null 2>&1
-        progress_bar 5 $YELLOW $MAIN_COLOR
-        is_dhcp_started
-        sleep 2
-        if [ $is_started -eq 1 ]; then
-            show_message "-" "$success_message" $GREEN $MAIN_COLOR
-        else
-            show_message "X" "$failure_message" $RED $MAIN_COLOR
-            sleep 1
-            show_error_details
-        fi
-        wait_for_continue $MAIN_COLOR $DHCPCOLOR
+    if [ "$action" == "start" ] && prompt_confirmation "Are you sure you want to start the DHCP service with this configuration?"; then
+        systemctl start dhcpd > /dev/null 2>&1
     else
         show_message "!" "DHCP service $action aborted." $YELLOW $MAIN_COLOR
         sleep 3
+        wait_for_continue $MAIN_COLOR $DHCPCOLOR
+        return
     fi
+
+    echo ""
+    show_message "!" "${action^}ing DHCP service..." $YELLOW $MAIN_COLOR
+    systemctl $action dhcpd > /dev/null 2>&1
+    progress_bar 5 $YELLOW $MAIN_COLOR
+    is_dhcp_started
+    sleep 2
+    if [ $is_started -eq 1 ]; then
+        show_message "-" "$success_message" $GREEN $MAIN_COLOR
+    else
+        show_message "X" "$failure_message" $RED $MAIN_COLOR
+        sleep 1
+        show_error_details
+    fi
+    wait_for_continue $MAIN_COLOR $DHCPCOLOR
 }
 
 # Function to display the DHCP management menu
