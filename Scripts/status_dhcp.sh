@@ -34,7 +34,6 @@ check_status() {
     echo -e " ${MAIN_COLOR}PID: ${NOCOLOR}$PID"
     echo -e " ${MAIN_COLOR}Memory: ${NOCOLOR}$MEMORY"
     echo -e " ${MAIN_COLOR}CPU: ${NOCOLOR}$CPU"
-    echo ""
     wait_for_continue $MAIN_COLOR $DHCPCOLOR
 }
     

@@ -65,7 +65,6 @@ show_logs() {
         # echo -e "${MAIN_COLOR}  ----------------------------------------------------------------${NOCOLOR}"
     done <<< "$log_lines"
 
-    echo ""
     wait_for_continue $MAIN_COLOR $HTTPCOLOR
 }
 
