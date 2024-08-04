@@ -132,14 +132,16 @@ manage_dhcp() {
         return
     fi
 
-    show_dhcp_config
-    if [[ "$action" == "start" && ´prompt_confirmation "Are you sure you want to start the DHCP service with this configuration?"´ ]]; then
-        systemctl start dhcpd > /dev/null 2>&1
-    else
-        show_message "!" "DHCP service $action aborted." $YELLOW $MAIN_COLOR
-        sleep 3
-        wait_for_continue $MAIN_COLOR $DHCPCOLOR
-        return
+    if [[ "$action" == "start" ]]; then
+        show_dhcp_config
+        if prompt_confirmation "Are you sure you want to start the DHCP service with this configuration?" ; then
+            systemctl start dhcpd > /dev/null 2>&1
+        else
+            show_message "!" "DHCP service $action aborted." $YELLOW $MAIN_COLOR
+            sleep 3
+            wait_for_continue $MAIN_COLOR $DHCPCOLOR
+            return
+        fi
     fi
 
     echo ""
