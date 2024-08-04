@@ -44,11 +44,10 @@ show_banner() {
     echo -e -n '/_/     \__,_/  /_/|_|  /_/  /_/   \__,_/  /_/ /_/ \__,_/  _\__, /  \___/ /_/      ' ; echo -e "${color}V_/_${main_color}"
     echo -e '                                                           /____/ '
     echo -e "${color}${extra_msg}${NOCOLOR}"
-
-    # Display the banner with ASCII art and the provided colors
-    set_title $color $main_color $extra_msg
-    set_info $color $main_color
-    
+    echo -e "${main_color}----------------------------------------------------------------------------------${NOCOLOR}"
+    echo -e -n "${main_color}GitHub: ${color}${GITHUB_URL}${NOCOLOR}"
+    echo -e "\t\t\t      ${main_color}Version: ${color}${VERSION}${NOCOLOR}"
+    echo -e "${main_color}----------------------------------------------------------------------------------${NOCOLOR}"
 }
 
 # Function to display a formatted message with a specific indicator and color
@@ -58,10 +57,9 @@ show_message() {
     local color="$3"   # The color for the indicator and message
     local main_color="$4"   # The color for the indicator and message
 
-    echo -e "${main_color}----------------------------------------------------------------------------------${NOCOLOR}"
-    echo -e -n "${main_color}GitHub: ${color}${GITHUB_URL}${NOCOLOR}"
-    echo -e "\t\t\t      ${main_color}Version: ${color}${VERSION}${NOCOLOR}"
-    echo -e "${main_color}----------------------------------------------------------------------------------${NOCOLOR}"
+    # Display the message with formatting and color
+    echo -ne "${main_color}"
+    echo -e " ${main_color}[${color}${c}${main_color}]${color} ${message}${NOCOLOR}"
 }
 
 # Function to display a input to wait for some key to be pressed
