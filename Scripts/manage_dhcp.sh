@@ -110,19 +110,19 @@ manage_dhcp() {
     show_title
     is_dhcp_started
 
-    if [[ "$action" =~ "^start" && $is_started -eq 1 ]]; then
+    if [[ "$action" == "start" && $is_started -eq 1 ]]; then
         echo ""
         show_message "!" "DHCP is already running." $YELLOW $MAIN_COLOR
         wait_for_continue $MAIN_COLOR $DHCPCOLOR
         menu_dhcp_man
         return
-    elif [[ "$action" =~ "^stop" && $is_started -eq 0 ]]; then
+    elif [[ "$action" == "stop" && $is_started -eq 0 ]]; then
         echo ""
         show_message "!" "DHCP service is already stopped." $YELLOW $MAIN_COLOR
         wait_for_continue $MAIN_COLOR $DHCPCOLOR
         menu_dhcp_man
         return
-    elif [[ "$action" =~ "^restart" && $is_started -eq 0 ]]; then
+    elif [[ "$action" == "restart" && $is_started -eq 0 ]]; then
         echo ""
         show_message "!" "DHCP service is not running. Would you like to start it instead?" $YELLOW $MAIN_COLOR
         if prompt_confirmation "Start DHCP?"; then
@@ -134,7 +134,7 @@ manage_dhcp() {
         return
     fi
 
-    if [[ "$action" =~ "^start" ]]; then
+    if [[ "$action" == "start" ]]; then
         show_dhcp_config
         if prompt_confirmation "Are you sure you want to start the DHCP service with this configuration?" ; then
             systemctl start dhcpd > /dev/null 2>&1
@@ -163,6 +163,7 @@ manage_dhcp() {
     wait_for_continue $MAIN_COLOR $DHCPCOLOR
     menu_dhcp_man
 }
+
 
 # Function to display the DHCP management menu
 menu_dhcp_man() {
