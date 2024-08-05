@@ -61,7 +61,7 @@ Clone the repository to your local machine:
 
 ```bash
 git clone https://github.com/GLSSltns/TuxManager.git
-cd TuxManager-main
+cd TuxManager
 ```
 
 Ensure the scripts have executable permissions:
