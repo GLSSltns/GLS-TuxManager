@@ -74,7 +74,7 @@ chmod +x Scripts/*.sh Utils/*.sh tuxmanager.sh
 
 TuxManager's main script can be executed to interact with all available features:
 Main script that acts as the entry point for all TuxManager functions. This script provides an interface to interact with all other scripts easily.
-> NOT RECOMMENDABLE TO RUN THE SCRIPTS INDIVIDUATELY!
+> NOT RECOMMENDABLE TO RUN THE SCRIPTS INDIVIDUALLY!
 
 ```bash
 ./tuxmanager.sh
