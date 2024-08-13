@@ -2,7 +2,7 @@
 **CentOS DHCP and HTTP manager tool**
 
 <p align="center">
-<a href="https://github.com/GsusLnd"><img title="Author" src="https://img.shields.io/badge/Author-GsusLnd-red.svg?style=for-the-badge&logo=github"></a>
+<a href="https://github.com/GutsNet"><img title="Author" src="https://img.shields.io/badge/Author-GutsNet-red.svg?style=for-the-badge&logo=github"></a>
 <a href="https://github.com/L30AM"><img title="Author" src="https://img.shields.io/badge/Author-L30AM-red.svg?style=for-the-badge&logo=github"></a>
 <a href="https://github.com/sergiomndz15"><img title="Author" src="https://img.shields.io/badge/Author-sergiomndz15-red.svg?style=for-the-badge&logo=github"></a>
 <a href="https://github.com/AlexMangle"><img title="Author" src="https://img.shields.io/badge/Author-AlexMangle-red.svg?style=for-the-badge&logo=github"></a>
