@@ -27,7 +27,7 @@ export WHITE='\033[38;5;158m'
 export NOCOLOR='\033[0m'
 
 # Function to display a banner with customizable colors and an extra message
-readonly GITHUB_URL="https://github.com/GLSSltns/TuxManager"
+readonly GITHUB_URL="https://github.com/GLS-Solutions/TuxManager"
 readonly VERSION="1.0"
 readonly NOCOLOR='\033[0m'
 
