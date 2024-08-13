@@ -241,7 +241,7 @@ show_info() {
     echo -e "${MAIN_COLOR} <_______________________________________[]${YELLOW}#######${MAIN_COLOR}]"
     echo -e '                                         </'
     echo -e " ${MAIN_COLOR}AUTHORS:"    
-    echo -e " ${MAIN_COLOR}@ Gael Landa ${NOCOLOR}\t\thttps://github.com/GsusLnd"
+    echo -e " ${MAIN_COLOR}@ Gael Landa ${NOCOLOR}\t\thttps://github.com/GutsNet"
     echo -e " ${MAIN_COLOR}@ Leonardo Aceves ${NOCOLOR}\thttps://github.com/L30AM"
     echo -e " ${MAIN_COLOR}@ Sergio Méndez ${NOCOLOR}\thttps://github.com/sergiomndz15"
     echo -e " ${MAIN_COLOR}@ Alexandra Gonzáles ${NOCOLOR}\thttps://github.com/AlexMangle"
