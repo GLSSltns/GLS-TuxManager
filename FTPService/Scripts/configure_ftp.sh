@@ -112,6 +112,7 @@ handle_vsftpd_option() {
                     sed -i 's/^listen=NO/listen=YES/' $FTP_CONFIG
                     show_message "!" "Listen has been set to YES." $YELLOW $MAIN_COLOR
                 fi
+                ;;
             9)  # Listen IPv6
                 value=$(grep -E '^listen_ipv6=' $FTP_CONFIG | cut -d= -f2)
                 if [ "$value" == "YES" ]; then
