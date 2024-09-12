@@ -15,6 +15,9 @@ export HTTPCOLOR='\033[38;5;134m'
 # Color for DHCP service messages
 export DHCPCOLOR='\033[38;5;204m'
 
+# Color for DHCP service messages
+export FTPCOLOR='\033[38;5;204m'
+
 # Additional colors for various purposes
 export LIGHTBLUE='\033[38;5;67m'
 export BLUE='\033[38;5;92m'
