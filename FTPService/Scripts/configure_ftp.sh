@@ -24,8 +24,7 @@ show_vsftpd_menu() {
     echo -e " ${MAIN_COLOR}[${FTPCOLOR}9${MAIN_COLOR}]${NOCOLOR} Listen IPv6 \t\t\t [${FTPCOLOR}$(grep -E '^listen_ipv6=' $FTP_CONFIG | cut -d= -f2)${NOCOLOR}]"
     echo -e " ${MAIN_COLOR}[${FTPCOLOR}10${MAIN_COLOR}]${NOCOLOR} Use Localtime \t\t\t [${FTPCOLOR}$(grep -E '^use_localtime=' $FTP_CONFIG | cut -d= -f2)${NOCOLOR}]"
     echo ""
-    echo -e " ${MAIN_COLOR}[${FTPCOLOR}11${MAIN_COLOR}]${NOCOLOR} Save Configuration"
-    echo -e " ${MAIN_COLOR}[${FTPCOLOR}12${MAIN_COLOR}]${NOCOLOR} Go Back"
+    echo -e " ${MAIN_COLOR}[${FTPCOLOR}11${MAIN_COLOR}]${NOCOLOR} Go Back"
     echo ""
 }
 
@@ -133,11 +132,8 @@ handle_vsftpd_option() {
 		                show_message "!" "Use Localtime has been set to YES." $YELLOW $MAIN_COLOR
 		            fi
 		            ;;
-		        11)  # Save Configuration
-		            show_message "!" "Configuration saved." $GREEN $MAIN_COLOR
-		            ;;
-		        12)  # Go Back
-		            
+		        11)  # Go Back
+		            break
 		            ;;
 		        *)  # Invalid option
 		            show_message "!" "Invalid option." $RED $MAIN_COLOR
