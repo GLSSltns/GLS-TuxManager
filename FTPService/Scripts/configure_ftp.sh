@@ -164,7 +164,6 @@ handle_vsftpd_option() {
     done
 }
 
-# Initial update of chroot list file path
 update_chroot_list_file
 
 # Main menu loop
