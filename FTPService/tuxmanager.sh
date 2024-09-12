@@ -152,14 +152,14 @@ main_menu() {
                 3)
                     clear
                     bash Scripts/manage_ftp.sh
-                    show_menu
                     clear
+                    show_menu
                     ;;
                 4)
                     clear
                     bash Scripts/status_ftp.sh
-                    show_menu
                     clear
+                    show_menu
                     ;;
                 5) 
                     show_bye_message
