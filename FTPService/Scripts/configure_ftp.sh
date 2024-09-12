@@ -7,9 +7,7 @@ source Utils/progress.sh
 readonly FTP_CONFIG="/etc/vsftpd/vsftpd.conf"
 
 show_title() {
-    clear
-    echo -e "${MAIN_COLOR}VSFTPD CONFIGURATION MENU${NOCOLOR}"
-    echo ""
+    show_banner "${TUXCOLOR}" "${MAIN_COLOR}" "FTP Service Configuration"
 }
 
 show_vsftpd_menu() {
