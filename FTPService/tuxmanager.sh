@@ -81,7 +81,7 @@ show_title() {
 
 show_menu() {
     show_title
-    echo -ne "\n ${MAIN_COLOR}[${TUXCOLOR}1${MAIN_COLOR}]${NOCOLOR} Install FTP Service\t\t${MAIN_COLOR}[${TUXCOLOR}6${MAIN_COLOR}]${NOCOLOR} Quit"
+    echo -ne "\n ${MAIN_COLOR}[${TUXCOLOR}1${MAIN_COLOR}]${NOCOLOR} Install FTP Service\t\t${MAIN_COLOR}[${TUXCOLOR}5${MAIN_COLOR}]${NOCOLOR} Quit"
     echo -ne "\n ${MAIN_COLOR}[${TUXCOLOR}2${MAIN_COLOR}]${NOCOLOR} Configure FTP Service"
     echo -ne "\n ${MAIN_COLOR}[${TUXCOLOR}3${MAIN_COLOR}]${NOCOLOR} Manage DHCP Service"
     display_not_installed_message "FTP" $is_vsftpd
