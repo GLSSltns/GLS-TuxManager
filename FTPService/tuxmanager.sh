@@ -143,7 +143,6 @@ main_menu() {
                     bash Scripts/install_ftp.sh
                     show_menu
                     check_services_install
-                    clear
                     ;;
                 2)
                     clear
