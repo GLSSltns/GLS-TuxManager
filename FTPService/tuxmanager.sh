@@ -146,8 +146,9 @@ main_menu() {
                     ;;
                 2)
                     clear
-                    show_menu
+                    bash Scripts/configure_ftp.sh
                     clear
+                    show_menu
                     ;;
                 3)
                     clear
