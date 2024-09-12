@@ -45,9 +45,11 @@ handle_vsftpd_option() {
                 if [ "$value" == "YES" ]; then
                     sed -i 's/^anonymous_enable=YES/anonymous_enable=NO/' $FTP_CONFIG
                     show_message "!" "Anonymous Enable has been set to NO." $YELLOW $MAIN_COLOR
+                    clear
                 else
                     sed -i 's/^anonymous_enable=NO/anonymous_enable=YES/' $FTP_CONFIG
                     show_message "!" "Anonymous Enable has been set to YES." $YELLOW $MAIN_COLOR
+                    clear
                 fi
                 ;;
             2)  # FTPD Banner
@@ -55,15 +57,18 @@ handle_vsftpd_option() {
                 read new_banner
                 sed -i "s/^ftpd_banner=.*/ftpd_banner=$new_banner/" $FTP_CONFIG
                 show_message "!" "FTPD Banner has been updated." $YELLOW $MAIN_COLOR
+                clear
                 ;;
             3)  # Chroot Local User
                 value=$(grep -E '^chroot_local_user=' $FTP_CONFIG | cut -d= -f2)
                 if [ "$value" == "YES" ]; then
                     sed -i 's/^chroot_local_user=YES/chroot_local_user=NO/' $FTP_CONFIG
                     show_message "!" "Chroot Local User has been set to NO." $YELLOW $MAIN_COLOR
+                    clear
                 else
                     sed -i 's/^chroot_local_user=NO/chroot_local_user=YES/' $FTP_CONFIG
                     show_message "!" "Chroot Local User has been set to YES." $YELLOW $MAIN_COLOR
+                    clear
                 fi
                 ;;
             4)  # Chroot List Enable
@@ -71,9 +76,11 @@ handle_vsftpd_option() {
                 if [ "$value" == "YES" ]; then
                     sed -i 's/^chroot_list_enable=YES/chroot_list_enable=NO/' $FTP_CONFIG
                     show_message "!" "Chroot List Enable has been set to NO." $YELLOW $MAIN_COLOR
+                    clear
                 else
                     sed -i 's/^chroot_list_enable=NO/chroot_list_enable=YES/' $FTP_CONFIG
                     show_message "!" "Chroot List Enable has been set to YES." $YELLOW $MAIN_COLOR
+                    clear
                 fi
                 ;;
             5)  # Allow Writeable Chroot
@@ -81,9 +88,11 @@ handle_vsftpd_option() {
                 if [ "$value" == "YES" ]; then
                     sed -i 's/^allow_writeable_chroot=YES/allow_writeable_chroot=NO/' $FTP_CONFIG
                     show_message "!" "Allow Writeable Chroot has been set to NO." $YELLOW $MAIN_COLOR
+                    clear
                 else
                     sed -i 's/^allow_writeable_chroot=NO/allow_writeable_chroot=YES/' $FTP_CONFIG
                     show_message "!" "Allow Writeable Chroot has been set to YES." $YELLOW $MAIN_COLOR
+                    clear
                 fi
                 ;;
             6)  # Chroot List File
@@ -92,15 +101,18 @@ handle_vsftpd_option() {
                 sed -i "s|^chroot_list_file=.*|chroot_list_file=$new_chroot_list_file|" $FTP_CONFIG
                 update_chroot_list_file
                 show_message "!" "Chroot List File path has been updated." $YELLOW $MAIN_COLOR
+                clear
                 ;;
             7)  # LS Recurse Enable
                 value=$(grep -E '^ls_recurse_enable=' $FTP_CONFIG | cut -d= -f2)
                 if [ "$value" == "YES" ]; then
                     sed -i 's/^ls_recurse_enable=YES/ls_recurse_enable=NO/' $FTP_CONFIG
                     show_message "!" "LS Recurse Enable has been set to NO." $YELLOW $MAIN_COLOR
+                    clear
                 else
                     sed -i 's/^ls_recurse_enable=NO/ls_recurse_enable=YES/' $FTP_CONFIG
                     show_message "!" "LS Recurse Enable has been set to YES." $YELLOW $MAIN_COLOR
+                    clear
                 fi
                 ;;
             8)  # Listen
@@ -108,9 +120,11 @@ handle_vsftpd_option() {
                 if [ "$value" == "YES" ]; then
                     sed -i 's/^listen=YES/listen=NO/' $FTP_CONFIG
                     show_message "!" "Listen has been set to NO." $YELLOW $MAIN_COLOR
+                    clear
                 else
                     sed -i 's/^listen=NO/listen=YES/' $FTP_CONFIG
                     show_message "!" "Listen has been set to YES." $YELLOW $MAIN_COLOR
+                    clear
                 fi
                 ;;
             9)  # Listen IPv6
@@ -118,9 +132,11 @@ handle_vsftpd_option() {
                 if [ "$value" == "YES" ]; then
                     sed -i 's/^listen_ipv6=YES/listen_ipv6=NO/' $FTP_CONFIG
                     show_message "!" "Listen IPv6 has been set to NO." $YELLOW $MAIN_COLOR
+                    clear
                 else
                     sed -i 's/^listen_ipv6=NO/listen_ipv6=YES/' $FTP_CONFIG
                     show_message "!" "Listen IPv6 has been set to YES." $YELLOW $MAIN_COLOR
+                    clear
                 fi
                 ;;
             10)  # Use Localtime
@@ -128,9 +144,11 @@ handle_vsftpd_option() {
                 if [ "$value" == "YES" ]; then
                     sed -i 's/^use_localtime=YES/use_localtime=NO/' $FTP_CONFIG
                     show_message "!" "Use Localtime has been set to NO." $YELLOW $MAIN_COLOR
+                    clear
                 else
                     sed -i 's/^use_localtime=NO/use_localtime=YES/' $FTP_CONFIG
                     show_message "!" "Use Localtime has been set to YES." $YELLOW $MAIN_COLOR
+                    clear
                 fi
                 ;;
             11)  # Add User to Chroot List
@@ -140,8 +158,10 @@ handle_vsftpd_option() {
                 if [[ -n "$CHROOT_LIST_FILE" ]]; then
                     echo "$username" >> "$CHROOT_LIST_FILE"
                     show_message "!" "User $username has been added to the chroot list." $YELLOW $MAIN_COLOR
+                    clear
                 else
                     show_message "!" "Chroot list file path is not set." $RED $MAIN_COLOR
+                    clear
                 fi
                 ;;
             12)  # Remove User from Chroot List
@@ -151,8 +171,10 @@ handle_vsftpd_option() {
                 if [[ -n "$CHROOT_LIST_FILE" ]]; then
                     sed -i "/^$username$/d" "$CHROOT_LIST_FILE"
                     show_message "!" "User $username has been removed from the chroot list." $YELLOW $MAIN_COLOR
+                    clear
                 else
                     show_message "!" "Chroot list file path is not set." $RED $MAIN_COLOR
+                    clear
                 fi
                 ;;
             13)  # Go Back
