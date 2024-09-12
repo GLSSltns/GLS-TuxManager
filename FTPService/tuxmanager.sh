@@ -35,7 +35,7 @@ check_services_install() {
     spinner_pid=$!
 
     # Check for installed packages
-    is_dhcp=$(yum list installed | grep -q vsftpd && echo 1 || echo 0)
+    is_vsftpd=$(yum list installed | grep -q vsftpd && echo 1 || echo 0)
 
     # Stop the spinner
     kill $spinner_pid 
