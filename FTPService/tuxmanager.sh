@@ -143,20 +143,24 @@ main_menu() {
                     bash Scripts/install_ftp.sh
                     show_menu
                     check_services_install
+                    clear
                     ;;
                 2)
                     clear
                     show_menu
+                    clear
                     ;;
                 3)
                     clear
                     bash Scripts/manage_ftp.sh
                     show_menu
+                    clear
                     ;;
                 4)
                     clear
                     bash Scripts/status_ftp.sh
                     show_menu
+                    clear
                     ;;
                 5) 
                     show_bye_message
